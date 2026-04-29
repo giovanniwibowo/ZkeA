@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dari Z ke A">
+<meta name="format-detection" content="telephone=no">
+<title>Dari Z ke A</title>
+<style>
+:root{
+  --white:#FFFFFF;--card:#FFFDF8;--shadow:rgba(0,0,0,0.18);
+  --radius:24px;
+  font-family:'Trebuchet MS','Comic Sans MS','Chalkboard SE',cursive;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;}
+html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#0d1b2a;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+
+.screen{position:absolute;top:0;left:0;right:0;bottom:0;display:none;overflow:hidden;overflow-y:hidden;-webkit-overflow-scrolling:auto;}
+.screen.active{display:-webkit-flex;display:flex;}
+
+/* ====== SPLASH ====== */
+#splash{background:linear-gradient(160deg,#0d1b2a 0%,#1b3a5c 50%,#0e6655 100%);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.splash-stars{position:absolute;inset:0;pointer-events:none;}
+.sstar{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d,2s) ease-in-out infinite var(--dl,0s);}
+@keyframes twinkle{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:1;transform:scale(1.6)}}
+.splash-logo-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;animation:floatY 3s ease-in-out infinite;}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.splash-title{font-size:clamp(36px,8vw,72px);color:#fff;text-shadow:0 4px 20px rgba(100,200,255,.5),3px 3px 0 rgba(0,0,0,.35);text-align:center;line-height:1.1;letter-spacing:1px;}
+.splash-subtitle{font-size:clamp(13px,2.5vw,20px);color:rgba(255,255,255,.7);text-align:center;letter-spacing:2px;}
+.splash-tagline{font-size:clamp(12px,2vw,17px);color:rgba(255,255,255,.5);text-align:center;}
+.start-btn{background:linear-gradient(135deg,#f7971e,#ffd200);color:#fff;border:none;border-radius:50px;padding:clamp(14px,3vw,22px) clamp(36px,8vw,64px);font-size:clamp(18px,4vw,28px);cursor:pointer;font-family:inherit;font-weight:700;box-shadow:0 8px 0 rgba(0,0,0,.25),0 0 40px rgba(255,200,0,.25);letter-spacing:.5px;margin-top:8px;}
+.start-btn:active{transform:translateY(5px);box-shadow:0 3px 0 rgba(0,0,0,.25);}
+.splash-ver{position:absolute;bottom:16px;color:rgba(255,255,255,.25);font-size:11px;}
+
+/* ====== HOME ====== */
+#home{flex-direction:column;background:linear-gradient(160deg,#0d1b2a,#1b3a5c 55%,#0e4d3a);}
+.home-header{padding:clamp(16px,3vw,28px) clamp(16px,3vw,28px) 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.home-logo{display:flex;align-items:center;gap:10px;}
+.home-logo-text{font-size:clamp(22px,4.5vw,38px);color:#ffd200;text-shadow:2px 2px 8px rgba(255,210,0,.35);font-weight:900;letter-spacing:1px;}
+.home-logo-sub{font-size:clamp(10px,1.8vw,14px);color:rgba(255,255,255,.5);letter-spacing:2px;}
+.hdr-right{display:flex;align-items:center;gap:8px;}
+.total-stars{background:rgba(255,210,0,.15);border:2px solid rgba(255,210,0,.3);border-radius:50px;padding:7px 16px;color:#ffd200;font-size:clamp(13px,2.2vw,18px);font-weight:700;}
+.music-btn{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.2);border-radius:50%;width:clamp(38px,6vw,50px);height:clamp(38px,6vw,50px);font-size:clamp(16px,2.8vw,22px);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.music-btn:active{transform:scale(.88);}
+.music-btn.muted{background:rgba(255,80,80,.2);border-color:rgba(255,80,80,.35);}
+
+/* Hero banner */
+.home-hero{flex-shrink:0;padding:0 clamp(16px,3vw,28px);margin-top:12px;}
+.hero-card{background:linear-gradient(120deg,rgba(255,255,255,.08),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:12px 18px;display:flex;align-items:flex-end;gap:0;overflow:hidden;position:relative;min-height:clamp(110px,18vw,160px);}
+.hero-text{flex:1;z-index:2;}
+.hero-text h2{font-size:clamp(14px,2.8vw,22px);color:#fff;font-weight:800;line-height:1.3;}
+.hero-text p{font-size:clamp(10px,1.8vw,14px);color:rgba(255,255,255,.6);margin-top:4px;line-height:1.4;}
+.hero-svg-wrap{flex-shrink:0;height:clamp(100px,17vw,155px);display:flex;align-items:flex-end;}
+
+.levels-scroll{-webkit-flex:1;flex:1;overflow-y:auto;overflow-x:hidden;padding:clamp(12px,2.5vw,22px);-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+.levels-scroll::-webkit-scrollbar{display:none;}
+.section-label{color:rgba(255,255,255,.55);font-size:clamp(10px,1.8vw,13px);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;margin-top:4px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.12);}
+.levels-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(100px,18vw,148px),1fr));gap:clamp(8px,1.8vw,16px);margin-bottom:16px;}
+
+.level-card{background:var(--card);border-radius:20px;padding:clamp(10px,2vw,18px);display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;box-shadow:0 5px 0 var(--shadow);transition:transform .12s,box-shadow .12s;position:relative;border:3px solid transparent;min-height:clamp(100px,16vw,140px);justify-content:center;}
+.level-card:active{transform:translateY(4px);box-shadow:0 1px 0 var(--shadow);}
+.level-card.completed{border-color:#2ECC71;}
+.level-card.completed::after{content:"✓";position:absolute;top:7px;right:9px;font-size:14px;color:#2ECC71;font-weight:900;}
+.lc-badge{position:absolute;top:-8px;left:50%;transform:translateX(-50%);color:#fff;font-size:9px;padding:3px 9px;border-radius:20px;white-space:nowrap;font-weight:700;}
+.lc-icon{font-size:clamp(26px,5vw,42px);line-height:1;}
+.lc-num{font-size:clamp(8px,1.4vw,11px);color:#aaa;font-weight:700;letter-spacing:1px;}
+.lc-name{font-size:clamp(9px,1.6vw,13px);color:#444;font-weight:700;text-align:center;line-height:1.3;}
+.lc-stars{font-size:11px;color:#ffd200;min-height:14px;}
+.add-card{background:rgba(255,255,255,.05);border:2px dashed rgba(255,255,255,.18);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;min-height:clamp(100px,16vw,140px);}
+.add-card span{color:rgba(255,255,255,.35);font-size:clamp(9px,1.6vw,12px);text-align:center;}
+
+/* ====== GAME ====== */
+#game{flex-direction:column;}
+.game-bg{position:absolute;inset:0;transition:background .4s;}
+.game-top{position:relative;z-index:10;display:flex;align-items:center;padding:clamp(10px,2vw,16px) clamp(12px,2.5vw,22px);gap:10px;background:rgba(0,0,0,.2);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.home-ico{background:rgba(255,255,255,.9);border:none;border-radius:50%;width:clamp(40px,6.5vw,52px);height:clamp(40px,6.5vw,52px);font-size:clamp(17px,2.8vw,22px);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.home-ico:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.2);}
+.game-title-bar{color:#fff;font-size:clamp(13px,2.5vw,20px);font-weight:700;text-shadow:1px 1px 5px rgba(0,0,0,.4);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.score-pill{background:rgba(255,210,0,.9);border-radius:50px;padding:clamp(5px,1vw,9px) clamp(12px,2.2vw,20px);font-size:clamp(13px,2.2vw,18px);font-weight:700;color:#3d2000;box-shadow:0 3px 0 rgba(0,0,0,.2);white-space:nowrap;}
+.progress-wrap{position:relative;z-index:10;padding:0 clamp(12px,2.5vw,22px) 5px;background:rgba(0,0,0,.18);}
+.progress-track{height:9px;background:rgba(255,255,255,.18);border-radius:9px;overflow:hidden;}
+.progress-bar{height:100%;background:linear-gradient(90deg,#ffd200,#f7971e);border-radius:9px;transition:width .5s cubic-bezier(.34,1.56,.64,1);}
+.game-body{position:relative;z-index:5;-webkit-flex:1;flex:1;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;padding:clamp(10px,2vw,20px);gap:clamp(8px,1.8vw,16px);overflow:hidden;}
+
+/* Question card */
+.q-card{background:rgba(255,255,255,.97);border-radius:var(--radius);padding:clamp(14px,2.8vw,26px);text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.22);width:100%;max-width:680px;}
+.q-text{font-size:clamp(15px,3.2vw,26px);color:#1b2a3b;line-height:1.4;}
+.q-emoji{font-size:clamp(48px,10vw,88px);display:block;line-height:1.1;margin:6px 0;}
+.q-sub{font-size:clamp(11px,1.8vw,15px);color:#888;margin-top:4px;}
+
+/* Flag display */
+.flag-display{font-size:clamp(64px,14vw,110px);display:block;text-align:center;line-height:1;margin:4px 0;}
+
+/* Options */
+.opts{display:grid;gap:clamp(7px,1.5vw,13px);width:100%;max-width:680px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.g4{grid-template-columns:1fr 1fr;}
+.opt{background:rgba(255,255,255,.97);border:4px solid transparent;border-radius:18px;padding:clamp(9px,1.8vw,18px) 8px;cursor:pointer;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.13);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:clamp(60px,11vw,96px);transition:transform .1s;}
+.opt:active{transform:scale(.92);}
+.opt.correct{background:#E8F5E9;border-color:#4CAF50;-webkit-animation:popOk .45s ease;animation:popOk .45s ease;}
+.opt.wrong{background:#FFEBEE;border-color:#F44336;-webkit-animation:shk .38s ease;animation:shk .38s ease;}
+@-webkit-keyframes popOk{0%{-webkit-transform:scale(1)}50%{-webkit-transform:scale(1.09)}100%{-webkit-transform:scale(1)}}
+@keyframes popOk{0%{transform:scale(1)}50%{transform:scale(1.09)}100%{transform:scale(1)}}
+@-webkit-keyframes shk{0%,100%{-webkit-transform:translateX(0)}25%{-webkit-transform:translateX(-9px)}75%{-webkit-transform:translateX(9px)}}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+.opt .oe{font-size:clamp(24px,5vw,46px);}
+.opt .ot{font-size:clamp(11px,2vw,17px);color:#222;font-weight:700;line-height:1.25;}
+.opt .os{font-size:clamp(9px,1.5vw,13px);color:#888;}
+
+/* Size compare */
+.size-row{display:flex;gap:clamp(14px,4vw,36px);justify-content:center;align-items:flex-end;}
+.sz-opt{background:rgba(255,255,255,.96);border:4px solid transparent;border-radius:18px;padding:clamp(10px,2.5vw,22px) clamp(14px,3vw,30px);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;transition:transform .1s;}
+.sz-opt:active{transform:scale(.92);}
+.sz-opt.correct{background:#E8F5E9;border-color:#4CAF50;animation:popOk .45s ease;}
+.sz-opt.wrong{background:#FFEBEE;border-color:#F44336;animation:shk .38s ease;}
+
+/* Counting */
+.count-items{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(5px,1.2vw,10px);max-width:560px;}
+.ci{font-size:clamp(26px,5.5vw,48px);cursor:pointer;transition:transform .14s,filter .18s;}
+.ci.tapped{filter:grayscale(1) opacity(.3);transform:scale(.8);}
+.hint-bar{font-size:clamp(11px,1.8vw,15px);color:rgba(255,255,255,.85);background:rgba(0,0,0,.18);border-radius:10px;padding:7px 16px;text-align:center;max-width:480px;}
+
+/* Drawing */
+.color-pal{display:flex;flex-wrap:wrap;gap:clamp(7px,1.5vw,12px);justify-content:center;}
+.cp{width:clamp(34px,5.5vw,48px);height:clamp(34px,5.5vw,48px);border-radius:50%;cursor:pointer;border:4px solid transparent;box-shadow:0 3px 0 rgba(0,0,0,.2);transition:transform .1s;}
+.cp.sel{border-color:#111;transform:scale(1.22);}
+.canvas-wrap{background:#fff;border-radius:18px;box-shadow:0 6px 24px rgba(0,0,0,.18);overflow:hidden;touch-action:none;}
+canvas{display:block;}
+.draw-actions{display:flex;gap:10px;align-items:center;}
+.btn-clr{background:#FF6B6B;color:#fff;border:none;border-radius:50px;padding:clamp(8px,1.6vw,13px) clamp(16px,3vw,26px);font-size:clamp(12px,2vw,17px);cursor:pointer;font-family:inherit;font-weight:700;box-shadow:0 3px 0 #c0392b;}
+.btn-clr:active{transform:translateY(3px);box-shadow:0 1px 0 #c0392b;}
+.btn-done-draw{background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff;border:none;border-radius:50px;padding:clamp(8px,1.6vw,13px) clamp(20px,4vw,36px);font-size:clamp(13px,2.2vw,19px);cursor:pointer;font-family:inherit;font-weight:700;box-shadow:0 3px 0 #1a7a2a;}
+.btn-done-draw:active{transform:translateY(3px);box-shadow:0 1px 0 #1a7a2a;}
+
+/* Feedback */
+#feedback{display:none;position:fixed;top:0;left:0;width:100%;height:100%;align-items:center;justify-content:center;z-index:500;pointer-events:none;}
+.fb-box{background:rgba(255,255,255,.97);border-radius:28px;padding:clamp(22px,4.5vw,38px) clamp(30px,6vw,52px);text-align:center;box-shadow:0 20px 70px rgba(0,0,0,.3);-webkit-transform:scale(0);transform:scale(0);-webkit-animation:fbPop .4s cubic-bezier(.34,1.56,.64,1) forwards;animation:fbPop .4s cubic-bezier(.34,1.56,.64,1) forwards;}
+@-webkit-keyframes fbPop{to{-webkit-transform:scale(1)}}
+@keyframes fbPop{to{transform:scale(1)}}
+.fb-emoji{font-size:clamp(58px,12vw,88px);}
+.fb-text{font-size:clamp(18px,3.8vw,30px);color:#1b2a3b;margin-top:8px;font-weight:700;}
+.fb-pts{font-size:clamp(12px,2.2vw,18px);color:#888;margin-top:4px;}
+
+/* Completion */
+#completion{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(160deg,#0d1b2a,#1b3a5c,#0e6655);display:none;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2.2vw,20px);padding:clamp(20px,4.5vw,44px);z-index:600;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.comp-title{font-size:clamp(28px,6.5vw,60px);color:#fff;text-shadow:0 4px 20px rgba(255,200,0,.4),3px 3px 0 rgba(0,0,0,.25);text-align:center;animation:floatY 2s ease-in-out infinite;}
+.comp-stars{display:flex;gap:clamp(8px,2vw,18px);}
+.comp-star{font-size:clamp(44px,9vw,72px);animation:sBurst .5s cubic-bezier(.34,1.56,.64,1) backwards;}
+.comp-star:nth-child(1){animation-delay:.15s}.comp-star:nth-child(2){animation-delay:.32s}.comp-star:nth-child(3){animation-delay:.5s}
+@keyframes sBurst{from{transform:scale(0) rotate(-35deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.comp-score{color:rgba(255,255,255,.9);font-size:clamp(14px,3vw,24px);text-align:center;background:rgba(255,255,255,.1);border-radius:18px;padding:10px 24px;}
+.comp-badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.comp-badge{background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.28);border-radius:50px;padding:7px 16px;color:#fff;font-size:clamp(11px,1.8vw,15px);}
+.comp-btns{display:flex;gap:clamp(8px,2vw,18px);flex-wrap:wrap;justify-content:center;margin-top:6px;}
+.btn-next{background:linear-gradient(135deg,#ffd200,#f7971e);color:#fff;border:none;border-radius:50px;padding:clamp(12px,2.2vw,19px) clamp(26px,5.5vw,48px);font-size:clamp(15px,2.8vw,22px);cursor:pointer;font-family:inherit;font-weight:700;box-shadow:0 5px 0 rgba(0,0,0,.22);}
+.btn-next:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.22);}
+.btn-replay,.btn-home2{border:none;border-radius:50px;padding:clamp(12px,2.2vw,19px) clamp(20px,4vw,36px);font-size:clamp(14px,2.5vw,20px);cursor:pointer;font-family:inherit;font-weight:700;}
+.btn-replay{background:rgba(255,255,255,.17);color:#fff;border:2px solid rgba(255,255,255,.35);}
+.btn-home2{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:2px solid rgba(255,255,255,.22);}
+
+/* Add Modal */
+#addModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:700;padding:20px;}
+.modal-box{background:#fff;border-radius:var(--radius);padding:clamp(18px,3.8vw,34px);width:100%;max-width:540px;max-height:82vh;overflow-y:auto;}
+.modal-title{font-size:clamp(16px,3.2vw,26px);color:#1b2a3b;margin-bottom:18px;text-align:center;font-weight:800;}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.topic-btn{background:#f4f4f4;border:3px solid transparent;border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;font-family:inherit;font-size:clamp(11px,1.8vw,15px);color:#333;font-weight:700;}
+.topic-btn:active,.topic-btn.sel{background:#EDE7F6;border-color:#7c3aed;color:#5b21b6;}
+.topic-btn .ti{font-size:clamp(22px,4vw,34px);display:block;margin-bottom:5px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.btn-cancel{background:#eee;border:none;border-radius:50px;padding:11px 22px;font-size:clamp(13px,2.2vw,17px);cursor:pointer;font-family:inherit;font-weight:700;color:#777;}
+.btn-add-modal{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:50px;padding:11px 26px;font-size:clamp(13px,2.2vw,17px);cursor:pointer;font-family:inherit;font-weight:700;box-shadow:0 4px 0 rgba(0,0,0,.18);}
+
+/* Confetti */
+.cf{position:fixed;width:10px;height:10px;border-radius:2px;animation:cfFall var(--d,2s) ease-in forwards;pointer-events:none;z-index:800;}
+@keyframes cfFall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(13,27,42,.96);color:#fff;border-radius:50px;padding:11px 26px;font-size:clamp(13px,2.2vw,17px);z-index:900;transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;}
+.toast.show{-webkit-transform:translateX(-50%) translateY(0);transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash" class="screen active">
+  <div class="splash-stars" id="splashStars"></div>
+  <div class="splash-logo-wrap">
+    <svg width="clamp(120px,22vw,180px)" height="clamp(80px,14vw,120px)" viewBox="0 0 180 120" style="width:clamp(120px,22vw,180px);height:auto;">
+      <!-- Globe -->
+      <circle cx="90" cy="60" r="52" fill="#1a6b8a" stroke="#4fc3f7" stroke-width="3"/>
+      <ellipse cx="90" cy="60" rx="22" ry="52" fill="none" stroke="#4fc3f7" stroke-width="1.5" opacity=".6"/>
+      <line x1="38" y1="60" x2="142" y2="60" stroke="#4fc3f7" stroke-width="1.5" opacity=".6"/>
+      <ellipse cx="90" cy="60" rx="52" ry="20" fill="none" stroke="#4fc3f7" stroke-width="1.5" opacity=".4"/>
+      <!-- Continents simplified -->
+      <path d="M68 45 Q75 38 85 42 Q90 38 96 44 Q100 40 108 45 Q112 52 105 58 Q95 55 88 58 Q78 56 70 52 Z" fill="#2e7d32" opacity=".85"/>
+      <path d="M50 65 Q58 60 64 64 Q68 60 74 65 Q72 72 65 74 Q56 72 50 68 Z" fill="#388e3c" opacity=".85"/>
+      <path d="M110 55 Q120 52 128 58 Q130 65 124 68 Q116 66 112 62 Z" fill="#1b5e20" opacity=".85"/>
+      <!-- Star on top -->
+      <polygon points="90,6 93,14 102,14 95,19 98,28 90,22 82,28 85,19 78,14 87,14" fill="#ffd200" opacity=".95"/>
+    </svg>
+    <div class="splash-title">Dari Z ke A</div>
+    <div class="splash-subtitle">✦ JELAJAHI DUNIA ✦</div>
+  </div>
+  <div class="splash-tagline">Belajar Bendera · Kota · Kuliner Indonesia</div>
+  <button class="start-btn" id="startBtn">Ayo Petualang! 🗺️</button>
+  <div class="splash-ver">v3.0 • Offline Forever 🔒</div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen">
+  <div class="home-header">
+    <div class="home-logo">
+      <div>
+        <div class="home-logo-text">Dari Z ke A</div>
+        <div class="home-logo-sub">JELAJAHI DUNIA</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <button class="music-btn" id="musicBtnHome" onclick="toggleMusic()">🎵</button>
+      <div class="total-stars">⭐ <span id="totalStarsDisplay">0</span></div>
+    </div>
+  </div>
+
+  <!-- Hero: two Indonesian boys -->
+  <div class="home-hero">
+    <div class="hero-card">
+      <div class="hero-text">
+        <h2>Halo, Petualang Cilik! 👋</h2>
+        <p>Kenali dunia lewat bendera,<br>kota, dan makanan Indonesia!</p>
+      </div>
+      <div class="hero-svg-wrap">
+        <svg viewBox="0 0 220 155" xmlns="http://www.w3.org/2000/svg" style="height:100%;width:auto;">
+          <!-- Background sky hint -->
+          <defs>
+            <radialGradient id="gnd" cx="50%" cy="100%" r="50%">
+              <stop offset="0%" stop-color="#1a7a4a" stop-opacity=".5"/>
+              <stop offset="100%" stop-color="#1a7a4a" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="110" cy="150" rx="100" ry="12" fill="url(#gnd)"/>
+
+          <!-- === BOY 1 (older, 6 yr, left, pointing forward) === -->
+          <!-- Shadow -->
+          <ellipse cx="72" cy="150" rx="28" ry="5" fill="rgba(0,0,0,.2)"/>
+          <!-- Shoes -->
+          <ellipse cx="58" cy="148" rx="10" ry="4" fill="#c0392b"/>
+          <ellipse cx="82" cy="148" rx="10" ry="4" fill="#c0392b"/>
+          <!-- Legs -->
+          <rect x="56" y="118" width="11" height="32" rx="5" fill="#1565c0"/>
+          <rect x="75" y="118" width="11" height="32" rx="5" fill="#1565c0"/>
+          <!-- Body: tshirt -->
+          <rect x="50" y="78" width="44" height="46" rx="10" fill="#e53935"/>
+          <!-- Collar -->
+          <path d="M68 78 Q72 84 76 78" fill="none" stroke="#fff" stroke-width="2"/>
+          <!-- Left arm raised & pointing -->
+          <rect x="28" y="72" width="11" height="38" rx="5" fill="#e53935" transform="rotate(-35 34 72)"/>
+          <!-- Right arm normal -->
+          <rect x="85" y="82" width="11" height="28" rx="5" fill="#e53935"/>
+          <!-- Hand pointing -->
+          <circle cx="20" cy="72" r="7" fill="#f0a070"/>
+          <line x1="20" y1="65" x2="14" y2="55" stroke="#f0a070" stroke-width="4" stroke-linecap="round"/>
+          <!-- Neck -->
+          <rect x="66" y="68" width="12" height="14" rx="5" fill="#f0a070"/>
+          <!-- Head -->
+          <ellipse cx="72" cy="52" rx="22" ry="24" fill="#f0a070"/>
+          <!-- Hair boy1 -->
+          <ellipse cx="72" cy="34" rx="22" ry="12" fill="#1a1a1a"/>
+          <ellipse cx="52" cy="46" rx="6" ry="9" fill="#1a1a1a"/>
+          <ellipse cx="92" cy="46" rx="6" ry="9" fill="#1a1a1a"/>
+          <!-- Eyes -->
+          <ellipse cx="63" cy="52" rx="3.5" ry="4" fill="#fff"/>
+          <ellipse cx="81" cy="52" rx="3.5" ry="4" fill="#fff"/>
+          <ellipse cx="63" cy="53" rx="2" ry="2.5" fill="#3d1c00"/>
+          <ellipse cx="81" cy="53" rx="2" ry="2.5" fill="#3d1c00"/>
+          <ellipse cx="63.8" cy="52" rx=".7" ry=".7" fill="#fff"/>
+          <ellipse cx="81.8" cy="52" rx=".7" ry=".7" fill="#fff"/>
+          <!-- Smile -->
+          <path d="M63 62 Q72 70 81 62" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+          <!-- Eyebrows excited -->
+          <path d="M59 47 Q63 44 67 47" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+          <path d="M77 47 Q81 44 85 47" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+          <!-- Ear -->
+          <ellipse cx="50" cy="54" rx="4" ry="5" fill="#e8896a"/>
+          <ellipse cx="94" cy="54" rx="4" ry="5" fill="#e8896a"/>
+
+          <!-- === BOY 2 (toddler, 2 yr, right, waving) === -->
+          <!-- Shadow -->
+          <ellipse cx="158" cy="150" rx="22" ry="4" fill="rgba(0,0,0,.2)"/>
+          <!-- Shoes -->
+          <ellipse cx="147" cy="149" rx="8" ry="3.5" fill="#7b1fa2"/>
+          <ellipse cx="168" cy="149" rx="8" ry="3.5" fill="#7b1fa2"/>
+          <!-- Chubby legs -->
+          <rect x="144" y="124" width="10" height="26" rx="5" fill="#4a148c"/>
+          <rect x="161" y="124" width="10" height="26" rx="5" fill="#4a148c"/>
+          <!-- Body big/round toddler -->
+          <ellipse cx="157" cy="108" rx="24" ry="22" fill="#ff8f00"/>
+          <!-- Collar -->
+          <path d="M148 90 Q157 96 166 90" fill="none" stroke="#fff" stroke-width="2"/>
+          <!-- Left arm up waving -->
+          <rect x="132" y="85" width="10" height="32" rx="5" fill="#ff8f00" transform="rotate(40 137 85)"/>
+          <!-- Right arm down -->
+          <rect x="175" y="98" width="10" height="24" rx="5" fill="#ff8f00"/>
+          <!-- Waving hand -->
+          <circle cx="120" cy="75" r="8" fill="#f5c6a0"/>
+          <line x1="120" y1="67" x2="116" y2="58" stroke="#f5c6a0" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="120" y1="67" x2="122" y2="57" stroke="#f5c6a0" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="120" y1="67" x2="128" y2="60" stroke="#f5c6a0" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Neck -->
+          <rect x="151" y="76" width="12" height="16" rx="5" fill="#f5c6a0"/>
+          <!-- Head big/round toddler -->
+          <ellipse cx="157" cy="60" rx="26" ry="26" fill="#f5c6a0"/>
+          <!-- Hair toddler black short -->
+          <ellipse cx="157" cy="38" rx="26" ry="14" fill="#111"/>
+          <ellipse cx="132" cy="52" rx="7" ry="10" fill="#111"/>
+          <ellipse cx="182" cy="52" rx="7" ry="10" fill="#111"/>
+          <!-- Eyes big toddler -->
+          <ellipse cx="147" cy="61" rx="5" ry="5.5" fill="#fff"/>
+          <ellipse cx="167" cy="61" rx="5" ry="5.5" fill="#fff"/>
+          <ellipse cx="147" cy="62" rx="3" ry="3.5" fill="#2d1200"/>
+          <ellipse cx="167" cy="62" rx="3" ry="3.5" fill="#2d1200"/>
+          <ellipse cx="148" cy="61" rx="1" ry="1" fill="#fff"/>
+          <ellipse cx="168" cy="61" rx="1" ry="1" fill="#fff"/>
+          <!-- Cheek blush -->
+          <ellipse cx="137" cy="67" rx="6" ry="4" fill="rgba(255,100,100,.25)"/>
+          <ellipse cx="177" cy="67" rx="6" ry="4" fill="rgba(255,100,100,.25)"/>
+          <!-- Smile open toddler -->
+          <path d="M146 72 Q157 82 168 72" fill="none" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Ear toddler -->
+          <ellipse cx="131" cy="62" rx="5" ry="6" fill="#e8a87c"/>
+          <ellipse cx="183" cy="62" rx="5" ry="6" fill="#e8a87c"/>
+
+          <!-- Globe icon between them -->
+          <circle cx="110" cy="120" r="14" fill="#1565c0" stroke="#42a5f5" stroke-width="2"/>
+          <ellipse cx="110" cy="120" rx="6" ry="14" fill="none" stroke="#42a5f5" stroke-width="1" opacity=".7"/>
+          <line x1="96" y1="120" x2="124" y2="120" stroke="#42a5f5" stroke-width="1" opacity=".7"/>
+          <!-- Small flag on globe -->
+          <line x1="110" y1="106" x2="110" y2="98" stroke="#fff" stroke-width="1.5"/>
+          <polygon points="110,98 118,101 110,104" fill="#ffd200"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="levels-scroll" id="levelsScroll"></div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <div class="game-bg" id="gameBg"></div>
+  <div class="game-top">
+    <button class="home-ico" onclick="confirmHome()">🏠</button>
+    <div class="game-title-bar" id="gameTitleBar"></div>
+    <button class="music-btn" id="musicBtnGame" onclick="toggleMusic()">🎵</button>
+    <div class="score-pill">⭐ <span id="scoreDisplay">0</span></div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  </div>
+  <div class="game-body" id="gameBody"></div>
+</div>
+
+<!-- FEEDBACK -->
+<div id="feedback" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;z-index:500;pointer-events:none;">
+  <div class="fb-box">
+    <div class="fb-emoji" id="fbEmoji"></div>
+    <div class="fb-text" id="fbText"></div>
+    <div class="fb-pts" id="fbPts"></div>
+  </div>
+</div>
+
+<!-- COMPLETION -->
+<div id="completion" style="display:none;-webkit-flex-direction:column;flex-direction:column;">
+  <div class="comp-title" id="compTitle"></div>
+  <div class="comp-stars">
+    <span class="comp-star">⭐</span><span class="comp-star">⭐</span><span class="comp-star">⭐</span>
+  </div>
+  <div class="comp-score" id="compScore"></div>
+  <div class="comp-badges" id="compBadges"></div>
+  <div class="comp-btns">
+    <button class="btn-replay" onclick="replayLevel()">🔁 Ulangi</button>
+    <button class="btn-next" id="btnNext"></button>
+    <button class="btn-home2" onclick="goHome()">🏠 Menu</button>
+  </div>
+</div>
+
+<!-- ADD LEVEL MODAL -->
+<div id="addModal">
+  <div class="modal-box">
+    <div class="modal-title">🗺️ Tambah Petualangan Baru</div>
+    <div class="modal-grid" id="topicGrid"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Batal</button>
+      <button class="btn-add-modal" onclick="addSelectedLevel()">✅ Tambah!</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// LEVEL DATA
+// ============================================================
+const BUILT_IN_LEVELS = [
+  // ── WORLD FLAGS ────────────────────────────────────────────
+  {id:'f1',name:'Bendera Dunia 1',icon:'🏳️',age:'Semua',color:'#1565c0',type:'flag',
+   questions:[
+    {q:'Bendera negara mana ini?',flag:'🇮🇩',correct:'Indonesia',choices:['Malaysia','Indonesia','Thailand','Filipina']},
+    {q:'Bendera negara mana ini?',flag:'🇯🇵',correct:'Jepang',choices:['Korea','China','Jepang','Taiwan']},
+    {q:'Bendera negara mana ini?',flag:'🇺🇸',correct:'Amerika Serikat',choices:['Inggris','Prancis','Australia','Amerika Serikat']},
+    {q:'Bendera negara mana ini?',flag:'🇧🇷',correct:'Brasil',choices:['Brasil','Argentina','Meksiko','Kolombia']},
+    {q:'Bendera negara mana ini?',flag:'🇩🇪',correct:'Jerman',choices:['Austria','Belgia','Jerman','Swiss']},
+    {q:'Bendera negara mana ini?',flag:'🇫🇷',correct:'Prancis',choices:['Italia','Prancis','Spanyol','Portugal']},
+    {q:'Bendera negara mana ini?',flag:'🇬🇧',correct:'Inggris',choices:['Australia','Inggris','Selandia Baru','Kanada']},
+    {q:'Bendera negara mana ini?',flag:'🇨🇳',correct:'China',choices:['Vietnam','China','Korea Utara','Mongolia']},
+   ]},
+  {id:'f2',name:'Bendera Dunia 2',icon:'🚩',age:'Semua',color:'#0277bd',type:'flag',
+   questions:[
+    {q:'Bendera negara mana ini?',flag:'🇸🇦',correct:'Arab Saudi',choices:['Arab Saudi','Irak','Iran','Yaman']},
+    {q:'Bendera negara mana ini?',flag:'🇦🇺',correct:'Australia',choices:['Selandia Baru','Australia','Kanada','Inggris']},
+    {q:'Bendera negara mana ini?',flag:'🇮🇳',correct:'India',choices:['Pakistan','Bangladesh','India','Sri Lanka']},
+    {q:'Bendera negara mana ini?',flag:'🇷🇺',correct:'Rusia',choices:['Serbia','Rusia','Slovakia','Kroasia']},
+    {q:'Bendera negara mana ini?',flag:'🇰🇷',correct:'Korea Selatan',choices:['Korea Selatan','Jepang','China','Taiwan']},
+    {q:'Bendera negara mana ini?',flag:'🇹🇷',correct:'Turki',choices:['Tunisia','Turki','Pakistan','Maroko']},
+    {q:'Bendera negara mana ini?',flag:'🇲🇽',correct:'Meksiko',choices:['Brasil','Colombia','Italia','Meksiko']},
+    {q:'Bendera negara mana ini?',flag:'🇿🇦',correct:'Afrika Selatan',choices:['Nigeria','Kenya','Afrika Selatan','Ghana']},
+   ]},
+  // ── WORLD DESTINATIONS ────────────────────────────────────
+  {id:'d1',name:'Destinasi Dunia',icon:'🗼',age:'Semua',color:'#2e7d32',type:'basic',
+   questions:[
+    {q:'Menara Eiffel ada di kota mana?',items:['🗼','🗽','🏰','🌉'],labels:['Paris','New York','London','San Francisco'],ci:0},
+    {q:'Patung Liberty ada di kota mana?',items:['🗼','🗽','🕌','🏯'],labels:['Paris','New York','Dubai','Tokyo'],ci:1},
+    {q:'Tembok Besar ada di negara mana?',items:['🇯🇵','🇰🇷','🇨🇳','🇻🇳'],labels:['Jepang','Korea','China','Vietnam'],ci:2},
+    {q:'Menara Pisa ada di negara mana?',items:['🇪🇸','🇫🇷','🇩🇪','🇮🇹'],labels:['Spanyol','Prancis','Jerman','Italia'],ci:3},
+    {q:'Big Ben ada di kota mana?',items:['🗼','🗽','🏰','🌁'],labels:['Paris','New York','London','Roma'],ci:2},
+    {q:'Colosseum ada di kota mana?',items:['🇬🇷','🇮🇹','🇪🇸','🇵🇹'],labels:['Athena','Roma','Madrid','Lisbon'],ci:1},
+    {q:'Taj Mahal ada di negara mana?',items:['🇵🇰','🇧🇩','🇮🇳','🇱🇰'],labels:['Pakistan','Bangladesh','India','Sri Lanka'],ci:2},
+    {q:'Opera House ada di kota mana?',items:['🇳🇿','🇿🇦','🇬🇧','🇦🇺'],labels:['Auckland','Cape Town','London','Sydney'],ci:3},
+   ]},
+  // ── WORLD CITIES ───────────────────────────────────────────
+  {id:'c1',name:'Kota Besar Dunia',icon:'🌆',age:'Semua',color:'#4a148c',type:'city_flag',
+   questions:[
+    {q:'Ibu kota Jepang adalah...',flag:'🇯🇵',correct:'Tokyo',choices:['Osaka','Tokyo','Kyoto','Hiroshima']},
+    {q:'Ibu kota Prancis adalah...',flag:'🇫🇷',correct:'Paris',choices:['Lyon','Nice','Marseille','Paris']},
+    {q:'Ibu kota Amerika Serikat adalah...',flag:'🇺🇸',correct:'Washington D.C.',choices:['New York','Los Angeles','Washington D.C.','Chicago']},
+    {q:'Ibu kota Brasil adalah...',flag:'🇧🇷',correct:'Brasília',choices:['São Paulo','Rio de Janeiro','Brasília','Salvador']},
+    {q:'Ibu kota Australia adalah...',flag:'🇦🇺',correct:'Canberra',choices:['Sydney','Melbourne','Canberra','Brisbane']},
+    {q:'Ibu kota Mesir adalah...',flag:'🇪🇬',correct:'Kairo',choices:['Alexandria','Kairo','Luxor','Aswan']},
+    {q:'Ibu kota Rusia adalah...',flag:'🇷🇺',correct:'Moskow',choices:['St. Petersburg','Moskow','Novosibirsk','Kazan']},
+    {q:'Ibu kota China adalah...',flag:'🇨🇳',correct:'Beijing',choices:['Shanghai','Guangzhou','Beijing','Shenzhen']},
+   ]},
+  // ── INDONESIA CITIES ───────────────────────────────────────
+  {id:'i1',name:'Kota Indonesia 1',icon:'🇮🇩',age:'Semua',color:'#b71c1c',type:'basic',
+   questions:[
+    {q:'Ibu kota Indonesia adalah...',items:['🏙️','🌴','🏔️','🌊'],labels:['Jakarta','Bali','Bromo','Raja Ampat'],ci:0},
+    {q:'Kota terbesar di Jawa Timur adalah...',items:['🦁','🐊','🦅','🐘'],labels:['Surabaya','Malang','Madiun','Kediri'],ci:0},
+    {q:'Kota Metropolitan di Jawa Barat adalah...',items:['🌿','🌊','🏙️','🏔️'],labels:['Bogor','Bandung','Bekasi','Depok'],ci:1},
+    {q:'Kota "Gudeg" terkenal ada di...',items:['🌶️','🍛','🥘','🫕'],labels:['Solo','Yogyakarta','Semarang','Magelang'],ci:1},
+    {q:'Kota pelabuhan terbesar di Sumatra adalah...',items:['🌴','🏔️','🌊','🏙️'],labels:['Palembang','Padang','Medan','Pekanbaru'],ci:2},
+    {q:'Kota wisata utama di Bali adalah...',items:['🏖️','🗿','🌺','🌊'],labels:['Denpasar','Ubud','Kuta','Sanur'],ci:0},
+    {q:'Kota "Soto Banjar" berasal dari...',items:['🌊','🏔️','🌿','🌴'],labels:['Banjarmasin','Samarinda','Balikpapan','Pontianak'],ci:0},
+    {q:'Kota terbesar di Sulawesi adalah...',items:['🐟','🦐','🦑','🐙'],labels:['Palu','Kendari','Manado','Makassar'],ci:3},
+   ]},
+  {id:'i2',name:'Kota Indonesia 2',icon:'🗺️',age:'Semua',color:'#c62828',type:'basic',
+   questions:[
+    {q:'Kota "Rendang" terkenal dari...',items:['🥘','🍲','🫕','🍛'],labels:['Aceh','Padang','Pekanbaru','Jambi'],ci:1},
+    {q:'Kota "Batik" paling terkenal adalah...',items:['🎨','🖌️','🧵','🪡'],labels:['Solo','Yogyakarta','Pekalongan','Cirebon'],ci:2},
+    {q:'Kota yang dijuluki "Kota Pahlawan" adalah...',items:['⚔️','🛡️','🏆','🎖️'],labels:['Jakarta','Bandung','Surabaya','Semarang'],ci:2},
+    {q:'Manado ada di pulau...',items:['🏝️','🌋','🌊','🌴'],labels:['Kalimantan','Sulawesi','Papua','Maluku'],ci:1},
+    {q:'Kota Ambon ada di...',items:['🏔️','🌊','🌿','🌴'],labels:['Maluku','Papua','NTT','NTB'],ci:0},
+    {q:'Jayapura adalah ibu kota...',items:['🌿','🦜','🌿','🐊'],labels:['Maluku','Papua','Sulawesi','Kalimantan'],ci:1},
+    {q:'Kota Banda Aceh ada di pulau...',items:['🌋','🌴','🏔️','🌊'],labels:['Jawa','Kalimantan','Sumatra','Sulawesi'],ci:2},
+    {q:'Mataram adalah ibu kota...',items:['🌊','🌴','🏔️','🌺'],labels:['Bali','NTB (Lombok)','NTT','Maluku'],ci:1},
+   ]},
+  // ── INDONESIAN FOOD ────────────────────────────────────────
+  {id:'mk1',name:'Makanan Indonesia 1',icon:'🍜',age:'Semua',color:'#e65100',type:'food',
+   questions:[
+    {q:'Makanan khas Padang yang paling terkenal di dunia:',emoji:'🥘',desc:'Daging sapi dimasak santan & rempah kaya',correct:'Rendang',choices:['Soto','Rendang','Gulai','Rawon']},
+    {q:'Sup daging hitam khas Jawa Timur:',emoji:'🍲',desc:'Kuah hitam dari keluak, daging sapi',correct:'Rawon',choices:['Soto','Rawon','Bakso','Tengkleng']},
+    {q:'Makanan khas Yogyakarta dari nangka muda:',emoji:'🫕',desc:'Nangka muda dimasak manis dengan santan',correct:'Gudeg',choices:['Gudeg','Sayur Lodeh','Opor','Garang Asem']},
+    {q:'Mie khas Aceh dengan kuah kari kental:',emoji:'🍝',desc:'Mie kuning, kuah kari, seafood/daging',correct:'Mie Aceh',choices:['Mie Goreng','Mie Ayam','Mie Aceh','Mie Cakalang']},
+    {q:'Sate khas Madura dengan bumbu kacang:',emoji:'🍢',desc:'Daging sapi/ayam, bumbu kacang manis',correct:'Sate Madura',choices:['Sate Lilit','Sate Padang','Sate Madura','Sate Maranggi']},
+    {q:'Sup khas Manado dengan ikan cakalang:',emoji:'🐟',desc:'Ikan cakalang suwir, kuah asam pedas',correct:'Ikan Cakalang Fufu',choices:['Ikan Cakalang Fufu','Ikan Pindang','Ikan Asam Padeh','Palumara']},
+    {q:'Makanan khas Bali dari babi guling:',emoji:'🥩',desc:'Babi utuh dipanggang dengan rempah Bali',correct:'Babi Guling',choices:['Lawar','Babi Guling','Betutu','Sate Lilit']},
+    {q:'Nasi liwet khas kota...',emoji:'🍚',desc:'Nasi gurih dengan santan, lauk lengkap',correct:'Solo',choices:['Solo','Bandung','Surabaya','Semarang']},
+   ]},
+  {id:'mk2',name:'Makanan Indonesia 2',icon:'🍛',age:'Semua',color:'#bf360c',type:'food',
+   questions:[
+    {q:'Pempek adalah makanan khas kota:',emoji:'🐟',desc:'Olahan ikan tenggiri, disajikan dengan cuko',correct:'Palembang',choices:['Padang','Palembang','Jambi','Bengkulu']},
+    {q:'Papeda dimakan dengan ikan kuah kuning, khas:',emoji:'🫕',desc:'Bubur sagu kental, makanan pokok Papua',correct:'Papua',choices:['Maluku','Papua','NTT','Sulawesi']},
+    {q:'Nasi Padang disajikan dengan lauk...',emoji:'🍽️',desc:'Banyak lauk ditaruh sekaligus di meja',correct:'Banyak jenis sekaligus',choices:['Satu lauk saja','Banyak jenis sekaligus','Kuah saja','Nasi goreng']},
+    {q:'Lumpia adalah makanan khas kota:',emoji:'🥢',desc:'Rebung, telur, udang dibungkus kulit tipis',correct:'Semarang',choices:['Surabaya','Jakarta','Semarang','Yogyakarta']},
+    {q:'Ketoprak adalah makanan khas:',emoji:'🥗',desc:'Tahu, bihun, sayur dengan bumbu kacang',correct:'Jakarta',choices:['Jakarta','Bandung','Bogor','Depok']},
+    {q:'Coto Makassar adalah makanan dari daerah:',emoji:'🍲',desc:'Sup jeroan sapi, kuah kaya rempah',correct:'Sulawesi Selatan',choices:['Sulawesi Utara','Sulawesi Selatan','Kalimantan','Papua']},
+    {q:'Soto Betawi menggunakan santan dan berasal dari:',emoji:'🍜',desc:'Soto dengan santan & susu, daging sapi',correct:'Jakarta',choices:['Bandung','Surabaya','Jakarta','Semarang']},
+    {q:'Pecel adalah makanan khas Jawa dengan bumbu:',emoji:'🥗',desc:'Sayuran rebus disiram sambal kacang',correct:'Kacang tanah',choices:['Santan','Kacang tanah','Kedelai','Kemiri']},
+   ]},
+  // ── ASEAN FLAGS ────────────────────────────────────────────
+  {id:'asean1',name:'Bendera ASEAN',icon:'🌏',age:'Semua',color:'#006064',type:'flag',
+   questions:[
+    {q:'Bendera negara mana ini?',flag:'🇲🇾',correct:'Malaysia',choices:['Indonesia','Malaysia','Brunei','Singapura']},
+    {q:'Bendera negara mana ini?',flag:'🇸🇬',correct:'Singapura',choices:['Malaysia','Indonesia','Singapura','Filipina']},
+    {q:'Bendera negara mana ini?',flag:'🇹🇭',correct:'Thailand',choices:['Kamboja','Thailand','Laos','Myanmar']},
+    {q:'Bendera negara mana ini?',flag:'🇻🇳',correct:'Vietnam',choices:['Vietnam','China','Laos','Kamboja']},
+    {q:'Bendera negara mana ini?',flag:'🇵🇭',correct:'Filipina',choices:['Malaysia','Indonesia','Thailand','Filipina']},
+    {q:'Bendera negara mana ini?',flag:'🇲🇲',correct:'Myanmar',choices:['Laos','Kamboja','Myanmar','Thailand']},
+    {q:'Bendera negara mana ini?',flag:'🇧🇳',correct:'Brunei',choices:['Malaysia','Brunei','Singapura','Indonesia']},
+    {q:'Bendera negara mana ini?',flag:'🇰🇭',correct:'Kamboja',choices:['Thailand','Laos','Vietnam','Kamboja']},
+   ]},
+];
+
+const EXTRA_LEVEL_BANK = [
+  {id:'ex_f3',name:'Bendera Eropa',icon:'🇪🇺',age:'Semua',color:'#283593',type:'flag',
+   questions:[
+    {q:'Bendera negara mana ini?',flag:'🇮🇹',correct:'Italia',choices:['Italia','Prancis','Meksiko','Portugal']},
+    {q:'Bendera negara mana ini?',flag:'🇪🇸',correct:'Spanyol',choices:['Portugal','Italia','Spanyol','Argentina']},
+    {q:'Bendera negara mana ini?',flag:'🇳🇱',correct:'Belanda',choices:['Luksemburg','Prancis','Belanda','Belgia']},
+    {q:'Bendera negara mana ini?',flag:'🇵🇱',correct:'Polandia',choices:['Austria','Polandia','Kroasia','Ceko']},
+    {q:'Bendera negara mana ini?',flag:'🇸🇪',correct:'Swedia',choices:['Finlandia','Norwegia','Swedia','Denmark']},
+    {q:'Bendera negara mana ini?',flag:'🇨🇭',correct:'Swiss',choices:['Denmark','Malta','Swiss','Austria']},
+    {q:'Bendera negara mana ini?',flag:'🇬🇷',correct:'Yunani',choices:['Islandia','Yunani','Siprus','Malta']},
+    {q:'Bendera negara mana ini?',flag:'🇵🇹',correct:'Portugal',choices:['Brasil','Spanyol','Portugal','Meksiko']},
+   ]},
+  {id:'ex_f4',name:'Bendera Amerika & Afrika',icon:'🌍',age:'Semua',color:'#1b5e20',type:'flag',
+   questions:[
+    {q:'Bendera negara mana ini?',flag:'🇦🇷',correct:'Argentina',choices:['Uruguay','Argentina','Chile','Bolivia']},
+    {q:'Bendera negara mana ini?',flag:'🇨🇦',correct:'Kanada',choices:['Amerika Serikat','Kanada','Australia','Prancis']},
+    {q:'Bendera negara mana ini?',flag:'🇨🇴',correct:'Kolombia',choices:['Ekuador','Bolivia','Kolombia','Venezuela']},
+    {q:'Bendera negara mana ini?',flag:'🇳🇬',correct:'Nigeria',choices:['Kenya','Nigeria','Pantai Gading','Ghana']},
+    {q:'Bendera negara mana ini?',flag:'🇰🇪',correct:'Kenya',choices:['Ethiopia','Kenya','Uganda','Tanzania']},
+    {q:'Bendera negara mana ini?',flag:'🇪🇬',correct:'Mesir',choices:['Suriah','Irak','Mesir','Libya']},
+    {q:'Bendera negara mana ini?',flag:'🇲🇦',correct:'Maroko',choices:['Tunisia','Maroko','Aljazair','Libya']},
+    {q:'Bendera negara mana ini?',flag:'🇨🇱',correct:'Chile',choices:['Peru','Paraguay','Chile','Bolivia']},
+   ]},
+  {id:'ex_d2',name:'Destinasi Indonesia',icon:'🏝️',age:'Semua',color:'#00695c',type:'basic',
+   questions:[
+    {q:'Tempat wisata Candi Borobudur ada di...',items:['🏔️','🌊','🌿','🌴'],labels:['Jawa Tengah','Jawa Barat','Jawa Timur','DIY'],ci:0},
+    {q:'Tempat wisata Danau Toba ada di...',items:['🌊','🏔️','🌺','🌿'],labels:['Sumatra Utara','Sumatra Barat','Riau','Aceh'],ci:0},
+    {q:'Raja Ampat terkenal dengan...',items:['🐠','🦁','🦅','🐘'],labels:['Bawah Laut','Savana','Gunung','Hutan'],ci:0},
+    {q:'Prambanan adalah candi untuk...',items:['☸️','✝️','🕉️','☪️'],labels:['Buddha','Kristen','Hindu','Islam'],ci:2},
+    {q:'Komodo Island terkenal dengan hewan...',items:['🐊','🦁','🐯','🦈'],labels:['Komodo','Singa','Harimau','Hiu'],ci:0},
+    {q:'Bromo adalah gunung berapi di...',items:['🌋','🏔️','🗻','⛰️'],labels:['Jawa Timur','Jawa Tengah','NTB','NTT'],ci:0},
+    {q:'Bunaken terkenal dengan wisata...',items:['🐠','🦁','🌿','🌋'],labels:['Menyelam','Safari','Hutan','Vulkanik'],ci:0},
+    {q:'Wayang kulit adalah kesenian khas...',items:['🎭','🎪','🎨','🎵'],labels:['Jawa','Bali','Minang','Batak'],ci:0},
+   ]},
+  {id:'ex_mk3',name:'Jajanan Tradisional',icon:'🧆',age:'Semua',color:'#e65100',type:'food',
+   questions:[
+    {q:'Kue basah khas Betawi dari santan:',emoji:'🟤',desc:'Bulat, coklat, harum daun pandan',correct:'Kue Cucur',choices:['Onde-onde','Kue Cucur','Klepon','Serabi']},
+    {q:'Jajanan bola hijau isi gula merah:',emoji:'🟢',desc:'Tepung ketan, daun pandan, isian gula aren',correct:'Klepon',choices:['Klepon','Onde-onde','Cenil','Lupis']},
+    {q:'Wajik adalah jajanan dari...',emoji:'🫓',desc:'Ketan manis dimasak gula merah & santan',correct:'Beras Ketan',choices:['Singkong','Beras Ketan','Jagung','Sagu']},
+    {q:'Pisang goreng crispy khas Pontianak disebut...',emoji:'🍌',desc:'Pisang goreng tepung renyah khas Kalbar',correct:'Pisang Goreng Pontianak',choices:['Pisang Epe','Pisang Ijo','Pisang Goreng Pontianak','Godok Pisang']},
+    {q:'Es Cendol adalah minuman dengan...',emoji:'🥤',desc:'Santan, gula merah, butiran hijau tepung beras',correct:'Cendol hijau',choices:['Boba','Cincau','Cendol hijau','Nata de coco']},
+    {q:'Surabi adalah kue dari kota...',emoji:'🥞',desc:'Serabi khas Sunda/Solo dengan topping beragam',correct:'Bandung / Solo',choices:['Surabaya','Jakarta','Bandung / Solo','Malang']},
+    {q:'Terang Bulan adalah versi lokal dari...',emoji:'🫓',desc:'Kue tipis lipat dengan berbagai isian manis',correct:'Martabak Manis',choices:['Pancake','Waffle','Martabak Manis','Crepe']},
+    {q:'Bika Ambon sebenarnya berasal dari kota...',emoji:'🍰',desc:'Kue kuning berpori khas Medan, bukan Ambon',correct:'Medan',choices:['Ambon','Makassar','Medan','Palembang']},
+   ]},
+  {id:'ex_c2',name:'Kota & Benua',icon:'🌐',age:'Semua',color:'#4527a0',type:'city_flag',
+   questions:[
+    {q:'Jakarta ada di benua...',flag:'🇮🇩',correct:'Asia',choices:['Asia','Afrika','Eropa','Amerika']},
+    {q:'Kota London ada di benua...',flag:'🇬🇧',correct:'Eropa',choices:['Amerika','Australia','Eropa','Afrika']},
+    {q:'New York ada di negara...',flag:'🇺🇸',correct:'Amerika Serikat',choices:['Kanada','Brasil','Meksiko','Amerika Serikat']},
+    {q:'Dubai ada di negara...',flag:'🇦🇪',correct:'Uni Emirat Arab',choices:['Arab Saudi','Kuwait','Bahrain','Uni Emirat Arab']},
+    {q:'Istanbul ada di negara...',flag:'🇹🇷',correct:'Turki',choices:['Yunani','Turki','Bulgaria','Serbia']},
+    {q:'Buenos Aires adalah ibu kota...',flag:'🇦🇷',correct:'Argentina',choices:['Chile','Uruguay','Argentina','Paraguay']},
+    {q:'Nairobi adalah ibu kota...',flag:'🇰🇪',correct:'Kenya',choices:['Uganda','Tanzania','Kenya','Ethiopia']},
+    {q:'Seoul adalah ibu kota...',flag:'🇰🇷',correct:'Korea Selatan',choices:['Korea Selatan','Jepang','China','Taiwan']},
+   ]},
+  {id:'ex_prov',name:'Provinsi Indonesia',icon:'🗺️',age:'Semua',color:'#880e4f',type:'basic',
+   questions:[
+    {q:'Provinsi paling barat Indonesia adalah...',items:['🌅','🌄','🌇','🌆'],labels:['Aceh','Riau','Jambi','Bengkulu'],ci:0},
+    {q:'Papua Barat ada di pulau...',items:['🦜','🌿','🏔️','🌊'],labels:['Papua','Kalimantan','Sulawesi','Maluku'],ci:0},
+    {q:'Ibu kota Kalimantan Timur adalah...',items:['🏙️','🌴','🌿','🌊'],labels:['Samarinda','Balikpapan','Banjarmasin','Palangkaraya'],ci:0},
+    {q:'Nusa Tenggara Timur (NTT) ibu kotanya...',items:['🌺','🌊','🏔️','🌴'],labels:['Kupang','Mataram','Ende','Labuan Bajo'],ci:0},
+    {q:'Yogyakarta dipimpin oleh seorang...',items:['🤴','👨‍💼','🎖️','👨‍⚖️'],labels:['Sultan','Gubernur biasa','Walikota','Bupati'],ci:0},
+    {q:'Pulau Sumatra memiliki berapa provinsi?',items:['🔢','🔢','🔢','🔢'],labels:['8','10','12','14'],ci:1},
+    {q:'Kalimantan Utara adalah provinsi termuda, berdiri tahun...',items:['📅','📅','📅','📅'],labels:['2012','2012','2013','2015'],ci:2},
+    {q:'Ibu kota Sulawesi Tengah adalah...',items:['🌴','🌊','🏔️','🌿'],labels:['Palu','Kendari','Gorontalo','Luwuk'],ci:0},
+   ]},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state={activeLevelIds:BUILT_IN_LEVELS.map(l=>l.id),progress:{},totalStars:0};
+let curLevel=null,curQ=0,curScore=0,totalQs=0,qAnswered=false;
+let drawColor='#e74c3c',drawCtx=null,tappedSet=new Set(),selectedTopic=null;
+
+function loadState(){
+  try{
+    var s=null;
+    try{s=localStorage.getItem('darizka_v3');}catch(e){}
+    if(s){var parsed=JSON.parse(s);state.activeLevelIds=parsed.activeLevelIds||state.activeLevelIds;state.progress=parsed.progress||{};state.totalStars=parsed.totalStars||0;}
+  }catch(e){console.log('loadState error:',e);}
+  updateTotalStars();
+}
+function saveState(){
+  try{localStorage.setItem('darizka_v3',JSON.stringify(state));}catch(e){
+    // iOS private mode: silently ignore
+  }
+}
+function updateTotalStars(){
+  state.totalStars=Object.values(state.progress).reduce((a,p)=>a+(p.stars||0),0);
+  const el=document.getElementById('totalStarsDisplay');if(el)el.textContent=state.totalStars;
+}
+
+// ============================================================
+// SCREENS
+// ============================================================
+function switchScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){
+    s.classList.remove('active');
+    s.style.display='none';
+  });
+  var el=document.getElementById(id);
+  el.classList.add('active');
+  // Force correct display type per screen
+  var flexScreens=['splash','home','game'];
+  if(flexScreens.indexOf(id)>=0){
+    el.style.display='-webkit-flex';
+    el.style.display='flex';
+  } else {
+    el.style.display='block';
+  }
+}
+function showHome(){switchScreen('home');buildLevels();}
+
+function buildLevels(){
+  const scroll=document.getElementById('levelsScroll');scroll.innerHTML='';
+  const sections=[
+    {label:'🏳️ Bendera Dunia',ids:['f1','f2','asean1']},
+    {label:'🗼 Destinasi & Kota Dunia',ids:['d1','c1']},
+    {label:'🇮🇩 Indonesia',ids:['i1','i2']},
+    {label:'🍜 Kuliner Indonesia',ids:['mk1','mk2']},
+  ];
+  const allActive=getAllLevels();
+  const usedIds=new Set(['f1','f2','asean1','d1','c1','i1','i2','mk1','mk2']);
+  const extras=allActive.filter(l=>!usedIds.has(l.id));
+
+  sections.forEach(sec=>{
+    const lvs=sec.ids.map(id=>allActive.find(l=>l.id===id)).filter(Boolean);
+    if(!lvs.length) return;
+    const lbl=mkEl('div','section-label');lbl.textContent=sec.label;scroll.appendChild(lbl);
+    const grid=mkEl('div','levels-grid');
+    lvs.forEach((lv,gi)=>{
+      const prog=state.progress[lv.id]||{stars:0};
+      const card=mkEl('div','level-card'+(prog.stars>0?' completed':''));
+      card.innerHTML=`<div class="lc-badge" style="background:${lv.color}">${lv.age}</div>
+        <div class="lc-icon">${lv.icon}</div>
+        <div class="lc-num">${lv.name}</div>
+        <div class="lc-stars">${'⭐'.repeat(prog.stars||0)}${'·'.repeat(3-(prog.stars||0))}</div>`;
+      card.onclick=()=>startLevel(lv.id);grid.appendChild(card);
+    });
+    scroll.appendChild(grid);
+  });
+
+  if(extras.length){
+    const lbl=mkEl('div','section-label');lbl.textContent='✨ Level Tambahan';scroll.appendChild(lbl);
+    const grid=mkEl('div','levels-grid');
+    extras.forEach(lv=>{
+      const prog=state.progress[lv.id]||{stars:0};
+      const card=mkEl('div','level-card'+(prog.stars>0?' completed':''));
+      card.innerHTML=`<div class="lc-badge" style="background:${lv.color}">${lv.age}</div>
+        <div class="lc-icon">${lv.icon}</div>
+        <div class="lc-num">${lv.name}</div>
+        <div class="lc-stars">${'⭐'.repeat(prog.stars||0)}${'·'.repeat(3-(prog.stars||0))}</div>`;
+      card.onclick=()=>startLevel(lv.id);grid.appendChild(card);
+    });
+    const addCard=mkEl('div','add-card');
+    addCard.innerHTML=`<span style="font-size:clamp(26px,5vw,40px);color:rgba(255,255,255,.35)">＋</span><span>Tambah Level</span>`;
+    addCard.onclick=openAddModal;grid.appendChild(addCard);
+    scroll.appendChild(grid);
+  } else {
+    const grid=mkEl('div','levels-grid');
+    const addCard=mkEl('div','add-card');
+    addCard.innerHTML=`<span style="font-size:clamp(26px,5vw,40px);color:rgba(255,255,255,.35)">＋</span><span>Tambah Level</span>`;
+    addCard.onclick=openAddModal;grid.appendChild(addCard);
+    scroll.appendChild(grid);
+  }
+  document.getElementById('totalStarsDisplay').textContent=state.totalStars;
+}
+
+function getAllLevels(){
+  return state.activeLevelIds.map(id=>BUILT_IN_LEVELS.find(l=>l.id===id)||EXTRA_LEVEL_BANK.find(l=>l.id===id)).filter(Boolean);
+}
+
+// ============================================================
+// GAME
+// ============================================================
+function startLevel(id){
+  const all=getAllLevels();curLevel=all.find(l=>l.id===id);if(!curLevel)return;
+  curQ=0;curScore=0;qAnswered=false;
+  totalQs=curLevel.type==='drawing'?curLevel.prompts.length:curLevel.questions.length;
+  switchScreen('game');
+  document.getElementById('gameBg').style.background=`linear-gradient(160deg,${curLevel.color}cc 0%,${curLevel.color}44 55%,#0d1b2a 100%)`;
+  document.getElementById('gameTitleBar').textContent=`${curLevel.icon} ${curLevel.name}`;
+  updateHUD();renderQ();sfxPlay('levelstart');
+}
+
+function updateHUD(){
+  document.getElementById('scoreDisplay').textContent=curScore;
+  document.getElementById('progressBar').style.width=Math.round(curQ/totalQs*100)+'%';
+}
+
+function renderQ(){
+  hideFB();qAnswered=false;tappedSet.clear();
+  const body=document.getElementById('gameBody');body.innerHTML='';
+  if(curQ>=totalQs){showCompletion();return;}
+  const lv=curLevel,q=lv.questions[curQ];
+  if(lv.type==='flag')renderFlag(body,q);
+  else if(lv.type==='city_flag')renderCityFlag(body,q);
+  else if(lv.type==='food')renderFood(body,q);
+  else renderBasic(body,q);
+}
+
+function mkEl(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e;}
+
+function renderFlag(body,q){
+  const qc=mkEl('div','q-card',`<div class="q-text">${q.q}</div><span class="flag-display">${q.flag}</span>`);
+  body.appendChild(qc);
+  const grid=mkEl('div','opts g2');
+  q.choices.forEach(ch=>{
+    const b=mkEl('button','opt',`<span class="ot">${ch}</span>`);
+    b.onclick=()=>{if(!qAnswered)onAnswer(b,ch===q.correct);};
+    grid.appendChild(b);
+  });
+  body.appendChild(grid);
+}
+
+function renderCityFlag(body,q){
+  const qc=mkEl('div','q-card',`<div class="q-text">${q.q}</div><span class="flag-display">${q.flag}</span>`);
+  body.appendChild(qc);
+  const grid=mkEl('div','opts g2');
+  q.choices.forEach(ch=>{
+    const b=mkEl('button','opt',`<span class="ot">${ch}</span>`);
+    b.onclick=()=>{if(!qAnswered)onAnswer(b,ch===q.correct);};
+    grid.appendChild(b);
+  });
+  body.appendChild(grid);
+}
+
+function renderFood(body,q){
+  const qc=mkEl('div','q-card',`<div class="q-text">${q.q}</div><span class="q-emoji">${q.emoji}</span><div class="q-sub">${q.desc}</div>`);
+  body.appendChild(qc);
+  const grid=mkEl('div','opts g2');
+  q.choices.forEach(ch=>{
+    const b=mkEl('button','opt',`<span class="ot">${ch}</span>`);
+    b.onclick=()=>{if(!qAnswered)onAnswer(b,ch===q.correct);};
+    grid.appendChild(b);
+  });
+  body.appendChild(grid);
+}
+
+function renderBasic(body,q){
+  const qc=mkEl('div','q-card',`<div class="q-text">${q.q}</div>`);
+  body.appendChild(qc);
+  const grid=mkEl('div','opts g2');
+  q.items.forEach((it,i)=>{
+    const hasLabel=q.labels&&q.labels[i];
+    const b=mkEl('button','opt',`<span class="oe">${it}</span>${hasLabel?`<span class="ot">${q.labels[i]}</span>`:''}`);
+    b.onclick=()=>{if(!qAnswered)onAnswer(b,i===q.ci);};
+    grid.appendChild(b);
+  });
+  body.appendChild(grid);
+}
+
+function onAnswer(btn,correct){
+  qAnswered=true;
+  if(correct){
+    btn.classList.add('correct');curScore++;updateHUD();
+    showFB(true,getRandGood(),'+1 ⭐');
+    setTimeout(()=>{curQ++;renderQ();},1400);
+  } else {
+    btn.classList.add('wrong');showFB(false,getRandBad(),'');
+    setTimeout(()=>{btn.classList.remove('wrong');hideFB();qAnswered=false;},950);
+  }
+}
+
+const GOODS=['Benar! 🌟','Hebat! 🎉','Pintar! ✨','Luar biasa! 🏆','Bagus! 🎊','Keren! 💫','Mantap! 🥳','Tepat sekali! 🎯'];
+const BADS=['Coba lagi ya! 💪','Hampir! 🌈','Yuk coba lagi! 🌸','Jangan menyerah! 🌻'];
+const getRandGood=()=>GOODS[Math.floor(Math.random()*GOODS.length)];
+const getRandBad=()=>BADS[Math.floor(Math.random()*BADS.length)];
+
+function showFB(ok,text,pts){
+  var fb=document.getElementById('feedback');
+  document.getElementById('fbEmoji').textContent=ok?'🎉':'💪';
+  document.getElementById('fbText').textContent=text;
+  document.getElementById('fbPts').textContent=pts;
+  fb.style.display='-webkit-flex';fb.style.display='flex';
+  var box=fb.querySelector('.fb-box');
+  box.style.webkitAnimation='none';box.style.animation='none';
+  void box.offsetHeight; // force reflow
+  box.style.webkitTransform='scale(0)';box.style.transform='scale(0)';
+  setTimeout(function(){
+    box.style.webkitAnimation='fbPop .4s cubic-bezier(.34,1.56,.64,1) forwards';
+    box.style.animation='fbPop .4s cubic-bezier(.34,1.56,.64,1) forwards';
+  },10);
+}
+function hideFB(){document.getElementById('feedback').style.display='none';}
+
+// ============================================================
+// COMPLETION
+// ============================================================
+function showCompletion(){
+  hideFB();
+  const pct=Math.round(curScore/totalQs*100);const stars=pct>=90?3:pct>=60?2:1;
+  if(!state.progress[curLevel.id])state.progress[curLevel.id]={stars:0,bestScore:0,plays:0};
+  const prog=state.progress[curLevel.id];
+  if(stars>prog.stars)prog.stars=stars;
+  if(curScore>prog.bestScore)prog.bestScore=curScore;
+  prog.plays=(prog.plays||0)+1;
+  updateTotalStars();saveState();
+  const comp=document.getElementById('completion');comp.style.display='flex';
+  const titles={3:'🏆 Petualang Sejati!',2:'⭐ Luar Biasa!',1:'💪 Terus Belajar!'};
+  document.getElementById('compTitle').textContent=titles[stars];
+  document.getElementById('compScore').textContent=`${curScore} dari ${totalQs} benar (${pct}%)`;
+  const badges=document.getElementById('compBadges');badges.innerHTML='';
+  if(prog.plays===1)badges.innerHTML+=`<span class="comp-badge">🥇 Pertama kali!</span>`;
+  if(stars===3)badges.innerHTML+=`<span class="comp-badge">💯 Sempurna!</span>`;
+  if(prog.plays>=3)badges.innerHTML+=`<span class="comp-badge">🔥 Rajin!</span>`;
+  badges.innerHTML+=`<span class="comp-badge">⭐ ${stars} bintang</span>`;
+  document.querySelectorAll('.comp-star').forEach((s,i)=>{s.style.filter=i<stars?'':'grayscale(1) opacity(.3)';});
+  const allLevels=getAllLevels();const idx=allLevels.findIndex(l=>l.id===curLevel.id);const nextLv=allLevels[idx+1];
+  const btn=document.getElementById('btnNext');
+  if(nextLv){btn.textContent='➡️ Level Berikutnya';btn.onclick=()=>{comp.style.display='none';startLevel(nextLv.id);};}
+  else{btn.textContent='🏠 Kembali ke Menu';btn.onclick=goHome;}
+  launchConfetti();sfxPlay('victory');
+}
+
+function replayLevel(){document.getElementById('completion').style.display='none';startLevel(curLevel.id);}
+function goHome(){document.getElementById('completion').style.display='none';hideFB();switchScreen('home');buildLevels();}
+function confirmHome(){if(curQ>0){if(confirm('Kembali ke menu?'))goHome();}else goHome();}
+
+// ============================================================
+// ADD LEVEL
+// ============================================================
+function openAddModal(){
+  const available=EXTRA_LEVEL_BANK.filter(l=>!state.activeLevelIds.includes(l.id));
+  if(!available.length){showToast('Semua level sudah ditambahkan! 🎉');return;}
+  selectedTopic=null;
+  const grid=document.getElementById('topicGrid');grid.innerHTML='';
+  available.forEach(lv=>{
+    const btn=mkEl('button','topic-btn',`<span class="ti">${lv.icon}</span>${lv.name}<br><small style="color:#aaa;font-size:10px">${lv.age}</small>`);
+    btn.onclick=()=>{selectedTopic=lv.id;document.querySelectorAll('.topic-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');};
+    grid.appendChild(btn);
+  });
+  document.getElementById('addModal').style.display='flex';
+}
+function closeModal(){document.getElementById('addModal').style.display='none';}
+function addSelectedLevel(){
+  if(!selectedTopic){showToast('Pilih level dulu! 👆');return;}
+  state.activeLevelIds.push(selectedTopic);saveState();closeModal();buildLevels();showToast('Level baru ditambahkan! 🌟');
+}
+
+// ============================================================
+// 🎵 MUSIC ENGINE
+// ============================================================
+let AC=null,musicMuted=false,bgmNodes=[],bgmPlaying=false,bgmScheduled=false,masterGain=null,bgmGain=null,sfxGain=null;
+
+const BGM_MELODY=[
+  [523.25,.5,.1],[659.25,.5,.1],[783.99,.5,.1],[1046.5,.5,.1],
+  [783.99,.25,.05],[659.25,.25,.05],[523.25,1,.2],
+  [392,.5,.1],[523.25,.5,.1],[659.25,.5,.1],[783.99,1,.2],
+  [659.25,.25,.05],[783.99,.25,.05],[1046.5,.5,.1],[880,.5,.1],
+  [783.99,.25,.05],[659.25,.25,.05],[523.25,.5,.1],[392,.5,.1],[261.63,1,.3],
+  [523.25,.33,.05],[587.33,.33,.05],[659.25,.34,.1],[698.46,.5,.1],[783.99,.5,.1],[880,1,.2],
+  [783.99,.5,.1],[698.46,.5,.1],[659.25,.5,.1],[587.33,.5,.1],[523.25,2,.4],
+];
+const BGM_BASS=[[130.81,4],[164.81,4],[174.61,4],[196,4],[130.81,4],[164.81,4],[174.61,4],[196,4]];
+
+function initAudio(){
+  if(AC)return;
+  try{
+    var Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx)return;
+    AC=new Ctx();
+    masterGain=AC.createGain();masterGain.gain.value=1;masterGain.connect(AC.destination);
+    bgmGain=AC.createGain();bgmGain.gain.value=.28;bgmGain.connect(masterGain);
+    sfxGain=AC.createGain();sfxGain.gain.value=1;sfxGain.connect(masterGain);
+    // iOS: must resume after user gesture
+    if(AC.state==='suspended'){AC.resume().catch(function(){});}
+  }catch(e){AC=null;console.log('Audio init failed:',e);}
+}
+// iOS unlock: create silent buffer on first touch to unblock AudioContext
+function iosUnlockAudio(){
+  if(!AC)return;
+  try{
+    var buf=AC.createBuffer(1,1,22050);
+    var src=AC.createBufferSource();src.buffer=buf;src.connect(AC.destination);src.start(0);
+    if(AC.state==='suspended')AC.resume().catch(function(){});
+  }catch(e){}
+}
+
+function scheduleBGM(){
+  if(!AC||musicMuted||bgmScheduled)return;bgmScheduled=true;stopBGM();
+  const BPM=128,beat=60/BPM;let t=AC.currentTime+.05;
+  BGM_MELODY.forEach(([freq,dur,rest])=>{
+    const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=freq;o.connect(g);g.connect(bgmGain);
+    const l=dur*beat;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.6,t+.02);g.gain.setValueAtTime(.6,t+l*.7);g.gain.linearRampToValueAtTime(0,t+l);o.start(t);o.stop(t+l+.01);bgmNodes.push(o);t+=(dur+rest)*beat;
+  });
+  let bt=AC.currentTime+.05;
+  BGM_BASS.forEach(([freq,dur])=>{
+    const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=freq;o.connect(g);g.connect(bgmGain);
+    const l=dur*beat;g.gain.setValueAtTime(0,bt);g.gain.linearRampToValueAtTime(.3,bt+.05);g.gain.setValueAtTime(.3,bt+l*.8);g.gain.linearRampToValueAtTime(0,bt+l);o.start(bt);o.stop(bt+l);bgmNodes.push(o);bt+=l;
+  });
+  const loopLen=t-(AC.currentTime+.05);bgmPlaying=true;
+  setTimeout(()=>{bgmScheduled=false;if(bgmPlaying&&!musicMuted)scheduleBGM();},loopLen*1000+200);
+}
+
+function stopBGM(){bgmNodes.forEach(n=>{try{n.stop();}catch(e){}});bgmNodes=[];bgmScheduled=false;}
+function startMusic(){if(!AC)initAudio();if(!AC)return;if(AC.state==='suspended')AC.resume();bgmPlaying=true;if(!bgmScheduled)scheduleBGM();updateMusicBtns();}
+function pauseMusic(){bgmPlaying=false;stopBGM();updateMusicBtns();}
+function toggleMusic(){if(!AC)initAudio();musicMuted=!musicMuted;if(musicMuted)pauseMusic();else startMusic();updateMusicBtns();showToast(musicMuted?'🔇 Musik dimatikan':'🎵 Musik dinyalakan');}
+function updateMusicBtns(){['musicBtnHome','musicBtnGame'].forEach(id=>{const b=document.getElementById(id);if(!b)return;b.textContent=musicMuted?'🔇':'🎵';b.classList.toggle('muted',musicMuted);});}
+
+function sfxPlay(type){
+  if(!AC||musicMuted)return;
+  try{if(AC.state==='suspended')AC.resume().catch(function(){});}catch(e){}
+  var t=AC.currentTime;
+  if(type==='correct'){
+    [[523,0],[659,.08],[784,.16],[1047,.26]].forEach(([f,d])=>{
+      const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(sfxGain);
+      g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.55,t+d+.02);g.gain.exponentialRampToValueAtTime(.001,t+d+.28);o.start(t+d);o.stop(t+d+.3);
+    });
+    const s=AC.createOscillator(),sg=AC.createGain();s.type='sine';s.frequency.setValueAtTime(2093,t+.28);s.frequency.linearRampToValueAtTime(2637,t+.5);s.connect(sg);sg.connect(sfxGain);sg.gain.setValueAtTime(.2,t+.28);sg.gain.exponentialRampToValueAtTime(.001,t+.55);s.start(t+.28);s.stop(t+.56);
+  } else if(type==='wrong'){
+    [[350,0],[280,.18]].forEach(([f,d])=>{
+      const o=AC.createOscillator(),g=AC.createGain();o.type='sawtooth';o.frequency.value=f;o.connect(g);g.connect(sfxGain);
+      g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.35,t+d+.02);g.gain.exponentialRampToValueAtTime(.001,t+d+.22);o.start(t+d);o.stop(t+d+.24);
+    });
+  } else if(type==='tap'){
+    const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.setValueAtTime(900,t);o.frequency.exponentialRampToValueAtTime(300,t+.12);o.connect(g);g.connect(sfxGain);g.gain.setValueAtTime(.3,t);g.gain.exponentialRampToValueAtTime(.001,t+.14);o.start(t);o.stop(t+.15);
+  } else if(type==='levelstart'){
+    [[262,0,.18],[392,.18,.18],[523,.36,.22],[659,.58,.22],[784,.8,.4]].forEach(([f,d,dur])=>{
+      const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(sfxGain);
+      g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.5,t+d+.03);g.gain.setValueAtTime(.5,t+d+dur*.75);g.gain.linearRampToValueAtTime(0,t+d+dur);o.start(t+d);o.stop(t+d+dur+.01);
+    });
+  } else if(type==='victory'){
+    [[523,0,.2],[659,.22,.2],[784,.44,.2],[1047,.66,.45],[880,.95,.18],[784,1.15,.18],[1047,1.35,.5]].forEach(([f,d,dur])=>{
+      const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(sfxGain);
+      g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.55,t+d+.03);g.gain.setValueAtTime(.55,t+d+dur*.7);g.gain.linearRampToValueAtTime(0,t+d+dur);o.start(t+d);o.stop(t+d+dur+.01);
+    });
+    [2093,2637,3136].forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f;o.connect(g);g.connect(sfxGain);const d2=1.5+i*.15;g.gain.setValueAtTime(.22,t+d2);g.gain.exponentialRampToValueAtTime(.001,t+d2+.6);o.start(t+d2);o.stop(t+d2+.65);});
+  }
+}
+
+function playTick(){initAudio();sfxPlay('tap');}
+
+var musicStarted=false;
+function tryStartMusic(){
+  if(musicStarted)return;musicStarted=true;
+  initAudio();iosUnlockAudio();
+  if(!musicMuted)startMusic();
+}
+document.addEventListener('touchstart',tryStartMusic,{once:true,passive:true});
+document.addEventListener('touchend',function iosTouchEnd(){iosUnlockAudio();document.removeEventListener('touchend',iosTouchEnd);});
+document.addEventListener('mousedown',tryStartMusic,{once:true});
+
+// Override onAnswer to add SFX
+const _oa=onAnswer;
+onAnswer=function(btn,correct){sfxPlay(correct?'correct':'wrong');_oa(btn,correct);};
+
+// ============================================================
+// UTILS
+// ============================================================
+function launchConfetti(){
+  const cols=['#FF6B6B','#FFD700','#4CAF50','#3498DB','#9B59B6','#FF8E53','#00BCD4'];
+  for(let i=0;i<70;i++){const c=document.createElement('div');c.className='cf';const d=(1.5+Math.random()*1.2).toFixed(2);c.style.cssText=`left:${Math.random()*100}vw;top:-12px;background:${cols[Math.floor(Math.random()*cols.length)]};transform:rotate(${Math.random()*360}deg);--d:${d}s;animation-delay:${(Math.random()*.8).toFixed(2)}s;${Math.random()>.5?'border-radius:50%':''}`;document.body.appendChild(c);setTimeout(()=>c.remove(),(parseFloat(d)+1)*1000);}
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// Splash stars
+(function(){const c=document.getElementById('splashStars');for(let i=0;i<55;i++){const s=document.createElement('div');const sz=(1.5+Math.random()*4).toFixed(1);s.className='sstar';s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(1.5+Math.random()*2.5).toFixed(1)}s;--dl:${(Math.random()*3).toFixed(1)}s`;c.appendChild(s);}})();
+
+// iOS: fast-tap for start button
+(function(){
+  var sb=document.getElementById('startBtn');
+  if(sb){
+    sb.addEventListener('touchend',function(e){e.preventDefault();showHome();},{passive:false});
+    sb.addEventListener('click',showHome);
+  }
+})();
+
+// Fix: ensure body/html fills screen properly on iOS
+(function(){
+  function fixHeight(){
+    var h=window.innerHeight;
+    document.documentElement.style.height=h+'px';
+    document.body.style.height=h+'px';
+    document.querySelectorAll('.screen').forEach(function(s){s.style.height=h+'px';});
+  }
+  fixHeight();
+  window.addEventListener('resize',fixHeight);
+  window.addEventListener('orientationchange',function(){setTimeout(fixHeight,150);});
+})();
+
+loadState();
+</script>
+</body>
+</html>
