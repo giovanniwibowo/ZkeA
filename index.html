@@ -10,1431 +10,1465 @@
 <meta name="format-detection" content="telephone=no">
 <title>Dari Z ke A</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;}
-html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#0d1b2a;-webkit-text-size-adjust:100%;text-size-adjust:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+html,body{width:100%;height:100%;height:100dvh;overflow:hidden;background:#0d1b2a;-webkit-text-size-adjust:100%;text-size-adjust:100%;font-family:'Nunito',-apple-system,BlinkMacSystemFont,sans-serif;}
 body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
 
-.screen{position:absolute;top:0;left:0;right:0;bottom:0;display:none;overflow:hidden;flex-direction:column;}
-.screen.active{display:flex;}
-#splash.active{display:flex;align-items:center;justify-content:center;}
+:root{
+  --c-bg:#0d1b2a;
+  --c-surface:#132233;
+  --c-card:#1a2e42;
+  --c-border:rgba(255,255,255,0.08);
+  --c-text:#e8f4fd;
+  --c-muted:#7a9bb5;
+  --c-gold:#f5c842;
+  --c-green:#4cde7c;
+  --c-red:#ff6b6b;
+  --c-toddler-a:#ff6eb4;
+  --c-toddler-b:#ff9de2;
+  --c-kid-a:#4fc3f7;
+  --c-kid-b:#81d4fa;
+  --c-bigkid-a:#43e97b;
+  --c-bigkid-b:#38f9d7;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
 
-/* ─── SPLASH ─── */
-#splash{background:radial-gradient(ellipse at top,#1a3a5c 0%,#0d1b2a 70%);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;}
-.splash-stars{position:absolute;inset:0;pointer-events:none;}
-.splash-stars span{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;opacity:0;animation:twinkle 3s infinite;}
-@keyframes twinkle{0%,100%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1.5)}}
-.splash-logo-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;animation:popIn .8s cubic-bezier(.34,1.56,.64,1);}
-@keyframes popIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
-.splash-title{font-size:clamp(40px,9vw,72px);font-weight:900;color:#ffd200;letter-spacing:2px;text-shadow:0 4px 20px rgba(255,210,0,.5);}
-.splash-subtitle{font-size:clamp(13px,2.5vw,18px);color:#4fc3f7;letter-spacing:6px;font-weight:700;}
-.splash-tagline{margin-top:24px;font-size:clamp(13px,2.3vw,17px);color:#b3e5fc;opacity:.85;}
-.start-btn{margin-top:36px;background:linear-gradient(135deg,#ff6b35,#f7931e);border:none;color:#fff;font-size:clamp(17px,3.5vw,24px);font-weight:900;padding:18px 44px;border-radius:50px;cursor:pointer;box-shadow:0 8px 0 #c54a18,0 12px 30px rgba(0,0,0,.4);transition:transform .15s;font-family:inherit;}
-.start-btn:active{transform:translateY(4px);box-shadow:0 4px 0 #c54a18,0 6px 15px rgba(0,0,0,.4);}
-.splash-ver{position:absolute;bottom:20px;font-size:11px;color:#4fc3f7;opacity:.6;letter-spacing:1px;}
+/* Dark mode support */
+@media(prefers-color-scheme:light){
+  :root{
+    --c-bg:#f0f7ff;
+    --c-surface:#e3f0fb;
+    --c-card:#fff;
+    --c-border:rgba(0,0,0,0.08);
+    --c-text:#1a2e42;
+    --c-muted:#5a7a96;
+  }
+  html,body{background:#f0f7ff;}
+}
 
-/* ─── COMMON HEADER ─── */
-.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(13,27,42,.95);border-bottom:2px solid #1a3a5c;}
-.hdr-title{font-size:clamp(15px,2.8vw,20px);font-weight:900;color:#ffd200;letter-spacing:1px;}
-.hdr-right{display:flex;align-items:center;gap:10px;}
-.music-btn,.back-btn{background:#1a3a5c;border:none;color:#fff;width:42px;height:42px;border-radius:50%;font-size:18px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;}
-.music-btn:active,.back-btn:active{background:#264a73;}
-.total-stars{background:linear-gradient(135deg,#ffd200,#ff9800);color:#5a3700;font-weight:900;padding:8px 14px;border-radius:20px;font-size:clamp(13px,2.3vw,16px);box-shadow:0 3px 0 rgba(0,0,0,.25);}
+.screen{position:absolute;top:0;left:0;right:0;bottom:0;display:none;overflow:hidden;}
+.screen.active{display:flex;flex-direction:column;}
 
-/* ─── HOMEPAGE (Age Selection) ─── */
-#home{background:linear-gradient(180deg,#0d1b2a 0%,#1a3a5c 100%);}
-.home-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 18px 30px;}
+/* ── HEADER ── */
+.hdr{display:flex;align-items:center;gap:10px;padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top,12px));background:var(--c-surface);border-bottom:0.5px solid var(--c-border);flex-shrink:0;z-index:10;}
+.back-btn{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--c-border);background:var(--c-card);color:var(--c-text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.back-btn:active{transform:scale(.92);}
+.hdr-title{flex:1;font-size:17px;font-weight:800;color:var(--c-text);}
+.hdr-stars{font-size:14px;font-weight:700;color:var(--c-gold);background:rgba(245,200,66,0.15);padding:5px 10px;border-radius:20px;}
 
-.home-hero{background:linear-gradient(135deg,#ff6b35 0%,#f7931e 50%,#ffc107 100%);border-radius:28px;padding:20px;margin:20px 0 24px;display:flex;align-items:center;gap:14px;box-shadow:0 8px 30px rgba(255,107,53,.3);position:relative;overflow:hidden;}
-.home-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);}
-.hero-text{flex:1;z-index:1;}
-.hero-text h2{color:#fff;font-size:clamp(18px,3.5vw,24px);font-weight:900;text-shadow:0 2px 6px rgba(0,0,0,.25);margin-bottom:4px;}
-.hero-text p{color:#fff;font-size:clamp(12px,2.2vw,15px);opacity:.95;line-height:1.4;}
-.hero-illu{width:clamp(100px,22vw,140px);height:auto;z-index:1;flex-shrink:0;}
+/* ── SCROLLABLE BODY ── */
+.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:max(20px,var(--safe-bottom));}
 
-.section-title{color:#ffd200;font-size:clamp(15px,2.7vw,19px);font-weight:900;margin-bottom:14px;letter-spacing:.5px;display:flex;align-items:center;gap:8px;}
-.section-title::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,#ffd200,transparent);border-radius:1px;}
+/* ── SPLASH ── */
+#splash{background:radial-gradient(ellipse at 50% 30%,#1a4a6e 0%,#0d1b2a 65%);align-items:center;justify-content:center;text-align:center;gap:0;}
+.splash-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.splash-bg::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(79,195,247,0.08),transparent 70%);top:10%;left:50%;transform:translateX(-50%);animation:pulse 4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.5;}50%{transform:translateX(-50%) scale(1.3);opacity:1;}}
+.stars-wrap{position:absolute;inset:0;}
+.star-dot{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle var(--d) var(--delay) ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:0;}50%{opacity:1;}}
+.splash-content{position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;animation:popIn .8s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popIn{from{opacity:0;transform:scale(.4)translateY(40px);}to{opacity:1;transform:scale(1)translateY(0);}}
+.splash-globe{width:clamp(120px,26vw,180px);height:auto;}
+.splash-title{font-size:clamp(32px,8vw,52px);font-weight:900;color:var(--c-text);letter-spacing:-1px;line-height:1;}
+.splash-sub{font-size:clamp(13px,3.5vw,16px);color:var(--c-muted);font-weight:600;letter-spacing:3px;text-transform:uppercase;}
+.splash-tagline{font-size:clamp(11px,2.8vw,14px);color:var(--c-muted);margin-top:4px;}
+.splash-btn{margin-top:12px;background:linear-gradient(135deg,#4fc3f7,#0288d1);color:#fff;border:none;border-radius:50px;padding:16px 44px;font-size:18px;font-weight:800;cursor:pointer;letter-spacing:.5px;box-shadow:0 8px 24px rgba(79,195,247,0.35);}
+.splash-btn:active{transform:scale(.95);}
 
-.age-grid{display:grid;grid-template-columns:1fr;gap:14px;}
-@media(min-width:600px){.age-grid{grid-template-columns:1fr 1fr 1fr;}}
-
-.age-card{background:rgba(255,255,255,.07);border:2px solid rgba(255,210,0,.15);border-radius:24px;padding:22px 18px;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;}
-.age-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--accent);}
+/* ── HOME ── */
+#home{background:var(--c-bg);}
+.home-inner{padding:20px 16px;display:flex;flex-direction:column;gap:16px;}
+.home-banner{background:linear-gradient(135deg,var(--c-surface),var(--c-card));border:0.5px solid var(--c-border);border-radius:20px;padding:20px;text-align:center;}
+.home-banner h2{font-size:20px;font-weight:900;color:var(--c-text);margin-bottom:4px;}
+.home-banner p{font-size:13px;color:var(--c-muted);}
+.section-label{font-size:12px;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:2px;padding:0 4px;}
+.age-cards{display:flex;flex-direction:column;gap:12px;}
+.age-card{border-radius:20px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;border:2px solid transparent;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
 .age-card:active{transform:scale(.97);}
-.age-card .age-icon{font-size:42px;flex-shrink:0;width:64px;height:64px;background:var(--accent);border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 rgba(0,0,0,.2);}
-.age-card .age-info{flex:1;}
-.age-card .age-label{color:#fff;font-size:clamp(17px,3.2vw,22px);font-weight:900;margin-bottom:4px;}
-.age-card .age-desc{color:#b3e5fc;font-size:clamp(11px,2vw,14px);line-height:1.3;opacity:.85;}
-.age-card .age-count{position:absolute;top:14px;right:14px;background:rgba(255,210,0,.2);color:#ffd200;font-size:11px;font-weight:800;padding:4px 9px;border-radius:10px;letter-spacing:.5px;}
-.age-card.toddler{--accent:linear-gradient(135deg,#ff6b9d,#c44569);}
-.age-card.kid{--accent:linear-gradient(135deg,#4fc3f7,#1976d2);}
-.age-card.bigkid{--accent:linear-gradient(135deg,#66bb6a,#2e7d32);}
+.age-card.toddler{background:linear-gradient(135deg,rgba(255,110,180,0.15),rgba(255,157,226,0.08));border-color:rgba(255,110,180,0.3);}
+.age-card.kid{background:linear-gradient(135deg,rgba(79,195,247,0.15),rgba(129,212,250,0.08));border-color:rgba(79,195,247,0.3);}
+.age-card.bigkid{background:linear-gradient(135deg,rgba(67,233,123,0.15),rgba(56,249,215,0.08));border-color:rgba(67,233,123,0.3);}
+.age-icon-wrap{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+.toddler .age-icon-wrap{background:rgba(255,110,180,0.2);}
+.kid .age-icon-wrap{background:rgba(79,195,247,0.2);}
+.bigkid .age-icon-wrap{background:rgba(67,233,123,0.2);}
+.age-info{flex:1;}
+.age-label{font-size:18px;font-weight:800;color:var(--c-text);margin-bottom:2px;}
+.age-desc{font-size:12px;color:var(--c-muted);line-height:1.4;}
+.age-stars-badge{font-size:13px;font-weight:700;color:var(--c-gold);background:rgba(245,200,66,0.15);padding:4px 10px;border-radius:20px;white-space:nowrap;}
 
-/* ─── CATEGORY SCREEN ─── */
-#categoryScreen{background:linear-gradient(180deg,#0d1b2a 0%,#1a3a5c 100%);}
-.cat-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px;}
-.cat-banner{background:var(--ageColor,linear-gradient(135deg,#4fc3f7,#1976d2));border-radius:22px;padding:18px;margin-bottom:20px;color:#fff;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25);}
-.cat-banner h2{font-size:clamp(18px,3.5vw,24px);font-weight:900;margin-bottom:4px;text-shadow:0 2px 4px rgba(0,0,0,.2);}
-.cat-banner p{font-size:clamp(12px,2.2vw,15px);opacity:.9;}
-.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(min-width:600px){.cat-grid{grid-template-columns:1fr 1fr 1fr;}}
-.cat-card{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.1);border-radius:20px;padding:18px 12px;cursor:pointer;text-align:center;position:relative;transition:transform .2s;overflow:hidden;}
-.cat-card:active{transform:scale(.96);}
-.cat-card .cat-icon{font-size:42px;margin-bottom:8px;display:block;}
-.cat-card .cat-name{color:#fff;font-size:clamp(12px,2.2vw,15px);font-weight:800;line-height:1.2;margin-bottom:4px;}
-.cat-card .cat-count{color:#ffd200;font-size:11px;font-weight:700;opacity:.85;}
-.cat-card .cat-stars{position:absolute;top:8px;right:8px;background:rgba(255,210,0,.85);color:#5a3700;font-size:10px;font-weight:900;padding:3px 7px;border-radius:8px;}
+/* ── CATEGORY ── */
+#categoryScreen{background:var(--c-bg);}
+.cat-banner{margin:16px 16px 0;border-radius:20px;padding:16px 20px;text-align:center;}
+.cat-banner.toddler{background:linear-gradient(135deg,rgba(255,110,180,0.2),rgba(255,157,226,0.1));border:1px solid rgba(255,110,180,0.3);}
+.cat-banner.kid{background:linear-gradient(135deg,rgba(79,195,247,0.2),rgba(129,212,250,0.1));border:1px solid rgba(79,195,247,0.3);}
+.cat-banner.bigkid{background:linear-gradient(135deg,rgba(67,233,123,0.2),rgba(56,249,215,0.1));border:1px solid rgba(67,233,123,0.3);}
+.cat-banner h2{font-size:17px;font-weight:800;color:var(--c-text);}
+.cat-banner p{font-size:12px;color:var(--c-muted);}
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px;}
+.cat-item{background:var(--c-card);border:0.5px solid var(--c-border);border-radius:18px;padding:16px 12px;text-align:center;cursor:pointer;transition:transform .15s;}
+.cat-item:active{transform:scale(.95);}
+.cat-emoji{font-size:32px;margin-bottom:8px;}
+.cat-name{font-size:13px;font-weight:800;color:var(--c-text);margin-bottom:4px;line-height:1.2;}
+.cat-count{font-size:11px;color:var(--c-muted);}
+.cat-stars{font-size:11px;color:var(--c-gold);font-weight:700;margin-top:4px;}
 
-/* ─── LEVEL LIST SCREEN ─── */
-#levelListScreen{background:linear-gradient(180deg,#0d1b2a 0%,#1a3a5c 100%);}
-.lvl-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px;}
-.lvl-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(min-width:600px){.lvl-grid{grid-template-columns:1fr 1fr 1fr;}}
-.lvl-card{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.1);border-radius:18px;padding:16px 12px;cursor:pointer;text-align:center;position:relative;transition:transform .2s;}
-.lvl-card:active{transform:scale(.96);}
-.lvl-card.locked{opacity:.45;}
-.lvl-card .lvl-icon{font-size:34px;margin-bottom:6px;display:block;}
-.lvl-card .lvl-name{color:#fff;font-size:clamp(11px,2vw,14px);font-weight:800;line-height:1.2;}
-.lvl-card .lvl-stars{margin-top:6px;font-size:13px;letter-spacing:1px;}
-.lvl-card .lvl-lock{position:absolute;top:10px;right:10px;font-size:14px;}
+/* ── LEVEL LIST ── */
+#levelListScreen{background:var(--c-bg);}
+.lvl-grid{display:flex;flex-direction:column;gap:10px;padding:16px;}
+.lvl-item{background:var(--c-card);border:0.5px solid var(--c-border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .1s;}
+.lvl-item:active{transform:scale(.98);}
+.lvl-item.locked{opacity:.45;cursor:default;}
+.lvl-num{width:38px;height:38px;border-radius:12px;background:var(--c-surface);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:var(--c-muted);flex-shrink:0;}
+.lvl-num.done{background:rgba(76,222,124,0.15);color:var(--c-green);}
+.lvl-info{flex:1;}
+.lvl-name{font-size:14px;font-weight:700;color:var(--c-text);}
+.lvl-detail{font-size:12px;color:var(--c-muted);margin-top:2px;}
+.lvl-stars-row{font-size:14px;color:var(--c-gold);}
+.lock-icon{font-size:18px;color:var(--c-muted);}
 
-/* ─── GAME PLAY ─── */
-#play{background:linear-gradient(180deg,#0d1b2a 0%,#1a3a5c 100%);}
-.play-hdr{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(13,27,42,.95);border-bottom:2px solid #1a3a5c;}
-.play-info{flex:1;}
-.play-name{color:#ffd200;font-size:clamp(13px,2.4vw,17px);font-weight:900;}
-.play-prog{color:#b3e5fc;font-size:clamp(11px,2vw,13px);opacity:.85;margin-top:2px;}
-.progress-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin:0 18px 14px;margin-top:8px;}
-.progress-fill{height:100%;background:linear-gradient(90deg,#ffd200,#ff6b35);border-radius:3px;transition:width .4s;}
+/* ── PLAY SCREEN ── */
+#play{background:var(--c-bg);}
+.play-progress-bar{height:4px;background:var(--c-surface);flex-shrink:0;}
+.play-progress-fill{height:100%;background:linear-gradient(90deg,#4fc3f7,#43e97b);transition:width .4s ease;border-radius:0 2px 2px 0;}
+.play-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;padding:16px;gap:16px;}
+.question-card{background:var(--c-card);border:0.5px solid var(--c-border);border-radius:20px;padding:20px;text-align:center;}
+.question-badge{display:inline-block;font-size:11px;font-weight:700;color:var(--c-muted);background:var(--c-surface);padding:4px 12px;border-radius:20px;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
+.question-emoji{font-size:clamp(52px,14vw,80px);margin-bottom:8px;display:block;line-height:1;}
+.question-flag{font-size:clamp(52px,14vw,72px);margin-bottom:8px;display:block;line-height:1;}
+.question-text{font-size:clamp(15px,4vw,18px);font-weight:700;color:var(--c-text);line-height:1.4;margin-bottom:6px;}
+.question-desc{font-size:13px;color:var(--c-muted);line-height:1.5;}
+/* TTS button */
+.tts-btn{margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:rgba(79,195,247,0.12);border:1px solid rgba(79,195,247,0.25);border-radius:50px;padding:7px 16px;font-size:13px;font-weight:700;color:#4fc3f7;cursor:pointer;}
+.tts-btn:active{transform:scale(.95);}
+.tts-btn.speaking{background:rgba(79,195,247,0.25);animation:tts-pulse .8s ease-in-out infinite;}
+@keyframes tts-pulse{0%,100%{opacity:1;}50%{opacity:.6;}}
 
-.play-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 18px 22px;}
-.question-card{background:rgba(255,255,255,.06);border-radius:24px;padding:22px 18px;text-align:center;margin-bottom:18px;}
-.question-text{color:#fff;font-size:clamp(15px,2.8vw,20px);font-weight:800;line-height:1.4;margin-bottom:14px;}
-.question-flag{font-size:clamp(80px,18vw,140px);line-height:1;margin:10px 0;}
-.question-emoji{font-size:clamp(70px,16vw,120px);line-height:1;margin:10px 0;}
-.question-desc{color:#b3e5fc;font-size:clamp(12px,2.2vw,15px);font-style:italic;opacity:.9;margin-top:6px;}
+/* Choices — TODDLER mode: bigger */
+.choices-grid{display:grid;gap:10px;}
+.choices-grid.toddler-mode{grid-template-columns:1fr 1fr;}
+.choices-grid:not(.toddler-mode){grid-template-columns:1fr 1fr;}
+.choice-btn{background:var(--c-surface);border:2px solid var(--c-border);border-radius:16px;padding:14px 10px;font-size:clamp(14px,3.8vw,16px);font-weight:700;color:var(--c-text);cursor:pointer;transition:transform .1s,border-color .15s,background .15s;text-align:center;line-height:1.3;word-break:break-word;}
+.choices-grid.toddler-mode .choice-btn{padding:20px 10px;font-size:clamp(15px,4.5vw,18px);border-radius:20px;min-height:70px;}
+.choice-btn:active{transform:scale(.96);}
+.choice-btn.correct{background:rgba(76,222,124,0.2);border-color:var(--c-green);color:var(--c-green);}
+.choice-btn.wrong{background:rgba(255,107,107,0.2);border-color:var(--c-red);color:var(--c-red);}
+.choice-btn:disabled{cursor:default;}
 
-.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.choice-btn{background:linear-gradient(135deg,#4fc3f7,#1976d2);border:none;color:#fff;font-size:clamp(13px,2.4vw,17px);font-weight:800;padding:18px 12px;border-radius:18px;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 #0d47a1;transition:transform .12s;line-height:1.3;min-height:60px;}
-.choice-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #0d47a1;}
-.choice-btn.correct{background:linear-gradient(135deg,#66bb6a,#2e7d32);box-shadow:0 4px 0 #1b5e20;animation:pulse .5s;}
-.choice-btn.wrong{background:linear-gradient(135deg,#ef5350,#c62828);box-shadow:0 4px 0 #b71c1c;animation:shake .4s;}
-.choice-btn.disabled{pointer-events:none;}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* ── RESULT SCREEN ── */
+#result{background:var(--c-bg);align-items:center;justify-content:center;text-align:center;padding:20px;}
+.result-card{background:var(--c-card);border:0.5px solid var(--c-border);border-radius:24px;padding:28px 24px;width:100%;max-width:360px;}
+.result-emoji-big{font-size:64px;display:block;margin-bottom:12px;}
+.result-title{font-size:26px;font-weight:900;color:var(--c-text);margin-bottom:6px;}
+.result-msg{font-size:15px;color:var(--c-muted);margin-bottom:16px;line-height:1.5;}
+.result-stars-row{font-size:36px;letter-spacing:4px;margin-bottom:20px;}
+.result-score{font-size:14px;color:var(--c-muted);margin-bottom:24px;}
+.result-btns{display:flex;flex-direction:column;gap:10px;}
+.result-btn{border:none;border-radius:50px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.3px;}
+.result-btn:active{transform:scale(.97);}
+.result-btn.primary{background:linear-gradient(135deg,#4fc3f7,#0288d1);color:#fff;}
+.result-btn.secondary{background:var(--c-surface);color:var(--c-text);border:1.5px solid var(--c-border);}
 
-.choice-emoji{display:flex;flex-direction:column;align-items:center;gap:6px;}
-.choice-emoji .e{font-size:38px;line-height:1;}
-.choice-emoji .l{font-size:clamp(11px,2vw,14px);}
-
-/* ─── FEEDBACK ─── */
-#feedback{display:none;position:fixed;top:0;left:0;width:100%;height:100%;align-items:center;justify-content:center;z-index:500;pointer-events:none;}
-#feedback.show{display:flex;}
-.fb-box{background:rgba(13,27,42,.95);border-radius:28px;padding:30px 36px;text-align:center;animation:popIn .4s cubic-bezier(.34,1.56,.64,1);border:3px solid #ffd200;}
-.fb-emoji{font-size:70px;margin-bottom:8px;}
-.fb-text{color:#ffd200;font-size:24px;font-weight:900;}
-
-/* ─── LEVEL COMPLETE ─── */
-#complete{display:none;position:fixed;top:0;left:0;width:100%;height:100%;align-items:center;justify-content:center;z-index:600;background:rgba(0,0,0,.7);padding:20px;}
-#complete.show{display:flex;}
-.complete-box{background:linear-gradient(135deg,#1a3a5c,#0d1b2a);border-radius:28px;padding:32px 24px;text-align:center;max-width:340px;width:100%;border:3px solid #ffd200;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:popIn .5s cubic-bezier(.34,1.56,.64,1);}
-.complete-emoji{font-size:80px;margin-bottom:12px;}
-.complete-title{color:#ffd200;font-size:28px;font-weight:900;margin-bottom:6px;}
-.complete-sub{color:#b3e5fc;font-size:15px;margin-bottom:18px;}
-.complete-stars{display:flex;justify-content:center;gap:10px;margin-bottom:24px;}
-.complete-stars .s{font-size:50px;color:#444;transition:all .3s;}
-.complete-stars .s.on{color:#ffd200;text-shadow:0 0 20px rgba(255,210,0,.8);transform:scale(1.15);}
-.complete-btn{background:linear-gradient(135deg,#ff6b35,#f7931e);border:none;color:#fff;font-size:17px;font-weight:900;padding:14px 28px;border-radius:50px;cursor:pointer;font-family:inherit;box-shadow:0 5px 0 #c54a18;margin:4px;}
-.complete-btn:active{transform:translateY(2px);box-shadow:0 3px 0 #c54a18;}
-.complete-btn.sec{background:linear-gradient(135deg,#4fc3f7,#1976d2);box-shadow:0 5px 0 #0d47a1;}
-.complete-btn.sec:active{box-shadow:0 3px 0 #0d47a1;}
-.complete-btn.replay{background:linear-gradient(135deg,#9c27b0,#6a1b9a);box-shadow:0 5px 0 #4a148c;}
-.complete-btn.replay:active{box-shadow:0 3px 0 #4a148c;}
-
-/* ─── CONFETTI ─── */
-.cf{position:fixed;width:10px;height:10px;border-radius:2px;animation:cfFall var(--d,2s) ease-in forwards;pointer-events:none;z-index:800;}
+/* ── CONFETTI ── */
+.cf{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:900;animation:cfFall var(--d,2s) ease-in forwards;}
 @keyframes cfFall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 
-/* ─── TOAST ─── */
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(13,27,42,.96);color:#fff;border-radius:50px;padding:11px 26px;font-size:14px;z-index:900;transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:calc(24px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(80px);background:rgba(13,27,42,.95);color:#e8f4fd;border-radius:50px;padding:11px 24px;font-size:14px;font-weight:600;z-index:950;transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;border:1px solid var(--c-border);}
 .toast.show{transform:translateX(-50%) translateY(0);}
-</style>
-</head>
-<body>
 
-<!-- ─────────── SPLASH ─────────── -->
+/* ── MASCOT ── */
+.mascot-wrap{display:flex;align-items:flex-end;gap:10px;margin-bottom:4px;}
+.mascot-bubble{background:var(--c-card);border:0.5px solid var(--c-border);border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:13px;color:var(--c-text);line-height:1.4;flex:1;position:relative;}
+.mascot-bubble::after{content:'';position:absolute;left:-8px;bottom:10px;border:4px solid transparent;border-right-color:var(--c-border);}
+
+/* ── DIFFICULTY SELECTOR ── */
+.diff-row{display:flex;gap:8px;padding:0 16px 0;flex-shrink:0;}
+.diff-btn{flex:1;padding:8px;border-radius:12px;border:1.5px solid var(--c-border);background:var(--c-surface);font-size:12px;font-weight:700;color:var(--c-muted);cursor:pointer;text-align:center;}
+.diff-btn.active{border-color:#4fc3f7;color:#4fc3f7;background:rgba(79,195,247,0.1);}
+.diff-btn:active{transform:scale(.95);}
+</style>
+<!-- ══════════════ HTML SCREENS ══════════════ -->
+<body>
+<div id="toast" class="toast"></div>
+
+<!-- ── SPLASH ── -->
 <div id="splash" class="screen active">
-  <div class="splash-stars" id="splashStars"></div>
-  <div class="splash-logo-wrap">
-    <svg width="170" height="120" viewBox="0 0 180 120" style="width:clamp(120px,22vw,170px);height:auto;">
-      <circle cx="90" cy="60" r="52" fill="#1a6b8a" stroke="#4fc3f7" stroke-width="3"/>
-      <ellipse cx="90" cy="60" rx="22" ry="52" fill="none" stroke="#4fc3f7" stroke-width="1.5" opacity=".6"/>
-      <line x1="38" y1="60" x2="142" y2="60" stroke="#4fc3f7" stroke-width="1.5" opacity=".6"/>
-      <ellipse cx="90" cy="60" rx="52" ry="20" fill="none" stroke="#4fc3f7" stroke-width="1.5" opacity=".4"/>
-      <path d="M68 45 Q75 38 85 42 Q90 38 96 44 Q100 40 108 45 Q112 52 105 58 Q95 55 88 58 Q78 56 70 52 Z" fill="#2e7d32" opacity=".85"/>
-      <path d="M50 65 Q58 60 64 64 Q68 60 74 65 Q72 72 65 74 Q56 72 50 68 Z" fill="#388e3c" opacity=".85"/>
-      <path d="M110 55 Q120 52 128 58 Q130 65 124 68 Q116 66 112 62 Z" fill="#1b5e20" opacity=".85"/>
-      <polygon points="90,6 93,14 102,14 95,19 98,28 90,22 82,28 85,19 78,14 87,14" fill="#ffd200" opacity=".95"/>
+  <div class="splash-bg"></div>
+  <div class="stars-wrap" id="starsWrap"></div>
+  <div class="splash-content">
+    <svg class="splash-globe" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="gGlobe" cx="40%" cy="35%">
+          <stop offset="0%" stop-color="#1a6b8a"/>
+          <stop offset="100%" stop-color="#0a3d5a"/>
+        </radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="90" fill="url(#gGlobe)" stroke="#4fc3f7" stroke-width="2.5" opacity=".9"/>
+      <ellipse cx="100" cy="100" rx="36" ry="90" fill="none" stroke="#4fc3f7" stroke-width="1.5" opacity=".5"/>
+      <line x1="10" y1="100" x2="190" y2="100" stroke="#4fc3f7" stroke-width="1" opacity=".4"/>
+      <line x1="10" y1="70" x2="190" y2="70" stroke="#4fc3f7" stroke-width=".8" opacity=".3"/>
+      <line x1="10" y1="130" x2="190" y2="130" stroke="#4fc3f7" stroke-width=".8" opacity=".3"/>
+      <ellipse cx="100" cy="100" rx="90" ry="30" fill="none" stroke="#4fc3f7" stroke-width="1" opacity=".3"/>
+      <!-- Indonesia approximate -->
+      <path d="M95 108 Q105 104 115 107 Q118 112 108 114 Q98 113 95 108Z" fill="#2e7d32" opacity=".9"/>
+      <path d="M75 107 Q83 104 90 107 Q88 112 80 112 Q74 110 75 107Z" fill="#388e3c" opacity=".9"/>
+      <path d="M120 109 Q130 106 140 110 Q138 115 130 115 Q120 113 120 109Z" fill="#1b5e20" opacity=".9"/>
+      <!-- Other continents simplified -->
+      <path d="M30 75 Q50 68 65 74 Q72 82 62 88 Q45 87 32 82Z" fill="#2e7d32" opacity=".7"/>
+      <path d="M55 55 Q75 48 88 56 Q92 64 80 70 Q62 69 55 62Z" fill="#388e3c" opacity=".7"/>
+      <path d="M130 60 Q150 55 165 62 Q168 72 155 76 Q136 74 130 67Z" fill="#2e7d32" opacity=".7"/>
+      <path d="M140 82 Q158 78 172 85 Q170 95 158 97 Q142 95 140 88Z" fill="#1b5e20" opacity=".7"/>
+      <!-- Star -->
+      <polygon points="100,18 103,27 113,27 106,33 108,42 100,37 92,42 94,33 87,27 97,27" fill="#f5c842" opacity=".95"/>
     </svg>
     <div class="splash-title">Dari Z ke A</div>
-    <div class="splash-subtitle">✦ JELAJAHI DUNIA ✦</div>
+    <div class="splash-sub">✦ Jelajahi Dunia ✦</div>
+    <div class="splash-tagline">Bendera · Kota · Kuliner · Hewan · Profesi</div>
+    <button class="splash-btn" onclick="showHome()">Ayo Petualang! 🚀</button>
   </div>
-  <div class="splash-tagline">Belajar Bendera · Kota · Kuliner · Hewan · Profesi</div>
-  <button class="start-btn" onclick="showHome()">Ayo Petualang! 🗺️</button>
-  <div class="splash-ver">v4.0 • Offline Forever 🔒</div>
 </div>
 
-<!-- ─────────── HOME (Age Selection) ─────────── -->
+<!-- ── HOME ── -->
 <div id="home" class="screen">
   <div class="hdr">
-    <div class="hdr-title">🗺️ Dari Z ke A</div>
-    <div class="hdr-right">
-      <button class="music-btn" onclick="toggleMusic()" id="musicBtn">🎵</button>
-      <div class="total-stars">⭐ <span id="totalStarsDisplay">0</span></div>
-    </div>
+    <div class="hdr-title">🌍 Dari Z ke A</div>
+    <div class="hdr-stars">⭐ <span id="totalStarsMain">0</span></div>
   </div>
-  <div class="home-scroll">
-    <div class="home-hero">
-      <div class="hero-text">
-        <h2>Halo, Petualang Cilik!</h2>
-        <p>Pilih usia kamu untuk memulai petualangan seru!</p>
+  <div class="scroll-body">
+    <div class="home-inner">
+      <div class="home-banner">
+        <div style="font-size:32px;margin-bottom:8px;" id="mascotHome">🧭</div>
+        <h2>Halo, Petualang!</h2>
+        <p>Pilih kelompok usiamu untuk mulai</p>
       </div>
-      <svg class="hero-illu" viewBox="0 0 140 120" xmlns="http://www.w3.org/2000/svg">
-        <!-- Globe base -->
-        <ellipse cx="70" cy="108" rx="50" ry="8" fill="rgba(0,0,0,.2)"/>
-        <circle cx="70" cy="102" r="14" fill="#1976d2" stroke="#fff" stroke-width="1.5"/>
-        <path d="M58 100 Q64 95 70 98 Q76 95 82 100" fill="#2e7d32"/>
-        <!-- Big brother (6yr) -->
-        <g transform="translate(38,30)">
-          <ellipse cx="0" cy="-3" rx="11" ry="12" fill="#1a1a1a"/>
-          <ellipse cx="0" cy="2" rx="9" ry="10" fill="#d4a373"/>
-          <circle cx="-3" cy="0" r="1.2" fill="#1a1a1a"/>
-          <circle cx="3" cy="0" r="1.2" fill="#1a1a1a"/>
-          <path d="M-2 5 Q0 7 2 5" stroke="#1a1a1a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-          <rect x="-9" y="10" width="18" height="22" rx="3" fill="#e53935"/>
-          <rect x="-9" y="10" width="18" height="5" fill="#fff" opacity=".3"/>
-          <rect x="-9" y="32" width="7" height="14" fill="#1565c0"/>
-          <rect x="2" y="32" width="7" height="14" fill="#1565c0"/>
-          <rect x="-10" y="44" width="9" height="4" rx="1" fill="#3e2723"/>
-          <rect x="1" y="44" width="9" height="4" rx="1" fill="#3e2723"/>
-          <path d="M9 14 L18 8" stroke="#d4a373" stroke-width="4" stroke-linecap="round"/>
-          <circle cx="20" cy="6" r="3" fill="#d4a373"/>
-        </g>
-        <!-- Little brother (2yr) -->
-        <g transform="translate(92,42)">
-          <ellipse cx="0" cy="-2" rx="9" ry="10" fill="#1a1a1a"/>
-          <ellipse cx="0" cy="2" rx="7.5" ry="8.5" fill="#d4a373"/>
-          <circle cx="-2.5" cy="0" r="1" fill="#1a1a1a"/>
-          <circle cx="2.5" cy="0" r="1" fill="#1a1a1a"/>
-          <path d="M-1.5 4 Q0 6 1.5 4" stroke="#1a1a1a" stroke-width="1" fill="none" stroke-linecap="round"/>
-          <circle cx="-4" cy="2.5" r="1" fill="#ff6b9d" opacity=".5"/>
-          <circle cx="4" cy="2.5" r="1" fill="#ff6b9d" opacity=".5"/>
-          <rect x="-7" y="8" width="14" height="18" rx="3" fill="#ff9800"/>
-          <rect x="-7" y="8" width="14" height="4" fill="#fff" opacity=".3"/>
-          <rect x="-7" y="26" width="6" height="11" fill="#1565c0"/>
-          <rect x="1" y="26" width="6" height="11" fill="#1565c0"/>
-          <rect x="-8" y="36" width="7" height="3" rx="1" fill="#3e2723"/>
-          <rect x="1" y="36" width="7" height="3" rx="1" fill="#3e2723"/>
-          <path d="M-7 13 L-14 8" stroke="#d4a373" stroke-width="3.5" stroke-linecap="round"/>
-          <circle cx="-15" cy="7" r="2.5" fill="#d4a373"/>
-          <path d="M-17 4 Q-15 2 -13 4 Q-15 6 -17 4" fill="#ffd200" opacity=".8"/>
-        </g>
-        <!-- Sparkles -->
-        <text x="20" y="20" font-size="14" fill="#ffd200">✨</text>
-        <text x="118" y="30" font-size="12" fill="#ffd200">⭐</text>
-        <text x="125" y="80" font-size="10" fill="#fff">✦</text>
-      </svg>
-    </div>
-
-    <div class="section-title">👶 Pilih Usia</div>
-    <div class="age-grid">
-      <div class="age-card toddler" onclick="selectAge('toddler')">
-        <div class="age-icon">🧸</div>
-        <div class="age-info">
-          <div class="age-label">2 - 3 Tahun</div>
-          <div class="age-desc">Balita · warna, bentuk, hewan</div>
+      <div class="section-label">Pilih Kelompok Usia</div>
+      <div class="age-cards">
+        <div class="age-card toddler" onclick="selectAge('toddler')">
+          <div class="age-icon-wrap">🧸</div>
+          <div class="age-info">
+            <div class="age-label">2 – 3 Tahun</div>
+            <div class="age-desc">Warna · Bentuk · Hewan · Buah · Kendaraan</div>
+          </div>
+          <div class="age-stars-badge" id="starsToddler">0 ⭐</div>
         </div>
-        <div class="age-count" id="cntToddler">0 ⭐</div>
-      </div>
-      <div class="age-card kid" onclick="selectAge('kid')">
-        <div class="age-icon">🎈</div>
-        <div class="age-info">
-          <div class="age-label">4 - 6 Tahun</div>
-          <div class="age-desc">TK · huruf, angka, profesi, alam</div>
+        <div class="age-card kid" onclick="selectAge('kid')">
+          <div class="age-icon-wrap">🎈</div>
+          <div class="age-info">
+            <div class="age-label">4 – 6 Tahun</div>
+            <div class="age-desc">Alfabet · Angka · Profesi · Alam · Tubuh</div>
+          </div>
+          <div class="age-stars-badge" id="starsKid">0 ⭐</div>
         </div>
-        <div class="age-count" id="cntKid">0 ⭐</div>
-      </div>
-      <div class="age-card bigkid" onclick="selectAge('bigkid')">
-        <div class="age-icon">🌍</div>
-        <div class="age-info">
-          <div class="age-label">7+ Tahun</div>
-          <div class="age-desc">SD · bendera, kota, kuliner, dunia</div>
+        <div class="age-card bigkid" onclick="selectAge('bigkid')">
+          <div class="age-icon-wrap">🌍</div>
+          <div class="age-info">
+            <div class="age-label">7+ Tahun</div>
+            <div class="age-desc">Bendera · Kota · Kuliner · Geografi · Sains</div>
+          </div>
+          <div class="age-stars-badge" id="starsBigkid">0 ⭐</div>
         </div>
-        <div class="age-count" id="cntBigkid">0 ⭐</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ─────────── CATEGORY SCREEN ─────────── -->
+<!-- ── CATEGORY ── -->
 <div id="categoryScreen" class="screen">
   <div class="hdr">
     <button class="back-btn" onclick="showHome()">←</button>
     <div class="hdr-title" id="catTitle">Pilih Kategori</div>
-    <div class="hdr-right">
-      <div class="total-stars">⭐ <span id="totalStarsDisplay2">0</span></div>
-    </div>
+    <div class="hdr-stars">⭐ <span id="totalStarsCat">0</span></div>
   </div>
-  <div class="cat-scroll">
+  <div class="scroll-body">
     <div class="cat-banner" id="catBanner">
-      <h2 id="catBannerTitle">Petualangan Dimulai!</h2>
+      <h2 id="catBannerTitle">Petualangan!</h2>
       <p id="catBannerSub">Pilih kategori favoritmu</p>
     </div>
     <div class="cat-grid" id="catGrid"></div>
   </div>
 </div>
 
-<!-- ─────────── LEVEL LIST SCREEN ─────────── -->
+<!-- ── LEVEL LIST ── -->
 <div id="levelListScreen" class="screen">
   <div class="hdr">
     <button class="back-btn" onclick="backToCategories()">←</button>
     <div class="hdr-title" id="lvlListTitle">Level</div>
-    <div class="hdr-right">
-      <div class="total-stars">⭐ <span id="totalStarsDisplay3">0</span></div>
-    </div>
+    <div class="hdr-stars">⭐ <span id="totalStarsLvl">0</span></div>
   </div>
-  <div class="lvl-scroll">
+  <!-- Difficulty selector (only for bigkid) -->
+  <div class="diff-row" id="diffRow" style="display:none;padding-top:12px;padding-bottom:0;">
+    <button class="diff-btn active" onclick="setDiff('easy')" id="diffEasy">🟢 Mudah</button>
+    <button class="diff-btn" onclick="setDiff('medium')" id="diffMedium">🟡 Sedang</button>
+    <button class="diff-btn" onclick="setDiff('hard')" id="diffHard">🔴 Sulit</button>
+  </div>
+  <div class="scroll-body">
     <div class="lvl-grid" id="lvlGrid"></div>
   </div>
 </div>
 
-<!-- ─────────── PLAY SCREEN ─────────── -->
+<!-- ── PLAY ── -->
 <div id="play" class="screen">
-  <div class="play-hdr">
-    <button class="back-btn" onclick="quitPlay()">←</button>
-    <div class="play-info">
-      <div class="play-name" id="playName">Level</div>
-      <div class="play-prog" id="playProg">Soal 1 dari 6</div>
-    </div>
-    <button class="music-btn" onclick="toggleMusic()" id="musicBtn2">🎵</button>
+  <div class="hdr">
+    <button class="back-btn" onclick="confirmBack()">←</button>
+    <div class="hdr-title" id="playTitle">Level 1</div>
+    <div class="hdr-stars" id="playScore">0/0</div>
   </div>
-  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-  <div class="play-area" id="playArea"></div>
+  <div class="play-progress-bar"><div class="play-progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="play-body" id="playBody">
+    <!-- Mascot -->
+    <div class="mascot-wrap">
+      <svg width="44" height="44" viewBox="0 0 44 44" id="mascotSvg">
+        <circle cx="22" cy="22" r="20" fill="#1a6b8a" stroke="#4fc3f7" stroke-width="1.5"/>
+        <circle cx="17" cy="18" r="3" fill="#fff" opacity=".9"/>
+        <circle cx="27" cy="18" r="3" fill="#fff" opacity=".9"/>
+        <circle cx="18" cy="18" r="1.5" fill="#0d1b2a"/>
+        <circle cx="28" cy="18" r="1.5" fill="#0d1b2a"/>
+        <path d="M16 26 Q22 30 28 26" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>
+        <path d="M12 8 Q22 4 32 8" fill="none" stroke="#f5c842" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="mascot-bubble" id="mascotMsg">Yuk, kita mulai! 😊</div>
+    </div>
+    <!-- Question -->
+    <div class="question-card" id="questionCard">
+      <div class="question-badge" id="qBadge">Soal 1 dari 6</div>
+      <span class="question-emoji" id="qEmoji" style="display:none"></span>
+      <span class="question-flag" id="qFlag" style="display:none"></span>
+      <div class="question-text" id="qText"></div>
+      <div class="question-desc" id="qDesc"></div>
+      <button class="tts-btn" id="ttsBtn" onclick="speakQuestion()">
+        <span>🔊</span><span>Dengarkan Soal</span>
+      </button>
+    </div>
+    <!-- Choices -->
+    <div class="choices-grid" id="choicesGrid"></div>
+    <!-- Spacer -->
+    <div style="height:8px;flex-shrink:0;"></div>
+  </div>
 </div>
 
-<!-- ─────────── FEEDBACK ─────────── -->
-<div id="feedback">
-  <div class="fb-box">
-    <div class="fb-emoji" id="fbEmoji">🎉</div>
-    <div class="fb-text" id="fbText">Benar!</div>
-  </div>
-</div>
-
-<!-- ─────────── COMPLETE ─────────── -->
-<div id="complete">
-  <div class="complete-box">
-    <div class="complete-emoji">🏆</div>
-    <div class="complete-title">Hebat!</div>
-    <div class="complete-sub" id="completeSub">Kamu menyelesaikan level ini!</div>
-    <div class="complete-stars">
-      <div class="s" id="star1">☆</div>
-      <div class="s" id="star2">☆</div>
-      <div class="s" id="star3">☆</div>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
-      <button class="complete-btn sec" onclick="backToLevelList()">📋 Pilih Level</button>
-      <button class="complete-btn replay" onclick="replayLevel()">🔄 Main Lagi</button>
-      <button class="complete-btn" onclick="nextLevel()" id="nextBtn">Lanjut ➜</button>
+<!-- ── RESULT ── -->
+<div id="result" class="screen">
+  <div class="result-card">
+    <span class="result-emoji-big" id="resultEmoji">🎉</span>
+    <div class="result-title" id="resultTitle">Hebat!</div>
+    <div class="result-msg" id="resultMsg">Kamu menyelesaikan level ini</div>
+    <div class="result-stars-row" id="resultStars">⭐⭐⭐</div>
+    <div class="result-score" id="resultScore">6 dari 6 benar</div>
+    <div class="result-btns">
+      <button class="result-btn primary" id="nextBtn" onclick="goNext()">Level Berikutnya ➜</button>
+      <button class="result-btn secondary" onclick="replayLevel()">🔄 Coba Lagi</button>
+      <button class="result-btn secondary" onclick="backToCategories()">📚 Kembali ke Kategori</button>
     </div>
   </div>
 </div>
-
 <script>
-// ============================================================
-// LEVEL DATA - 66 levels distributed across age groups
-// Structure: {id, name, icon, age, category, color, type, questions}
-// age: 'toddler' (2-3), 'kid' (4-6), 'bigkid' (7+)
-// type: 'flag' | 'food' | 'basic' | 'pic' (uses emoji items+labels)
-// ============================================================
-const LEVELS = [
 // ═══════════════════════════════════════════════════════════
-// TODDLER (2-3 tahun) - 20 levels
-// Categories: warna, bentuk, hewan, buah, transport
+// GAME DATA — Dari Z ke A v5
 // ═══════════════════════════════════════════════════════════
 
-// --- WARNA (4 levels) ---
-{id:'t_w1',name:'Warna Dasar',icon:'🎨',age:'toddler',category:'warna',color:'#e91e63',type:'pic',
- questions:[
-  {q:'Apel warna apa?',items:['🍎','🍌','🍇','🫐'],labels:['Merah','Kuning','Ungu','Biru'],ci:0},
-  {q:'Pisang warna apa?',items:['🍌','🍎','🥝','🍊'],labels:['Kuning','Merah','Hijau','Oranye'],ci:0},
-  {q:'Mana yang warna hijau?',items:['🍎','🥝','🍌','🫐'],labels:['Merah','Hijau','Kuning','Biru'],ci:1},
-  {q:'Langit warna apa?',items:['🌈','☁️','🌌','🌤️'],labels:['Pelangi','Putih','Hitam','Biru'],ci:3},
-  {q:'Matahari warna apa?',items:['☀️','🌙','⭐','🌧️'],labels:['Kuning','Putih','Perak','Biru'],ci:0},
- ]},
-{id:'t_w2',name:'Warna Buah',icon:'🍓',age:'toddler',category:'warna',color:'#f06292',type:'pic',
- questions:[
-  {q:'Stroberi warna apa?',items:['🍓','🍌','🍇','🫐'],labels:['Merah','Kuning','Ungu','Biru'],ci:0},
-  {q:'Anggur warna apa?',items:['🍇','🍎','🍌','🍊'],labels:['Ungu','Merah','Kuning','Oranye'],ci:0},
-  {q:'Jeruk warna apa?',items:['🍊','🍎','🍇','🥝'],labels:['Oranye','Merah','Ungu','Hijau'],ci:0},
-  {q:'Blueberry warna apa?',items:['🫐','🍓','🍌','🍇'],labels:['Biru','Merah','Kuning','Ungu'],ci:0},
-  {q:'Pir warna apa?',items:['🍐','🍎','🍌','🍇'],labels:['Hijau','Merah','Kuning','Ungu'],ci:0},
- ]},
-{id:'t_w3',name:'Pelangi',icon:'🌈',age:'toddler',category:'warna',color:'#9c27b0',type:'pic',
- questions:[
-  {q:'Pelangi muncul setelah?',items:['🌧️','☀️','❄️','🌙'],labels:['Hujan','Panas','Salju','Malam'],ci:0},
-  {q:'Mana yang warna ungu?',items:['🍇','🍌','🍎','🥝'],labels:['Ungu','Kuning','Merah','Hijau'],ci:0},
-  {q:'Daun warna apa?',items:['🌿','🍎','🌻','🍇'],labels:['Hijau','Merah','Kuning','Ungu'],ci:0},
-  {q:'Salju warna apa?',items:['❄️','🍎','🌻','🌿'],labels:['Putih','Merah','Kuning','Hijau'],ci:0},
-  {q:'Mana yang warna hitam?',items:['🐈‍⬛','🐰','🐭','🐤'],labels:['Hitam','Putih','Abu','Kuning'],ci:0},
- ]},
-{id:'t_w4',name:'Warna Bunga',icon:'🌸',age:'toddler',category:'warna',color:'#ec407a',type:'pic',
- questions:[
-  {q:'Bunga matahari warna apa?',items:['🌻','🌹','🌷','🌸'],labels:['Kuning','Merah','Ungu','Pink'],ci:0},
-  {q:'Mawar biasanya warna apa?',items:['🌹','🌻','🌿','🫐'],labels:['Merah','Kuning','Hijau','Biru'],ci:0},
-  {q:'Bunga sakura warna apa?',items:['🌸','🌻','🌹','🌷'],labels:['Pink','Kuning','Merah','Ungu'],ci:0},
-  {q:'Mana bunga warna ungu?',items:['🌷','🌻','🌹','🌼'],labels:['Tulip ungu','Kuning','Merah','Putih'],ci:0},
-  {q:'Mana yang warna pink?',items:['🌸','🌻','🍎','🍇'],labels:['Pink','Kuning','Merah','Ungu'],ci:0},
- ]},
-
-// --- BENTUK (3 levels) ---
-{id:'t_b1',name:'Bentuk Dasar',icon:'⭕',age:'toddler',category:'bentuk',color:'#ff9800',type:'pic',
- questions:[
-  {q:'Mana lingkaran?',items:['⭕','⬛','🔺','⭐'],labels:['Lingkaran','Kotak','Segitiga','Bintang'],ci:0},
-  {q:'Mana segitiga?',items:['⭕','⬛','🔺','💜'],labels:['Lingkaran','Kotak','Segitiga','Hati'],ci:2},
-  {q:'Mana kotak?',items:['⭐','⭕','⬛','🔺'],labels:['Bintang','Lingkaran','Kotak','Segitiga'],ci:2},
-  {q:'Mana bintang?',items:['⭐','⭕','💜','🔺'],labels:['Bintang','Lingkaran','Hati','Segitiga'],ci:0},
-  {q:'Mana hati?',items:['💜','⭐','⭕','⬛'],labels:['Hati','Bintang','Lingkaran','Kotak'],ci:0},
- ]},
-{id:'t_b2',name:'Bentuk Benda',icon:'🔷',age:'toddler',category:'bentuk',color:'#ff6f00',type:'pic',
- questions:[
-  {q:'Roda mobil berbentuk?',items:['⭕','⬛','🔺','⭐'],labels:['Lingkaran','Kotak','Segitiga','Bintang'],ci:0},
-  {q:'Pintu rumah berbentuk?',items:['⭕','⬛','🔺','💜'],labels:['Lingkaran','Kotak','Segitiga','Hati'],ci:1},
-  {q:'Atap rumah berbentuk?',items:['⭐','⭕','⬛','🔺'],labels:['Bintang','Lingkaran','Kotak','Segitiga'],ci:3},
-  {q:'Bola berbentuk?',items:['⭕','⬛','🔺','⭐'],labels:['Bulat','Kotak','Segitiga','Bintang'],ci:0},
-  {q:'Buku berbentuk?',items:['⭕','⬛','🔺','💜'],labels:['Bulat','Kotak','Segitiga','Hati'],ci:1},
- ]},
-{id:'t_b3',name:'Besar & Kecil',icon:'🐘',age:'toddler',category:'bentuk',color:'#ef6c00',type:'pic',
- questions:[
-  {q:'Mana yang lebih besar?',items:['🐘','🐭','🐜','🐝'],labels:['Gajah','Tikus','Semut','Lebah'],ci:0},
-  {q:'Mana yang lebih kecil?',items:['🐘','🐅','🐁','🦒'],labels:['Gajah','Harimau','Tikus','Jerapah'],ci:2},
-  {q:'Mana yang paling tinggi?',items:['🦒','🐱','🐰','🐭'],labels:['Jerapah','Kucing','Kelinci','Tikus'],ci:0},
-  {q:'Mana yang paling pendek?',items:['🦒','🐎','🐕','🐭'],labels:['Jerapah','Kuda','Anjing','Tikus'],ci:3},
-  {q:'Mana yang paling besar?',items:['🐳','🐠','🐟','🦐'],labels:['Paus','Ikan kecil','Ikan','Udang'],ci:0},
- ]},
-
-// --- HEWAN (5 levels) ---
-{id:'t_h1',name:'Hewan Peliharaan',icon:'🐶',age:'toddler',category:'hewan',color:'#4caf50',type:'pic',
- questions:[
-  {q:'Hewan apa ini? "Guk guk!"',items:['🐶','🐱','🐰','🐭'],labels:['Anjing','Kucing','Kelinci','Tikus'],ci:0},
-  {q:'Hewan apa ini? "Meong!"',items:['🐶','🐱','🐰','🐭'],labels:['Anjing','Kucing','Kelinci','Tikus'],ci:1},
-  {q:'Hewan yang suka wortel?',items:['🐰','🐱','🐶','🐦'],labels:['Kelinci','Kucing','Anjing','Burung'],ci:0},
-  {q:'Hewan yang bisa terbang?',items:['🐰','🐱','🐦','🐭'],labels:['Kelinci','Kucing','Burung','Tikus'],ci:2},
-  {q:'Hewan yang punya tempurung?',items:['🐢','🐰','🐱','🐶'],labels:['Kura-kura','Kelinci','Kucing','Anjing'],ci:0},
- ]},
-{id:'t_h2',name:'Hewan Ternak',icon:'🐮',age:'toddler',category:'hewan',color:'#43a047',type:'pic',
- questions:[
-  {q:'Hewan apa ini? "Moo!"',items:['🐮','🐷','🐔','🐑'],labels:['Sapi','Babi','Ayam','Domba'],ci:0},
-  {q:'Hewan apa ini? "Petok petok!"',items:['🐮','🐷','🐔','🐑'],labels:['Sapi','Babi','Ayam','Domba'],ci:2},
-  {q:'Hewan yang kasih susu?',items:['🐮','🐔','🐷','🐭'],labels:['Sapi','Ayam','Babi','Tikus'],ci:0},
-  {q:'Hewan yang bertelur?',items:['🐔','🐮','🐷','🐑'],labels:['Ayam','Sapi','Babi','Domba'],ci:0},
-  {q:'Hewan yang berbulu tebal?',items:['🐑','🐔','🐍','🐠'],labels:['Domba','Ayam','Ular','Ikan'],ci:0},
- ]},
-{id:'t_h3',name:'Hewan Kebun Binatang',icon:'🦁',age:'toddler',category:'hewan',color:'#388e3c',type:'pic',
- questions:[
-  {q:'Hewan apa raja hutan?',items:['🦁','🐘','🦒','🐯'],labels:['Singa','Gajah','Jerapah','Harimau'],ci:0},
-  {q:'Hewan apa punya belalai?',items:['🦁','🐘','🦒','🐯'],labels:['Singa','Gajah','Jerapah','Harimau'],ci:1},
-  {q:'Hewan apa lehernya panjang?',items:['🦁','🐘','🦒','🐯'],labels:['Singa','Gajah','Jerapah','Harimau'],ci:2},
-  {q:'Hewan apa loncat-loncat?',items:['🦘','🐢','🐌','🐍'],labels:['Kanguru','Kura-kura','Siput','Ular'],ci:0},
-  {q:'Hewan apa suka bambu?',items:['🐼','🦁','🐘','🐯'],labels:['Panda','Singa','Gajah','Harimau'],ci:0},
- ]},
-{id:'t_h4',name:'Hewan Laut',icon:'🐠',age:'toddler',category:'hewan',color:'#2e7d32',type:'pic',
- questions:[
-  {q:'Hewan laut paling besar?',items:['🐳','🐠','🦐','🦀'],labels:['Paus','Ikan','Udang','Kepiting'],ci:0},
-  {q:'Hewan ini berenang di laut?',items:['🐬','🐔','🐮','🐶'],labels:['Lumba-lumba','Ayam','Sapi','Anjing'],ci:0},
-  {q:'Hewan yang berjalan menyamping?',items:['🦀','🐢','🐠','🐬'],labels:['Kepiting','Kura-kura','Ikan','Lumba-lumba'],ci:0},
-  {q:'Hewan yang punya 8 kaki?',items:['🐙','🦀','🦐','🐠'],labels:['Gurita','Kepiting','Udang','Ikan'],ci:0},
-  {q:'Hewan dengan sirip?',items:['🐠','🐢','🦀','🐙'],labels:['Ikan','Kura-kura','Kepiting','Gurita'],ci:0},
- ]},
-{id:'t_h5',name:'Suara Hewan',icon:'🎵',age:'toddler',category:'hewan',color:'#1b5e20',type:'pic',
- questions:[
-  {q:'Siapa berbunyi "Moo"?',items:['🐮','🐱','🐶','🐔'],labels:['Sapi','Kucing','Anjing','Ayam'],ci:0},
-  {q:'Siapa berbunyi "Kwek kwek"?',items:['🦆','🐔','🦉','🐦'],labels:['Bebek','Ayam','Burung hantu','Burung'],ci:0},
-  {q:'Siapa berbunyi "Quack quack"?',items:['🦆','🐸','🐔','🐶'],labels:['Bebek','Katak','Ayam','Anjing'],ci:0},
-  {q:'Siapa berbunyi "Krok krok"?',items:['🐸','🐢','🐍','🐠'],labels:['Katak','Kura-kura','Ular','Ikan'],ci:0},
-  {q:'Siapa berbunyi "Kruyuk"?',items:['🐔','🐮','🐷','🐰'],labels:['Ayam','Sapi','Babi','Kelinci'],ci:0},
- ]},
-
-// --- BUAH & TRANSPORT (8 levels) ---
-{id:'t_f1',name:'Buah Favorit',icon:'🍎',age:'toddler',category:'buah',color:'#f44336',type:'pic',
- questions:[
-  {q:'Mana apel?',items:['🍎','🍌','🍇','🍊'],labels:['Apel','Pisang','Anggur','Jeruk'],ci:0},
-  {q:'Mana pisang?',items:['🍎','🍌','🍇','🍊'],labels:['Apel','Pisang','Anggur','Jeruk'],ci:1},
-  {q:'Mana jeruk?',items:['🍎','🍌','🍇','🍊'],labels:['Apel','Pisang','Anggur','Jeruk'],ci:3},
-  {q:'Buah berkulit kuning, dikupas?',items:['🍌','🍎','🍇','🥝'],labels:['Pisang','Apel','Anggur','Kiwi'],ci:0},
-  {q:'Buah merah kecil-kecil?',items:['🍓','🍌','🍎','🥝'],labels:['Stroberi','Pisang','Apel','Kiwi'],ci:0},
- ]},
-{id:'t_f2',name:'Buah Tropis',icon:'🥭',age:'toddler',category:'buah',color:'#e53935',type:'pic',
- questions:[
-  {q:'Mana mangga?',items:['🥭','🍎','🍌','🍇'],labels:['Mangga','Apel','Pisang','Anggur'],ci:0},
-  {q:'Mana semangka?',items:['🍉','🍎','🍌','🍇'],labels:['Semangka','Apel','Pisang','Anggur'],ci:0},
-  {q:'Mana nanas?',items:['🍍','🍎','🍌','🥭'],labels:['Nanas','Apel','Pisang','Mangga'],ci:0},
-  {q:'Mana kelapa?',items:['🥥','🥭','🍍','🍌'],labels:['Kelapa','Mangga','Nanas','Pisang'],ci:0},
-  {q:'Buah kuning, dari pohon kelapa?',items:['🥥','🍎','🍇','🍓'],labels:['Kelapa','Apel','Anggur','Stroberi'],ci:0},
- ]},
-{id:'t_t1',name:'Kendaraan',icon:'🚗',age:'toddler',category:'transport',color:'#1976d2',type:'pic',
- questions:[
-  {q:'Mana mobil?',items:['🚗','🚌','✈️','🚂'],labels:['Mobil','Bus','Pesawat','Kereta'],ci:0},
-  {q:'Mana bus?',items:['🚗','🚌','✈️','🚂'],labels:['Mobil','Bus','Pesawat','Kereta'],ci:1},
-  {q:'Mana pesawat?',items:['🚗','🚌','✈️','🚂'],labels:['Mobil','Bus','Pesawat','Kereta'],ci:2},
-  {q:'Mana kereta?',items:['🚗','🚌','✈️','🚂'],labels:['Mobil','Bus','Pesawat','Kereta'],ci:3},
-  {q:'Mana sepeda?',items:['🚲','🚗','🚌','✈️'],labels:['Sepeda','Mobil','Bus','Pesawat'],ci:0},
- ]},
-{id:'t_t2',name:'Kendaraan Air',icon:'⛵',age:'toddler',category:'transport',color:'#1565c0',type:'pic',
- questions:[
-  {q:'Yang jalan di air?',items:['⛵','🚗','✈️','🚂'],labels:['Kapal','Mobil','Pesawat','Kereta'],ci:0},
-  {q:'Yang terbang di langit?',items:['⛵','🚗','✈️','🚂'],labels:['Kapal','Mobil','Pesawat','Kereta'],ci:2},
-  {q:'Yang jalan di rel?',items:['⛵','🚗','✈️','🚂'],labels:['Kapal','Mobil','Pesawat','Kereta'],ci:3},
-  {q:'Helikopter di mana?',items:['🚁','⛵','🚗','🚂'],labels:['Langit','Air','Jalan','Rel'],ci:0},
-  {q:'Roket pergi ke mana?',items:['🚀','🌊','🏠','🌳'],labels:['Luar angkasa','Laut','Rumah','Hutan'],ci:0},
- ]},
-
-// ═══════════════════════════════════════════════════════════
-// KID (4-6 tahun) - 22 levels
-// Categories: huruf, angka, profesi, alam, bagian tubuh, oposisi
-// ═══════════════════════════════════════════════════════════
-
-// --- HURUF (4 levels) ---
-{id:'k_a1',name:'Alfabet A-G',icon:'🔤',age:'kid',category:'huruf',color:'#3f51b5',type:'pic',
- questions:[
-  {q:'A untuk...',items:['🍎','🐝','🐱','🐶'],labels:['Apel','Lebah','Kucing','Anjing'],ci:0},
-  {q:'B untuk...',items:['🐝','🍎','🥕','🚗'],labels:['Lebah','Apel','Wortel','Mobil'],ci:0},
-  {q:'C untuk... (Cat)',items:['🐱','🐶','🐰','🐭'],labels:['Kucing','Anjing','Kelinci','Tikus'],ci:0},
-  {q:'D untuk...',items:['🐶','🐱','🐰','🐭'],labels:['Anjing','Kucing','Kelinci','Tikus'],ci:0},
-  {q:'E untuk...',items:['🐘','🐅','🦁','🐒'],labels:['Gajah','Harimau','Singa','Monyet'],ci:0},
-  {q:'F untuk...',items:['🐟','🐦','🐔','🦆'],labels:['Ikan','Burung','Ayam','Bebek'],ci:0},
-  {q:'G untuk...',items:['🍇','🍎','🍌','🍊'],labels:['Anggur','Apel','Pisang','Jeruk'],ci:0},
- ]},
-{id:'k_a2',name:'Alfabet H-N',icon:'🔠',age:'kid',category:'huruf',color:'#303f9f',type:'pic',
- questions:[
-  {q:'H untuk...',items:['🏠','🚗','🌳','⭐'],labels:['Rumah','Mobil','Pohon','Bintang'],ci:0},
-  {q:'I untuk...',items:['🍦','🍕','🍔','🍟'],labels:['Ice cream','Pizza','Burger','Kentang'],ci:0},
-  {q:'J untuk...',items:['🤹','🎤','🎸','🥁'],labels:['Juggle','Mic','Gitar','Drum'],ci:0},
-  {q:'K untuk...',items:['🪁','⚽','🏀','🎾'],labels:['Layangan','Bola','Basket','Tenis'],ci:0},
-  {q:'L untuk...',items:['🦁','🐯','🐶','🐺'],labels:['Singa','Harimau','Anjing','Serigala'],ci:0},
-  {q:'M untuk...',items:['🌙','☀️','⭐','☁️'],labels:['Bulan','Matahari','Bintang','Awan'],ci:0},
-  {q:'N untuk...',items:['👃','👁️','👂','👄'],labels:['Hidung','Mata','Telinga','Mulut'],ci:0},
- ]},
-{id:'k_a3',name:'Alfabet O-T',icon:'🔡',age:'kid',category:'huruf',color:'#283593',type:'pic',
- questions:[
-  {q:'O untuk...',items:['🐙','🐋','🐠','🦈'],labels:['Gurita','Paus','Ikan','Hiu'],ci:0},
-  {q:'P untuk...',items:['🥧','🍕','🍔','🌮'],labels:['Pai','Pizza','Burger','Taco'],ci:0},
-  {q:'Q untuk...',items:['👸','🤴','🧙','🧚'],labels:['Ratu','Raja','Penyihir','Peri'],ci:0},
-  {q:'R untuk...',items:['🐇','🐭','🐱','🐶'],labels:['Kelinci','Tikus','Kucing','Anjing'],ci:0},
-  {q:'S untuk...',items:['☀️','🌙','⭐','☁️'],labels:['Matahari','Bulan','Bintang','Awan'],ci:0},
-  {q:'T untuk...',items:['🐅','🦁','🐶','🐺'],labels:['Harimau','Singa','Anjing','Serigala'],ci:0},
- ]},
-{id:'k_a4',name:'Alfabet U-Z',icon:'🔣',age:'kid',category:'huruf',color:'#1a237e',type:'pic',
- questions:[
-  {q:'U untuk... (Umbrella)',items:['☂️','🎩','👜','🎒'],labels:['Payung','Topi','Tas','Ransel'],ci:0},
-  {q:'V untuk...',items:['🎻','🎸','🥁','🎤'],labels:['Biola','Gitar','Drum','Mic'],ci:0},
-  {q:'W untuk...',items:['🍉','🍎','🍌','🍇'],labels:['Watermelon','Apel','Pisang','Anggur'],ci:0},
-  {q:'X untuk...',items:['❌','⭕','✅','💯'],labels:['X mark','O','Check','Score'],ci:0},
-  {q:'Y untuk...',items:['🪀','⚽','🪁','🧸'],labels:['Yoyo','Bola','Layangan','Boneka'],ci:0},
-  {q:'Z untuk...',items:['🦓','🦒','🐘','🦁'],labels:['Zebra','Jerapah','Gajah','Singa'],ci:0},
- ]},
-
-// --- ANGKA (3 levels) ---
-{id:'k_n1',name:'Angka 1-5',icon:'🔢',age:'kid',category:'angka',color:'#00897b',type:'pic',
- questions:[
-  {q:'Ada berapa apel? 🍎',items:['1','2','3','4'],labels:['Satu','Dua','Tiga','Empat'],ci:0},
-  {q:'Ada berapa apel? 🍎🍎',items:['1','2','3','4'],labels:['Satu','Dua','Tiga','Empat'],ci:1},
-  {q:'Ada berapa pisang? 🍌🍌🍌',items:['2','3','4','5'],labels:['Dua','Tiga','Empat','Lima'],ci:1},
-  {q:'Ada berapa bintang? ⭐⭐⭐⭐',items:['2','3','4','5'],labels:['Dua','Tiga','Empat','Lima'],ci:2},
-  {q:'Ada berapa hati? ❤️❤️❤️❤️❤️',items:['3','4','5','6'],labels:['Tiga','Empat','Lima','Enam'],ci:2},
-  {q:'Satu tambah satu sama dengan?',items:['1','2','3','4'],labels:['1','2','3','4'],ci:1},
- ]},
-{id:'k_n2',name:'Angka 6-10',icon:'🔟',age:'kid',category:'angka',color:'#00796b',type:'pic',
- questions:[
-  {q:'Ada berapa bola? ⚽⚽⚽⚽⚽⚽',items:['5','6','7','8'],labels:['Lima','Enam','Tujuh','Delapan'],ci:1},
-  {q:'Ada berapa? 🌟🌟🌟🌟🌟🌟🌟',items:['6','7','8','9'],labels:['Enam','Tujuh','Delapan','Sembilan'],ci:1},
-  {q:'Setelah 7 adalah?',items:['6','7','8','9'],labels:['6','7','8','9'],ci:2},
-  {q:'Setelah 9 adalah?',items:['8','9','10','11'],labels:['8','9','10','11'],ci:2},
-  {q:'Dua tambah tiga sama dengan?',items:['4','5','6','7'],labels:['4','5','6','7'],ci:1},
-  {q:'Lima tambah lima sama dengan?',items:['8','9','10','11'],labels:['8','9','10','11'],ci:2},
- ]},
-{id:'k_n3',name:'Hitung Mundur',icon:'⏰',age:'kid',category:'angka',color:'#00695c',type:'pic',
- questions:[
-  {q:'Setelah 10 angka berapa?',items:['9','10','11','12'],labels:['9','10','11','12'],ci:2},
-  {q:'Sebelum 5 angka berapa?',items:['3','4','5','6'],labels:['3','4','5','6'],ci:1},
-  {q:'10 dikurangi 3?',items:['5','6','7','8'],labels:['5','6','7','8'],ci:2},
-  {q:'Kita tidur malam jam berapa?',items:['☀️','🌅','🌆','🌙'],labels:['Siang','Pagi','Sore','Malam'],ci:3},
-  {q:'Sehari ada berapa kali makan?',items:['1','2','3','5'],labels:['Satu','Dua','Tiga','Lima'],ci:2},
-  {q:'Berapa bulan dalam setahun?',items:['10','11','12','13'],labels:['10','11','12','13'],ci:2},
- ]},
-
-// --- PROFESI (4 levels) ---
-{id:'k_p1',name:'Profesi 1',icon:'👨‍⚕️',age:'kid',category:'profesi',color:'#7b1fa2',type:'pic',
- questions:[
-  {q:'Siapa menolong orang sakit?',items:['👨‍⚕️','👨‍🚒','👮','👨‍🍳'],labels:['Dokter','Pemadam','Polisi','Koki'],ci:0},
-  {q:'Siapa memadamkan api?',items:['👨‍⚕️','👨‍🚒','👮','👨‍🍳'],labels:['Dokter','Pemadam','Polisi','Koki'],ci:1},
-  {q:'Siapa mengatur lalu lintas?',items:['👨‍⚕️','👨‍🚒','👮','👨‍🍳'],labels:['Dokter','Pemadam','Polisi','Koki'],ci:2},
-  {q:'Siapa memasak makanan?',items:['👨‍⚕️','👨‍🚒','👮','👨‍🍳'],labels:['Dokter','Pemadam','Polisi','Koki'],ci:3},
-  {q:'Siapa mengajar di sekolah?',items:['👨‍🏫','👨‍⚕️','👨‍🚒','👨‍🍳'],labels:['Guru','Dokter','Pemadam','Koki'],ci:0},
- ]},
-{id:'k_p2',name:'Profesi 2',icon:'👩‍🌾',age:'kid',category:'profesi',color:'#6a1b9a',type:'pic',
- questions:[
-  {q:'Siapa menanam padi?',items:['👨‍🌾','👨‍🎨','👨‍🚀','👨‍✈️'],labels:['Petani','Pelukis','Astronot','Pilot'],ci:0},
-  {q:'Siapa terbang pesawat?',items:['👨‍🌾','👨‍🎨','👨‍🚀','👨‍✈️'],labels:['Petani','Pelukis','Astronot','Pilot'],ci:3},
-  {q:'Siapa pergi ke luar angkasa?',items:['👨‍🌾','👨‍🎨','👨‍🚀','👨‍✈️'],labels:['Petani','Pelukis','Astronot','Pilot'],ci:2},
-  {q:'Siapa membuat lukisan?',items:['👨‍🌾','👨‍🎨','👨‍🚀','👨‍✈️'],labels:['Petani','Pelukis','Astronot','Pilot'],ci:1},
-  {q:'Siapa menangkap ikan di laut?',items:['🧑‍🌾','🎣','⚓','👨‍🍳'],labels:['Petani','Nelayan','Pelaut','Koki'],ci:1},
- ]},
-{id:'k_p3',name:'Profesi 3',icon:'👨‍🔬',age:'kid',category:'profesi',color:'#4a148c',type:'pic',
- questions:[
-  {q:'Siapa meneliti di lab?',items:['👨‍🔬','👨‍🏫','👨‍⚕️','👨‍🚀'],labels:['Ilmuwan','Guru','Dokter','Astronot'],ci:0},
-  {q:'Siapa menyanyi di panggung?',items:['🎤','🎨','🔬','✏️'],labels:['Penyanyi','Pelukis','Ilmuwan','Penulis'],ci:0},
-  {q:'Siapa main bola?',items:['⚽','🎨','🎤','🔬'],labels:['Atlet','Pelukis','Penyanyi','Ilmuwan'],ci:0},
-  {q:'Siapa membuat baju?',items:['🧵','🔬','🎤','⚽'],labels:['Penjahit','Ilmuwan','Penyanyi','Atlet'],ci:0},
-  {q:'Siapa membangun rumah?',items:['👷','👨‍🌾','👨‍🍳','👨‍⚕️'],labels:['Tukang','Petani','Koki','Dokter'],ci:0},
- ]},
-{id:'k_p4',name:'Alat Profesi',icon:'🔨',age:'kid',category:'profesi',color:'#38006b',type:'pic',
- questions:[
-  {q:'Dokter pakai apa?',items:['🩺','🔨','🍳','✏️'],labels:['Stetoskop','Palu','Wajan','Pensil'],ci:0},
-  {q:'Tukang pakai apa?',items:['🩺','🔨','🍳','✏️'],labels:['Stetoskop','Palu','Wajan','Pensil'],ci:1},
-  {q:'Koki pakai apa?',items:['🩺','🔨','🍳','✏️'],labels:['Stetoskop','Palu','Wajan','Pensil'],ci:2},
-  {q:'Penulis pakai apa?',items:['🩺','🔨','🍳','✏️'],labels:['Stetoskop','Palu','Wajan','Pensil'],ci:3},
-  {q:'Polisi pakai apa?',items:['🚓','🚒','🚑','🚜'],labels:['Mobil polisi','Damkar','Ambulans','Traktor'],ci:0},
- ]},
-
-// --- ALAM (4 levels) ---
-{id:'k_l1',name:'Cuaca',icon:'☀️',age:'kid',category:'alam',color:'#0288d1',type:'pic',
- questions:[
-  {q:'Hari ini cerah, ada apa?',items:['☀️','🌧️','❄️','🌩️'],labels:['Matahari','Hujan','Salju','Petir'],ci:0},
-  {q:'Air turun dari langit disebut?',items:['☀️','🌧️','❄️','🌩️'],labels:['Matahari','Hujan','Salju','Petir'],ci:1},
-  {q:'Yang putih turun saat dingin?',items:['☀️','🌧️','❄️','🌩️'],labels:['Matahari','Hujan','Salju','Petir'],ci:2},
-  {q:'Suara "Dor!" saat hujan?',items:['☀️','🌧️','❄️','🌩️'],labels:['Matahari','Hujan','Salju','Petir'],ci:3},
-  {q:'Setelah hujan muncul apa di langit?',items:['🌈','☀️','❄️','⛈️'],labels:['Pelangi','Matahari','Salju','Badai'],ci:0},
- ]},
-{id:'k_l2',name:'Tumbuhan',icon:'🌳',age:'kid',category:'alam',color:'#0277bd',type:'pic',
- questions:[
-  {q:'Yang tumbuh besar dan tinggi?',items:['🌳','🌹','🌱','🍄'],labels:['Pohon','Bunga','Tunas','Jamur'],ci:0},
-  {q:'Yang dipetik untuk hadiah?',items:['🌳','🌹','🌱','🍄'],labels:['Pohon','Bunga','Tunas','Jamur'],ci:1},
-  {q:'Tumbuhan baru namanya?',items:['🌳','🌹','🌱','🍄'],labels:['Pohon','Bunga','Tunas','Jamur'],ci:2},
-  {q:'Tumbuh di tempat lembab?',items:['🌳','🌹','🌱','🍄'],labels:['Pohon','Bunga','Tunas','Jamur'],ci:3},
-  {q:'Daun warnanya?',items:['🟢','🔴','🔵','🟡'],labels:['Hijau','Merah','Biru','Kuning'],ci:0},
- ]},
-{id:'k_l3',name:'Langit & Bumi',icon:'🌍',age:'kid',category:'alam',color:'#01579b',type:'pic',
- questions:[
-  {q:'Siang ada apa di langit?',items:['☀️','🌙','⭐','🌧️'],labels:['Matahari','Bulan','Bintang','Hujan'],ci:0},
-  {q:'Malam ada apa di langit?',items:['☀️','🌙','🐦','🦋'],labels:['Matahari','Bulan','Burung','Kupu-kupu'],ci:1},
-  {q:'Bintang kelihatan kapan?',items:['🌅','☀️','🌇','🌙'],labels:['Pagi','Siang','Sore','Malam'],ci:3},
-  {q:'Kita tinggal di planet?',items:['🌍','☀️','🌙','⭐'],labels:['Bumi','Matahari','Bulan','Bintang'],ci:0},
-  {q:'Air banyak ada di mana?',items:['🌊','🏔️','🏜️','🌳'],labels:['Laut','Gunung','Gurun','Hutan'],ci:0},
- ]},
-{id:'k_l4',name:'Tempat Alam',icon:'🏔️',age:'kid',category:'alam',color:'#0d47a1',type:'pic',
- questions:[
-  {q:'Tempat banyak pohon?',items:['🌳','🌊','🏔️','🏜️'],labels:['Hutan','Laut','Gunung','Gurun'],ci:0},
-  {q:'Tempat tinggi sekali?',items:['🌳','🌊','🏔️','🏜️'],labels:['Hutan','Laut','Gunung','Gurun'],ci:2},
-  {q:'Tempat pasir luas, panas?',items:['🌳','🌊','🏔️','🏜️'],labels:['Hutan','Laut','Gunung','Gurun'],ci:3},
-  {q:'Tempat air mengalir panjang?',items:['🏞️','🌊','🏔️','🌳'],labels:['Sungai','Laut','Gunung','Hutan'],ci:0},
-  {q:'Tempat pohon kelapa tumbuh?',items:['🏖️','🏔️','🏜️','❄️'],labels:['Pantai','Gunung','Gurun','Salju'],ci:0},
- ]},
-
-// --- BAGIAN TUBUH & OPOSISI (7 levels) ---
-{id:'k_b1',name:'Bagian Wajah',icon:'😊',age:'kid',category:'tubuh',color:'#d81b60',type:'pic',
- questions:[
-  {q:'Untuk melihat kita pakai?',items:['👁️','👂','👃','👄'],labels:['Mata','Telinga','Hidung','Mulut'],ci:0},
-  {q:'Untuk mendengar kita pakai?',items:['👁️','👂','👃','👄'],labels:['Mata','Telinga','Hidung','Mulut'],ci:1},
-  {q:'Untuk mencium bau kita pakai?',items:['👁️','👂','👃','👄'],labels:['Mata','Telinga','Hidung','Mulut'],ci:2},
-  {q:'Untuk makan kita pakai?',items:['👁️','👂','👃','👄'],labels:['Mata','Telinga','Hidung','Mulut'],ci:3},
-  {q:'Yang menumbuhkan rambut?',items:['🧠','💪','👣','💇'],labels:['Otak','Tangan','Kaki','Kepala'],ci:3},
- ]},
-{id:'k_b2',name:'Bagian Tubuh',icon:'🧍',age:'kid',category:'tubuh',color:'#c2185b',type:'pic',
- questions:[
-  {q:'Untuk berjalan kita pakai?',items:['💪','👣','👁️','👂'],labels:['Tangan','Kaki','Mata','Telinga'],ci:1},
-  {q:'Untuk memegang kita pakai?',items:['👣','✋','👁️','👂'],labels:['Kaki','Tangan','Mata','Telinga'],ci:1},
-  {q:'Jari ada berapa di satu tangan?',items:['3','4','5','10'],labels:['Tiga','Empat','Lima','Sepuluh'],ci:2},
-  {q:'Jari kaki ada berapa total?',items:['5','8','10','12'],labels:['Lima','Delapan','Sepuluh','Dua belas'],ci:2},
-  {q:'Yang berdetak di dada?',items:['❤️','🧠','💪','👁️'],labels:['Jantung','Otak','Tangan','Mata'],ci:0},
- ]},
-{id:'k_o1',name:'Lawan Kata 1',icon:'⚖️',age:'kid',category:'oposisi',color:'#5d4037',type:'pic',
- questions:[
-  {q:'Lawan dari "besar" adalah?',items:['🐘','🐭','🦁','🐢'],labels:['Besar','Kecil','Buas','Lambat'],ci:1},
-  {q:'Lawan dari "panas" adalah?',items:['☀️','🌡️','❄️','🔥'],labels:['Panas','Termometer','Dingin','Api'],ci:2},
-  {q:'Lawan dari "siang" adalah?',items:['☀️','🌙','⭐','🌅'],labels:['Siang','Malam','Bintang','Pagi'],ci:1},
-  {q:'Lawan dari "cepat" adalah?',items:['🐇','🐢','🐆','🦅'],labels:['Cepat','Lambat (siput)','Cheetah cepat','Elang cepat'],ci:1},
-  {q:'Lawan dari "tinggi" adalah?',items:['🦒','🐭','🏔️','🏠'],labels:['Tinggi (jerapah)','Pendek','Gunung','Rumah'],ci:1},
- ]},
-{id:'k_o2',name:'Lawan Kata 2',icon:'🔄',age:'kid',category:'oposisi',color:'#4e342e',type:'pic',
- questions:[
-  {q:'Lawan dari "naik" adalah?',items:['⬆️','⬇️','➡️','⬅️'],labels:['Naik','Turun','Kanan','Kiri'],ci:1},
-  {q:'Lawan dari "depan" adalah?',items:['⬆️','⬇️','🔙','➡️'],labels:['Atas','Bawah','Belakang','Kanan'],ci:2},
-  {q:'Lawan dari "buka" adalah?',items:['📂','📁','🔓','🔒'],labels:['Folder buka','Folder tutup','Buka','Tutup'],ci:3},
-  {q:'Lawan dari "senang" adalah?',items:['😊','😢','😴','😡'],labels:['Senang','Sedih','Ngantuk','Marah'],ci:1},
-  {q:'Lawan dari "muda" adalah?',items:['👶','🧓','👦','👨'],labels:['Bayi','Tua','Anak','Pria'],ci:1},
- ]},
-{id:'k_w1',name:'Waktu',icon:'⏰',age:'kid',category:'oposisi',color:'#3e2723',type:'pic',
- questions:[
-  {q:'Saat matahari terbit?',items:['🌅','☀️','🌇','🌙'],labels:['Pagi','Siang','Sore','Malam'],ci:0},
-  {q:'Saat matahari di atas?',items:['🌅','☀️','🌇','🌙'],labels:['Pagi','Siang','Sore','Malam'],ci:1},
-  {q:'Saat matahari terbenam?',items:['🌅','☀️','🌇','🌙'],labels:['Pagi','Siang','Sore','Malam'],ci:2},
-  {q:'Saat gelap dan ada bulan?',items:['🌅','☀️','🌇','🌙'],labels:['Pagi','Siang','Sore','Malam'],ci:3},
-  {q:'Hari setelah Senin?',items:['Minggu','Selasa','Rabu','Kamis'],labels:['Minggu','Selasa','Rabu','Kamis'],ci:1},
- ]},
-{id:'k_e1',name:'Emosi',icon:'😊',age:'kid',category:'oposisi',color:'#bf360c',type:'pic',
- questions:[
-  {q:'Wajah ini emosi apa?',items:['😊','😢','😡','😴'],labels:['Senang','Sedih','Marah','Ngantuk'],ci:0},
-  {q:'Wajah ini emosi apa? 😢',items:['😊','😢','😡','😴'],labels:['Senang','Sedih','Marah','Ngantuk'],ci:1},
-  {q:'Wajah ini emosi apa? 😡',items:['😊','😢','😡','😴'],labels:['Senang','Sedih','Marah','Ngantuk'],ci:2},
-  {q:'Wajah ini emosi apa? 😴',items:['😊','😢','😡','😴'],labels:['Senang','Sedih','Marah','Ngantuk'],ci:3},
-  {q:'Wajah ini emosi apa? 😨',items:['😊','😨','😡','😴'],labels:['Senang','Takut','Marah','Ngantuk'],ci:1},
- ]},
-{id:'k_m1',name:'Musim',icon:'🍂',age:'kid',category:'oposisi',color:'#8d6e63',type:'pic',
- questions:[
-  {q:'Daun jatuh saat musim?',items:['🌸','☀️','🍂','❄️'],labels:['Semi','Panas','Gugur','Dingin'],ci:2},
-  {q:'Bunga mekar saat musim?',items:['🌸','☀️','🍂','❄️'],labels:['Semi','Panas','Gugur','Dingin'],ci:0},
-  {q:'Indonesia musim apa saja?',items:['4','3','2','1'],labels:['Empat','Tiga','Dua','Satu'],ci:2},
-  {q:'Saat musim hujan biasanya?',items:['☀️','🌧️','❄️','🌸'],labels:['Cerah','Hujan','Salju','Bunga'],ci:1},
-  {q:'Saat musim kemarau biasanya?',items:['☀️','🌧️','❄️','🌸'],labels:['Cerah','Hujan','Salju','Bunga'],ci:0},
- ]},
-
-// ═══════════════════════════════════════════════════════════
-// BIGKID (7+ tahun) - 24 levels
-// Categories: bendera, destinasi, kota-id, kuliner, dunia, sains
-// ═══════════════════════════════════════════════════════════
-
-// --- BENDERA (5 levels) ---
-{id:'b_f1',name:'Bendera Dunia 1',icon:'🏁',age:'bigkid',category:'bendera',color:'#0277bd',type:'flag',
- questions:[
-  {q:'Bendera negara mana ini?',flag:'🇺🇸',correct:'Amerika',choices:['Amerika','Inggris','Rusia','Prancis']},
-  {q:'Bendera negara mana ini?',flag:'🇯🇵',correct:'Jepang',choices:['Korea','China','Jepang','Vietnam']},
-  {q:'Bendera negara mana ini?',flag:'🇧🇷',correct:'Brasil',choices:['Argentina','Brasil','Meksiko','Kolombia']},
-  {q:'Bendera negara mana ini?',flag:'🇩🇪',correct:'Jerman',choices:['Belanda','Italia','Jerman','Belgia']},
-  {q:'Bendera negara mana ini?',flag:'🇮🇹',correct:'Italia',choices:['Italia','Irlandia','Meksiko','Hungaria']},
-  {q:'Bendera negara mana ini?',flag:'🇫🇷',correct:'Prancis',choices:['Italia','Prancis','Spanyol','Portugal']},
-  {q:'Bendera negara mana ini?',flag:'🇬🇧',correct:'Inggris',choices:['Australia','Inggris','Selandia Baru','Kanada']},
-  {q:'Bendera negara mana ini?',flag:'🇨🇳',correct:'China',choices:['Vietnam','China','Korea Utara','Mongolia']},
- ]},
-{id:'b_f2',name:'Bendera Dunia 2',icon:'🚩',age:'bigkid',category:'bendera',color:'#01579b',type:'flag',
- questions:[
-  {q:'Bendera negara mana ini?',flag:'🇸🇦',correct:'Arab Saudi',choices:['Arab Saudi','Irak','Iran','Yaman']},
-  {q:'Bendera negara mana ini?',flag:'🇦🇺',correct:'Australia',choices:['Selandia Baru','Australia','Kanada','Inggris']},
-  {q:'Bendera negara mana ini?',flag:'🇮🇳',correct:'India',choices:['Pakistan','Bangladesh','India','Sri Lanka']},
-  {q:'Bendera negara mana ini?',flag:'🇷🇺',correct:'Rusia',choices:['Serbia','Rusia','Slovakia','Kroasia']},
-  {q:'Bendera negara mana ini?',flag:'🇰🇷',correct:'Korea Selatan',choices:['Korea Selatan','Jepang','China','Taiwan']},
-  {q:'Bendera negara mana ini?',flag:'🇹🇷',correct:'Turki',choices:['Tunisia','Turki','Pakistan','Maroko']},
-  {q:'Bendera negara mana ini?',flag:'🇲🇽',correct:'Meksiko',choices:['Brasil','Colombia','Italia','Meksiko']},
-  {q:'Bendera negara mana ini?',flag:'🇿🇦',correct:'Afrika Selatan',choices:['Nigeria','Kenya','Afrika Selatan','Ghana']},
- ]},
-{id:'b_f3',name:'Bendera ASEAN',icon:'🌏',age:'bigkid',category:'bendera',color:'#006064',type:'flag',
- questions:[
-  {q:'Bendera negara mana ini?',flag:'🇮🇩',correct:'Indonesia',choices:['Indonesia','Malaysia','Filipina','Singapura']},
-  {q:'Bendera negara mana ini?',flag:'🇲🇾',correct:'Malaysia',choices:['Indonesia','Malaysia','Brunei','Singapura']},
-  {q:'Bendera negara mana ini?',flag:'🇸🇬',correct:'Singapura',choices:['Malaysia','Indonesia','Singapura','Filipina']},
-  {q:'Bendera negara mana ini?',flag:'🇹🇭',correct:'Thailand',choices:['Kamboja','Thailand','Laos','Myanmar']},
-  {q:'Bendera negara mana ini?',flag:'🇻🇳',correct:'Vietnam',choices:['Vietnam','China','Laos','Kamboja']},
-  {q:'Bendera negara mana ini?',flag:'🇵🇭',correct:'Filipina',choices:['Malaysia','Indonesia','Thailand','Filipina']},
-  {q:'Bendera negara mana ini?',flag:'🇲🇲',correct:'Myanmar',choices:['Laos','Kamboja','Myanmar','Thailand']},
-  {q:'Bendera negara mana ini?',flag:'🇧🇳',correct:'Brunei',choices:['Malaysia','Brunei','Singapura','Indonesia']},
- ]},
-{id:'b_f4',name:'Bendera Eropa',icon:'🇪🇺',age:'bigkid',category:'bendera',color:'#283593',type:'flag',
- questions:[
-  {q:'Bendera negara mana ini?',flag:'🇪🇸',correct:'Spanyol',choices:['Italia','Spanyol','Portugal','Prancis']},
-  {q:'Bendera negara mana ini?',flag:'🇵🇹',correct:'Portugal',choices:['Italia','Portugal','Spanyol','Yunani']},
-  {q:'Bendera negara mana ini?',flag:'🇳🇱',correct:'Belanda',choices:['Belanda','Rusia','Luxemburg','Hungaria']},
-  {q:'Bendera negara mana ini?',flag:'🇨🇭',correct:'Swiss',choices:['Denmark','Swiss','Inggris','Yunani']},
-  {q:'Bendera negara mana ini?',flag:'🇸🇪',correct:'Swedia',choices:['Finlandia','Swedia','Norwegia','Denmark']},
-  {q:'Bendera negara mana ini?',flag:'🇳🇴',correct:'Norwegia',choices:['Islandia','Norwegia','Denmark','Swedia']},
-  {q:'Bendera negara mana ini?',flag:'🇬🇷',correct:'Yunani',choices:['Argentina','Yunani','Israel','Uruguay']},
-  {q:'Bendera negara mana ini?',flag:'🇮🇪',correct:'Irlandia',choices:['Italia','Irlandia','India','Pantai Gading']},
- ]},
-{id:'b_f5',name:'Bendera Afrika & Amerika',icon:'🌍',age:'bigkid',category:'bendera',color:'#1b5e20',type:'flag',
- questions:[
-  {q:'Bendera negara mana ini?',flag:'🇪🇬',correct:'Mesir',choices:['Sudan','Mesir','Yaman','Iran']},
-  {q:'Bendera negara mana ini?',flag:'🇰🇪',correct:'Kenya',choices:['Nigeria','Kenya','Tanzania','Uganda']},
-  {q:'Bendera negara mana ini?',flag:'🇳🇬',correct:'Nigeria',choices:['Nigeria','Pantai Gading','Ghana','Senegal']},
-  {q:'Bendera negara mana ini?',flag:'🇦🇷',correct:'Argentina',choices:['Argentina','Uruguay','Yunani','Israel']},
-  {q:'Bendera negara mana ini?',flag:'🇨🇦',correct:'Kanada',choices:['Kanada','Amerika','Peru','Lebanon']},
-  {q:'Bendera negara mana ini?',flag:'🇨🇱',correct:'Chili',choices:['Texas','Chili','Kuba','Filipina']},
-  {q:'Bendera negara mana ini?',flag:'🇨🇴',correct:'Kolombia',choices:['Venezuela','Ekuador','Kolombia','Peru']},
-  {q:'Bendera negara mana ini?',flag:'🇲🇦',correct:'Maroko',choices:['Maroko','Tunisia','Aljazair','Mauritania']},
- ]},
-
-// --- DESTINASI DUNIA (3 levels) ---
-{id:'b_d1',name:'Destinasi Ikonik',icon:'🗼',age:'bigkid',category:'destinasi',color:'#2e7d32',type:'pic',
- questions:[
-  {q:'Menara Eiffel ada di kota?',items:['🗼','🗽','🏰','🌉'],labels:['Paris','New York','London','San Francisco'],ci:0},
-  {q:'Patung Liberty ada di kota?',items:['🗼','🗽','🕌','🏯'],labels:['Paris','New York','Dubai','Tokyo'],ci:1},
-  {q:'Tembok Besar ada di negara?',items:['🇯🇵','🇰🇷','🇨🇳','🇻🇳'],labels:['Jepang','Korea','China','Vietnam'],ci:2},
-  {q:'Menara Pisa ada di negara?',items:['🇪🇸','🇫🇷','🇩🇪','🇮🇹'],labels:['Spanyol','Prancis','Jerman','Italia'],ci:3},
-  {q:'Big Ben ada di kota?',items:['🗼','🗽','🏰','🌁'],labels:['Paris','New York','London','Roma'],ci:2},
-  {q:'Colosseum ada di kota?',items:['🇬🇷','🇮🇹','🇪🇸','🇵🇹'],labels:['Athena','Roma','Madrid','Lisbon'],ci:1},
-  {q:'Taj Mahal ada di negara?',items:['🇵🇰','🇧🇩','🇮🇳','🇱🇰'],labels:['Pakistan','Bangladesh','India','Sri Lanka'],ci:2},
-  {q:'Opera House ada di kota?',items:['🇳🇿','🇦🇺','🇨🇦','🇺🇸'],labels:['Auckland','Sydney','Toronto','LA'],ci:1},
- ]},
-{id:'b_d2',name:'Keajaiban Dunia',icon:'🏛️',age:'bigkid',category:'destinasi',color:'#1b5e20',type:'pic',
- questions:[
-  {q:'Piramida besar ada di negara?',items:['🇪🇬','🇲🇽','🇮🇶','🇸🇩'],labels:['Mesir','Meksiko','Irak','Sudan'],ci:0},
-  {q:'Machu Picchu ada di negara?',items:['🇨🇱','🇵🇪','🇧🇴','🇪🇨'],labels:['Chili','Peru','Bolivia','Ekuador'],ci:1},
-  {q:'Patung Kristus Penebus ada di?',items:['🇦🇷','🇧🇷','🇵🇪','🇨🇴'],labels:['Argentina','Brasil','Peru','Kolombia'],ci:1},
-  {q:'Petra ada di negara?',items:['🇮🇶','🇮🇷','🇯🇴','🇸🇾'],labels:['Irak','Iran','Yordania','Suriah'],ci:2},
-  {q:'Stonehenge ada di negara?',items:['🇮🇪','🇬🇧','🇫🇷','🇩🇪'],labels:['Irlandia','Inggris','Prancis','Jerman'],ci:1},
-  {q:'Acropolis ada di kota?',items:['🇮🇹','🇬🇷','🇪🇬','🇹🇷'],labels:['Roma','Athena','Kairo','Istanbul'],ci:1},
-  {q:'Angkor Wat ada di negara?',items:['🇹🇭','🇰🇭','🇱🇦','🇻🇳'],labels:['Thailand','Kamboja','Laos','Vietnam'],ci:1},
-  {q:'Menara Burj Khalifa ada di kota?',items:['🇶🇦','🇸🇦','🇦🇪','🇧🇭'],labels:['Doha','Riyadh','Dubai','Manama'],ci:2},
- ]},
-{id:'b_d3',name:'Destinasi Indonesia',icon:'🏝️',age:'bigkid',category:'destinasi',color:'#33691e',type:'pic',
- questions:[
-  {q:'Borobudur ada di provinsi?',items:['DKI','DIY','Jateng','Jatim'],labels:['Jakarta','Yogya','Jateng','Jatim'],ci:2},
-  {q:'Raja Ampat ada di pulau?',items:['Bali','Sumatra','Sulawesi','Papua'],labels:['Bali','Sumatra','Sulawesi','Papua'],ci:3},
-  {q:'Pulau Komodo ada di provinsi?',items:['Bali','NTB','NTT','Papua'],labels:['Bali','NTB','NTT','Papua'],ci:2},
-  {q:'Danau Toba ada di pulau?',items:['Jawa','Sumatra','Kalimantan','Sulawesi'],labels:['Jawa','Sumatra','Kalimantan','Sulawesi'],ci:1},
-  {q:'Candi Prambanan ada di provinsi?',items:['DKI','DIY','Jateng','Jatim'],labels:['Jakarta','Yogya','Jateng','Jatim'],ci:1},
-  {q:'Bromo ada di provinsi?',items:['DIY','Jateng','Jatim','Bali'],labels:['Yogya','Jateng','Jatim','Bali'],ci:2},
-  {q:'Tana Toraja ada di pulau?',items:['Jawa','Sumatra','Sulawesi','Kalimantan'],labels:['Jawa','Sumatra','Sulawesi','Kalimantan'],ci:2},
-  {q:'Pulau Bali ada di selatan pulau?',items:['Jawa','Sumatra','Sulawesi','Lombok'],labels:['Jawa','Sumatra','Sulawesi','Lombok'],ci:0},
- ]},
-
-// --- KOTA INDONESIA (3 levels) ---
-{id:'b_k1',name:'Kota Indonesia 1',icon:'🏙️',age:'bigkid',category:'kota',color:'#1565c0',type:'pic',
- questions:[
-  {q:'Ibu kota Indonesia adalah?',items:['🏛️','🏯','🕌','🌆'],labels:['Jakarta','Bandung','Surabaya','Medan'],ci:0},
-  {q:'Kota Pahlawan adalah?',items:['Jakarta','Bandung','Surabaya','Medan'],labels:['Jakarta','Bandung','Surabaya','Medan'],ci:2},
-  {q:'Kota Kembang adalah?',items:['Jakarta','Bandung','Surabaya','Medan'],labels:['Jakarta','Bandung','Surabaya','Medan'],ci:1},
-  {q:'Kota Gudeg adalah?',items:['Solo','Yogya','Semarang','Magelang'],labels:['Solo','Yogyakarta','Semarang','Magelang'],ci:1},
-  {q:'Kota Medan ada di provinsi?',items:['Aceh','Sumut','Sumbar','Riau'],labels:['Aceh','Sumut','Sumbar','Riau'],ci:1},
-  {q:'Surabaya ada di provinsi?',items:['Jateng','Jatim','DIY','Bali'],labels:['Jateng','Jatim','DIY','Bali'],ci:1},
-  {q:'Kota Makassar ada di pulau?',items:['Jawa','Sumatra','Sulawesi','Papua'],labels:['Jawa','Sumatra','Sulawesi','Papua'],ci:2},
-  {q:'Kota Manado ada di provinsi?',items:['Sulsel','Sulteng','Sulut','Sulbar'],labels:['Sulsel','Sulteng','Sulut','Sulbar'],ci:2},
- ]},
-{id:'b_k2',name:'Kota Indonesia 2',icon:'🌆',age:'bigkid',category:'kota',color:'#0d47a1',type:'pic',
- questions:[
-  {q:'Kota Banda Aceh ada di pulau?',items:['Jawa','Sumatra','Kalimantan','Sulawesi'],labels:['Jawa','Sumatra','Kalimantan','Sulawesi'],ci:1},
-  {q:'Jayapura ibu kota provinsi?',items:['Maluku','Papua','NTT','Sulawesi'],labels:['Maluku','Papua','NTT','Sulawesi'],ci:1},
-  {q:'Pontianak di pulau?',items:['Sumatra','Kalimantan','Sulawesi','Papua'],labels:['Sumatra','Kalimantan','Sulawesi','Papua'],ci:1},
-  {q:'Palembang di pulau?',items:['Jawa','Sumatra','Kalimantan','Sulawesi'],labels:['Jawa','Sumatra','Kalimantan','Sulawesi'],ci:1},
-  {q:'Denpasar ibu kota?',items:['Bali','Lombok','NTB','NTT'],labels:['Bali','Lombok','NTB','NTT'],ci:0},
-  {q:'Mataram ibu kota?',items:['Bali','NTB','NTT','Sulawesi'],labels:['Bali','NTB','NTT','Sulawesi'],ci:1},
-  {q:'Ambon ada di provinsi?',items:['Papua','Maluku','NTT','Sulut'],labels:['Papua','Maluku','NTT','Sulut'],ci:1},
-  {q:'Banjarmasin di pulau?',items:['Sumatra','Jawa','Kalimantan','Sulawesi'],labels:['Sumatra','Jawa','Kalimantan','Sulawesi'],ci:2},
- ]},
-{id:'b_k3',name:'Ibu Kota Dunia',icon:'🌆',age:'bigkid',category:'kota',color:'#1976d2',type:'pic',
- questions:[
-  {q:'Ibu kota Jepang adalah?',items:['Seoul','Tokyo','Beijing','Bangkok'],labels:['Seoul','Tokyo','Beijing','Bangkok'],ci:1},
-  {q:'Ibu kota Korea Selatan adalah?',items:['Seoul','Tokyo','Beijing','Bangkok'],labels:['Seoul','Tokyo','Beijing','Bangkok'],ci:0},
-  {q:'Ibu kota Inggris adalah?',items:['Paris','Roma','London','Madrid'],labels:['Paris','Roma','London','Madrid'],ci:2},
-  {q:'Ibu kota Prancis adalah?',items:['Paris','Roma','London','Madrid'],labels:['Paris','Roma','London','Madrid'],ci:0},
-  {q:'Ibu kota Mesir adalah?',items:['Kairo','Aleksandria','Luxor','Giza'],labels:['Kairo','Aleksandria','Luxor','Giza'],ci:0},
-  {q:'Ibu kota Australia adalah?',items:['Sydney','Canberra','Melbourne','Perth'],labels:['Sydney','Canberra','Melbourne','Perth'],ci:1},
-  {q:'Ibu kota Amerika Serikat?',items:['New York','Washington','LA','Boston'],labels:['New York','Washington DC','LA','Boston'],ci:1},
-  {q:'Ibu kota Kanada adalah?',items:['Toronto','Ottawa','Vancouver','Montreal'],labels:['Toronto','Ottawa','Vancouver','Montreal'],ci:1},
- ]},
-
-// --- KULINER (4 levels) ---
-{id:'b_m1',name:'Makanan Indonesia 1',icon:'🍜',age:'bigkid',category:'kuliner',color:'#e65100',type:'food',
- questions:[
-  {q:'Makanan khas Padang yang terkenal di dunia:',emoji:'🥘',desc:'Daging sapi dimasak santan & rempah',correct:'Rendang',choices:['Soto','Rendang','Gulai','Rawon']},
-  {q:'Sup daging hitam khas Jawa Timur:',emoji:'🍲',desc:'Kuah hitam dari keluak, daging sapi',correct:'Rawon',choices:['Soto','Rawon','Bakso','Tengkleng']},
-  {q:'Makanan khas Yogya dari nangka muda:',emoji:'🫕',desc:'Nangka muda dimasak manis dengan santan',correct:'Gudeg',choices:['Gudeg','Sayur Lodeh','Opor','Garang Asem']},
-  {q:'Mie khas Aceh dengan kuah kari kental:',emoji:'🍝',desc:'Mie kuning, kuah kari, seafood/daging',correct:'Mie Aceh',choices:['Mie Goreng','Mie Ayam','Mie Aceh','Mie Cakalang']},
-  {q:'Sate khas dengan bumbu kacang manis:',emoji:'🍢',desc:'Daging sapi/ayam, bumbu kacang manis',correct:'Sate Madura',choices:['Sate Lilit','Sate Padang','Sate Madura','Sate Maranggi']},
-  {q:'Makanan khas Bali dari babi panggang:',emoji:'🥩',desc:'Babi utuh dipanggang dengan rempah',correct:'Babi Guling',choices:['Lawar','Babi Guling','Betutu','Sate Lilit']},
-  {q:'Bakso terkenal dari kota:',emoji:'🍲',desc:'Bola daging sapi dalam kuah kaldu',correct:'Malang',choices:['Solo','Malang','Wonogiri','Surabaya']},
-  {q:'Nasi liwet khas kota:',emoji:'🍚',desc:'Nasi gurih dengan santan, lauk lengkap',correct:'Solo',choices:['Solo','Bandung','Surabaya','Semarang']},
- ]},
-{id:'b_m2',name:'Makanan Indonesia 2',icon:'🍛',age:'bigkid',category:'kuliner',color:'#bf360c',type:'food',
- questions:[
-  {q:'Pempek adalah makanan khas kota:',emoji:'🐟',desc:'Olahan ikan tenggiri, disajikan dengan cuko',correct:'Palembang',choices:['Padang','Palembang','Jambi','Bengkulu']},
-  {q:'Papeda dimakan dengan kuah ikan kuning, khas:',emoji:'🫕',desc:'Bubur sagu kental, makanan pokok Papua',correct:'Papua',choices:['Maluku','Papua','NTT','Sulawesi']},
-  {q:'Lumpia adalah makanan khas kota:',emoji:'🥢',desc:'Rebung, telur, udang dibungkus kulit tipis',correct:'Semarang',choices:['Surabaya','Jakarta','Semarang','Yogyakarta']},
-  {q:'Ketoprak adalah makanan khas:',emoji:'🥗',desc:'Tahu, bihun, sayur dengan bumbu kacang',correct:'Jakarta',choices:['Jakarta','Bandung','Bogor','Depok']},
-  {q:'Coto Makassar adalah makanan dari:',emoji:'🍲',desc:'Sup jeroan sapi, kuah kaya rempah',correct:'Sulawesi Selatan',choices:['Sulawesi Utara','Sulawesi Selatan','Kalimantan','Papua']},
-  {q:'Soto Betawi berasal dari:',emoji:'🍜',desc:'Soto dengan santan & susu, daging sapi',correct:'Jakarta',choices:['Bandung','Surabaya','Jakarta','Semarang']},
-  {q:'Pecel bumbunya dari?',emoji:'🥗',desc:'Sayuran rebus disiram sambal kacang',correct:'Kacang tanah',choices:['Santan','Kacang tanah','Kedelai','Kemiri']},
-  {q:'Rujak cingur khas kota:',emoji:'🥗',desc:'Buah & sayur dengan bumbu petis, ada cingur',correct:'Surabaya',choices:['Surabaya','Solo','Yogya','Malang']},
- ]},
-{id:'b_m3',name:'Jajanan Tradisional',icon:'🍡',age:'bigkid',category:'kuliner',color:'#d84315',type:'food',
- questions:[
-  {q:'Klepon berisi apa?',emoji:'🟢',desc:'Bola hijau dari ketan, taburan kelapa',correct:'Gula merah',choices:['Cokelat','Gula merah','Keju','Selai']},
-  {q:'Kerak telor khas kota:',emoji:'🍳',desc:'Beras ketan, telur bebek, ebi, kelapa',correct:'Jakarta',choices:['Jakarta','Bogor','Bandung','Cirebon']},
-  {q:'Onde-onde luarnya berlapis?',emoji:'🟡',desc:'Bola goreng isi kacang hijau',correct:'Wijen',choices:['Tepung','Wijen','Kelapa','Gula']},
-  {q:'Bika Ambon berasal dari kota:',emoji:'🍰',desc:'Kue berlubang, manis & gurih',correct:'Medan',choices:['Ambon','Medan','Manado','Palembang']},
-  {q:'Wingko khas kota:',emoji:'🥥',desc:'Kue kelapa, dipanggang',correct:'Babat (Semarang)',choices:['Solo','Babat (Semarang)','Yogya','Magelang']},
-  {q:'Getuk terbuat dari?',emoji:'🟤',desc:'Kue manis, lembut, warna-warni',correct:'Singkong',choices:['Beras','Singkong','Jagung','Tepung']},
-  {q:'Dodol Garut bahan utamanya?',emoji:'🟫',desc:'Kue kenyal manis dari Garut',correct:'Ketan',choices:['Ketan','Tepung','Singkong','Kentang']},
-  {q:'Cendol minuman khas dari?',emoji:'🥤',desc:'Hijau panjang, santan, gula merah',correct:'Indonesia',choices:['Thailand','Indonesia','Malaysia','India']},
- ]},
-{id:'b_m4',name:'Makanan Dunia',icon:'🌮',age:'bigkid',category:'kuliner',color:'#c62828',type:'food',
- questions:[
-  {q:'Sushi makanan khas negara:',emoji:'🍣',desc:'Nasi & ikan mentah, dari Asia Timur',correct:'Jepang',choices:['China','Korea','Jepang','Vietnam']},
-  {q:'Pizza makanan khas negara:',emoji:'🍕',desc:'Roti pipih dengan topping keju & saus',correct:'Italia',choices:['Italia','Prancis','Spanyol','Yunani']},
-  {q:'Taco makanan khas negara:',emoji:'🌮',desc:'Tortilla dilipat berisi daging & sayur',correct:'Meksiko',choices:['Meksiko','Spanyol','Argentina','Brasil']},
-  {q:'Kimchi makanan khas negara:',emoji:'🥬',desc:'Sayur fermentasi pedas, sangat populer',correct:'Korea',choices:['Jepang','Korea','China','Vietnam']},
-  {q:'Pho makanan khas negara:',emoji:'🍜',desc:'Sup mie dengan kuah kaldu',correct:'Vietnam',choices:['Thailand','Vietnam','China','Kamboja']},
-  {q:'Croissant makanan khas negara:',emoji:'🥐',desc:'Roti berlapis bentuk bulan sabit',correct:'Prancis',choices:['Italia','Prancis','Jerman','Belgia']},
-  {q:'Curry makanan khas negara:',emoji:'🍛',desc:'Kuah kental kaya rempah',correct:'India',choices:['Thailand','India','Vietnam','Pakistan']},
-  {q:'Burger berasal dari negara:',emoji:'🍔',desc:'Roti, daging, sayuran',correct:'Amerika',choices:['Amerika','Inggris','Jerman','Kanada']},
- ]},
-
-// --- DUNIA (3 levels) ---
-{id:'b_w1',name:'Benua',icon:'🌎',age:'bigkid',category:'dunia',color:'#5e35b1',type:'pic',
- questions:[
-  {q:'Indonesia ada di benua?',items:['Asia','Eropa','Afrika','Amerika'],labels:['Asia','Eropa','Afrika','Amerika'],ci:0},
-  {q:'Mesir ada di benua?',items:['Asia','Eropa','Afrika','Amerika'],labels:['Asia','Eropa','Afrika','Amerika'],ci:2},
-  {q:'Brasil ada di benua?',items:['Asia','Eropa','Afrika','Amerika'],labels:['Asia','Eropa','Afrika','Amerika'],ci:3},
-  {q:'Prancis ada di benua?',items:['Asia','Eropa','Afrika','Amerika'],labels:['Asia','Eropa','Afrika','Amerika'],ci:1},
-  {q:'Australia juga merupakan?',items:['Negara','Pulau','Benua','Provinsi'],labels:['Negara','Pulau','Benua','Provinsi'],ci:2},
-  {q:'Benua terbesar adalah?',items:['Asia','Eropa','Afrika','Amerika'],labels:['Asia','Eropa','Afrika','Amerika'],ci:0},
-  {q:'Benua paling dingin adalah?',items:['Eropa','Amerika','Antartika','Asia'],labels:['Eropa','Amerika','Antartika','Asia'],ci:2},
-  {q:'Total benua di dunia ada?',items:['5','6','7','8'],labels:['Lima','Enam','Tujuh','Delapan'],ci:2},
- ]},
-{id:'b_w2',name:'Samudra & Gunung',icon:'🌊',age:'bigkid',category:'dunia',color:'#4527a0',type:'pic',
- questions:[
-  {q:'Samudra terbesar adalah?',items:['Atlantik','Pasifik','Hindia','Arktik'],labels:['Atlantik','Pasifik','Hindia','Arktik'],ci:1},
-  {q:'Indonesia diapit samudra?',items:['Pasifik & Atlantik','Pasifik & Hindia','Hindia & Arktik','Atlantik & Arktik'],labels:['Pasifik & Atlantik','Pasifik & Hindia','Hindia & Arktik','Atlantik & Arktik'],ci:1},
-  {q:'Gunung tertinggi di dunia?',items:['Fuji','Everest','Kilimanjaro','Aconcagua'],labels:['Fuji','Everest','Kilimanjaro','Aconcagua'],ci:1},
-  {q:'Gunung Everest ada di?',items:['Tibet/Nepal','India','Pakistan','China'],labels:['Nepal','India','Pakistan','China'],ci:0},
-  {q:'Sungai Nil ada di benua?',items:['Asia','Eropa','Afrika','Amerika'],labels:['Asia','Eropa','Afrika','Amerika'],ci:2},
-  {q:'Sungai Amazon ada di benua?',items:['Asia','Eropa','Afrika','Amerika'],labels:['Asia','Eropa','Afrika','Amerika'],ci:3},
-  {q:'Hutan Amazon ada di negara?',items:['Argentina','Brasil','Peru','Kolombia'],labels:['Argentina','Brasil','Peru','Kolombia'],ci:1},
-  {q:'Gurun Sahara ada di benua?',items:['Asia','Eropa','Afrika','Australia'],labels:['Asia','Eropa','Afrika','Australia'],ci:2},
- ]},
-{id:'b_w3',name:'Tata Surya',icon:'🪐',age:'bigkid',category:'dunia',color:'#311b92',type:'pic',
- questions:[
-  {q:'Planet kita tinggal adalah?',items:['Mars','Bumi','Venus','Saturnus'],labels:['Mars','Bumi','Venus','Saturnus'],ci:1},
-  {q:'Planet terdekat dengan matahari?',items:['Bumi','Venus','Merkurius','Mars'],labels:['Bumi','Venus','Merkurius','Mars'],ci:2},
-  {q:'Planet merah adalah?',items:['Mars','Venus','Jupiter','Saturnus'],labels:['Mars','Venus','Jupiter','Saturnus'],ci:0},
-  {q:'Planet dengan cincin terkenal?',items:['Mars','Venus','Jupiter','Saturnus'],labels:['Mars','Venus','Jupiter','Saturnus'],ci:3},
-  {q:'Planet terbesar adalah?',items:['Mars','Bumi','Jupiter','Saturnus'],labels:['Mars','Bumi','Jupiter','Saturnus'],ci:2},
-  {q:'Berapa planet di tata surya?',items:['6','7','8','9'],labels:['Enam','Tujuh','Delapan','Sembilan'],ci:2},
-  {q:'Bulan adalah satelit dari?',items:['Mars','Bumi','Venus','Matahari'],labels:['Mars','Bumi','Venus','Matahari'],ci:1},
-  {q:'Matahari adalah?',items:['Planet','Bintang','Satelit','Asteroid'],labels:['Planet','Bintang','Satelit','Asteroid'],ci:1},
- ]},
-
-// --- SAINS & ALAM (3 levels) ---
-{id:'b_s1',name:'Hewan Dunia',icon:'🦒',age:'bigkid',category:'sains',color:'#00838f',type:'pic',
- questions:[
-  {q:'Mamalia terbesar di laut?',items:['🦈','🐳','🐬','🐙'],labels:['Hiu','Paus','Lumba-lumba','Gurita'],ci:1},
-  {q:'Hewan tercepat di darat?',items:['🐆','🦓','🦒','🐘'],labels:['Cheetah','Zebra','Jerapah','Gajah'],ci:0},
-  {q:'Hewan tertinggi di darat?',items:['🐆','🦓','🦒','🐘'],labels:['Cheetah','Zebra','Jerapah','Gajah'],ci:2},
-  {q:'Hewan hanya ada di Australia?',items:['🦘','🦁','🐘','🐯'],labels:['Kanguru','Singa','Gajah','Harimau'],ci:0},
-  {q:'Hewan hanya ada di China?',items:['🐼','🦘','🦁','🐯'],labels:['Panda','Kanguru','Singa','Harimau'],ci:0},
-  {q:'Komodo hanya ada di?',items:['Bali','Lombok','NTT','Papua'],labels:['Bali','Lombok','NTT','Papua'],ci:2},
-  {q:'Orangutan ada di pulau?',items:['Jawa','Sumatra & Kalimantan','Sulawesi','Papua'],labels:['Jawa','Sumatra & Kalimantan','Sulawesi','Papua'],ci:1},
-  {q:'Burung tak bisa terbang?',items:['🦅','🐧','🦆','🦉'],labels:['Elang','Penguin','Bebek','Hantu'],ci:1},
- ]},
-{id:'b_s2',name:'Tubuh Manusia',icon:'🫀',age:'bigkid',category:'sains',color:'#006064',type:'pic',
- questions:[
-  {q:'Organ pemompa darah?',items:['🧠','🫀','🫁','🦴'],labels:['Otak','Jantung','Paru','Tulang'],ci:1},
-  {q:'Organ untuk berpikir?',items:['🧠','🫀','🫁','🦴'],labels:['Otak','Jantung','Paru','Tulang'],ci:0},
-  {q:'Organ untuk bernapas?',items:['🧠','🫀','🫁','🦴'],labels:['Otak','Jantung','Paru','Tulang'],ci:2},
-  {q:'Tulang menjadi rangka?',items:['🧠','🫀','🫁','🦴'],labels:['Otak','Jantung','Paru','Tulang'],ci:3},
-  {q:'Gigi orang dewasa berapa?',items:['20','28','32','40'],labels:['20','28','32','40'],ci:2},
-  {q:'Manusia bernapas hirup?',items:['Oksigen','Nitrogen','CO2','Hidrogen'],labels:['Oksigen','Nitrogen','CO2','Hidrogen'],ci:0},
-  {q:'Darah merah karena?',items:['Air','Zat besi','Vitamin','Gula'],labels:['Air','Zat besi','Vitamin','Gula'],ci:1},
-  {q:'Mata, telinga, hidung, lidah, kulit. Total ada?',items:['3','4','5','6'],labels:['Tiga','Empat','Lima','Enam'],ci:2},
- ]},
-{id:'b_s3',name:'Sains Umum',icon:'🔬',age:'bigkid',category:'sains',color:'#00695c',type:'pic',
- questions:[
-  {q:'Air mendidih pada suhu?',items:['50°C','75°C','100°C','150°C'],labels:['50°C','75°C','100°C','150°C'],ci:2},
-  {q:'Es mencair menjadi?',items:['Gas','Cair','Padat','Uap'],labels:['Gas','Cair','Padat','Uap'],ci:1},
-  {q:'Tumbuhan butuh apa untuk hidup?',items:['Cahaya','Suara','Gas','Listrik'],labels:['Cahaya','Suara','Gas','Listrik'],ci:0},
-  {q:'Pelangi muncul karena?',items:['Angin','Cahaya & air','Petir','Es'],labels:['Angin','Cahaya & air','Petir','Es'],ci:1},
-  {q:'Bumi mengelilingi?',items:['Bulan','Bintang','Matahari','Mars'],labels:['Bulan','Bintang','Matahari','Mars'],ci:2},
-  {q:'Magnet menarik benda?',items:['Kayu','Plastik','Besi','Kaca'],labels:['Kayu','Plastik','Besi','Kaca'],ci:2},
-  {q:'Suara merambat melalui?',items:['Udara','Vakum','Cahaya','Kosong'],labels:['Udara','Vakum','Cahaya','Kosong'],ci:0},
-  {q:'Tumbuhan menghasilkan?',items:['CO2','Oksigen','Nitrogen','Hidrogen'],labels:['CO2','Oksigen','Nitrogen','Hidrogen'],ci:1},
- ]},
-
-];
-
-
-// ============================================================
-// CATEGORY METADATA per age group
-// ============================================================
-const CATEGORIES = {
+const AGES = {
   toddler: {
-    label: 'Balita (2-3 Tahun)',
-    sub: 'Kenali dunia di sekitar 🧸',
-    color: 'linear-gradient(135deg,#ff6b9d,#c44569)',
-    cats: [
-      {id:'warna', name:'Warna', icon:'🎨'},
-      {id:'bentuk', name:'Bentuk & Ukuran', icon:'⭕'},
-      {id:'hewan', name:'Hewan', icon:'🐶'},
-      {id:'buah', name:'Buah-buahan', icon:'🍎'},
-      {id:'transport', name:'Kendaraan', icon:'🚗'},
-    ]
+    label:'2 – 3 Tahun', icon:'🧸',
+    bannerTitle:'Dunia Balita 🧸',
+    bannerSub:'Yuk belajar hal-hal seru!',
+    cls:'toddler'
   },
   kid: {
-    label: 'Anak TK (4-6 Tahun)',
-    sub: 'Belajar membaca, berhitung & dunia sekitar 🎈',
-    color: 'linear-gradient(135deg,#4fc3f7,#1976d2)',
-    cats: [
-      {id:'huruf', name:'Alfabet', icon:'🔤'},
-      {id:'angka', name:'Berhitung', icon:'🔢'},
-      {id:'profesi', name:'Profesi', icon:'👨‍⚕️'},
-      {id:'alam', name:'Alam & Cuaca', icon:'🌳'},
-      {id:'tubuh', name:'Tubuh Kita', icon:'🧍'},
-      {id:'oposisi', name:'Lawan Kata', icon:'⚖️'},
-    ]
+    label:'4 – 6 Tahun', icon:'🎈',
+    bannerTitle:'Ayo Belajar Bersama! 🎈',
+    bannerSub:'Alfabet, angka, dan banyak lagi!',
+    cls:'kid'
   },
   bigkid: {
-    label: 'Anak SD (7+ Tahun)',
-    sub: 'Petualangan ke dunia, budaya & sains 🌍',
-    color: 'linear-gradient(135deg,#66bb6a,#2e7d32)',
-    cats: [
-      {id:'bendera', name:'Bendera Dunia', icon:'🏁'},
-      {id:'destinasi', name:'Destinasi & Keajaiban', icon:'🗼'},
-      {id:'kota', name:'Kota & Ibu Kota', icon:'🏙️'},
-      {id:'kuliner', name:'Kuliner', icon:'🍜'},
-      {id:'dunia', name:'Geografi Dunia', icon:'🌎'},
-      {id:'sains', name:'Sains & Tubuh', icon:'🔬'},
-    ]
+    label:'7+ Tahun', icon:'🌍',
+    bannerTitle:'Penjelajah Dunia 🌍',
+    bannerSub:'Bendera, kota, kuliner, dan sains!',
+    cls:'bigkid'
   }
 };
 
-// ============================================================
-// STATE
-// ============================================================
-let STATE = {stars:{}, totalStars:0, music:false};
-let CURRENT = {age:null, category:null, level:null, qIndex:0, correct:0, wrong:0};
+// ═══════ TODDLER LEVELS (2-3 th) ═══════
+const TODDLER_LEVELS = [
+  // ── WARNA ──
+  {id:'t_warna1', cat:'warna', name:'Mengenal Warna 1', icon:'🎨',
+   qs:[
+    {q:'Ini warna apa?',emoji:'🔴',desc:'Warna buah tomat!',correct:'Merah',choices:['Merah','Biru','Kuning','Hijau']},
+    {q:'Ini warna apa?',emoji:'🔵',desc:'Warna langit siang!',correct:'Biru',choices:['Merah','Biru','Hijau','Putih']},
+    {q:'Ini warna apa?',emoji:'🟡',desc:'Warna matahari!',correct:'Kuning',choices:['Oranye','Merah','Kuning','Putih']},
+    {q:'Ini warna apa?',emoji:'🟢',desc:'Warna daun!',correct:'Hijau',choices:['Biru','Hijau','Merah','Kuning']},
+    {q:'Ini warna apa?',emoji:'🟠',desc:'Warna buah jeruk!',correct:'Oranye',choices:['Merah','Kuning','Oranye','Cokelat']},
+    {q:'Ini warna apa?',emoji:'⚫',desc:'Warna malam gelap!',correct:'Hitam',choices:['Abu-abu','Hitam','Cokelat','Biru']},
+  ]},
+  {id:'t_warna2', cat:'warna', name:'Mengenal Warna 2', icon:'🌈',
+   qs:[
+    {q:'Ini warna apa?',emoji:'⚪',desc:'Warna kapas!',correct:'Putih',choices:['Putih','Abu-abu','Kuning','Hijau']},
+    {q:'Ini warna apa?',emoji:'🟤',desc:'Warna tanah dan cokelat!',correct:'Cokelat',choices:['Merah','Oranye','Cokelat','Hitam']},
+    {q:'Ini warna apa?',emoji:'🟣',desc:'Warna terung!',correct:'Ungu',choices:['Biru','Ungu','Merah','Pink']},
+    {q:'Ini warna apa?',emoji:'🩷',desc:'Warna flamingo!',correct:'Pink',choices:['Merah','Ungu','Pink','Oranye']},
+    {q:'Langit saat sore hari berwarna...',emoji:'🌅',desc:'Indah sekali warnanya!',correct:'Oranye',choices:['Biru','Hitam','Oranye','Hijau']},
+    {q:'Warna bendera Indonesia yang di atas...',emoji:'🇮🇩',desc:'Merah dan Putih!',correct:'Merah',choices:['Putih','Merah','Biru','Hijau']},
+  ]},
+  // ── BENTUK ──
+  {id:'t_bentuk1', cat:'bentuk', name:'Mengenal Bentuk', icon:'⭕',
+   qs:[
+    {q:'Ini bentuk apa?',emoji:'⭕',desc:'Bulat seperti bola!',correct:'Lingkaran',choices:['Segitiga','Lingkaran','Kotak','Bintang']},
+    {q:'Ini bentuk apa?',emoji:'🔺',desc:'Seperti atap rumah!',correct:'Segitiga',choices:['Lingkaran','Kotak','Segitiga','Persegi Panjang']},
+    {q:'Ini bentuk apa?',emoji:'⬛',desc:'Semua sisinya sama!',correct:'Kotak',choices:['Kotak','Segitiga','Lingkaran','Bintang']},
+    {q:'Ini bentuk apa?',emoji:'⬜',desc:'Panjang dan lebar!',correct:'Persegi Panjang',choices:['Kotak','Persegi Panjang','Segitiga','Oval']},
+    {q:'Ini bentuk apa?',emoji:'⭐',desc:'Seperti bintang di langit!',correct:'Bintang',choices:['Bintang','Lingkaran','Kotak','Hati']},
+    {q:'Ini bentuk apa?',emoji:'🫀',desc:'Lambang cinta!',correct:'Hati',choices:['Bintang','Lingkaran','Hati','Kotak']},
+  ]},
+  // ── HEWAN ──
+  {id:'t_hewan1', cat:'hewan', name:'Hewan Peliharaan', icon:'🐶',
+   qs:[
+    {q:'Hewan apa ini?',emoji:'🐶',desc:'Suka menggonggong, sahabat manusia!',correct:'Anjing',choices:['Kucing','Anjing','Kelinci','Hamster']},
+    {q:'Hewan apa ini?',emoji:'🐱',desc:'Suka mengeong dan manja!',correct:'Kucing',choices:['Anjing','Tikus','Kucing','Kelinci']},
+    {q:'Hewan apa ini?',emoji:'🐰',desc:'Telinganya panjang, suka wortel!',correct:'Kelinci',choices:['Tikus','Hamster','Kucing','Kelinci']},
+    {q:'Hewan apa ini?',emoji:'🐠',desc:'Berenang di dalam akuarium!',correct:'Ikan',choices:['Kura-kura','Ikan','Katak','Kepiting']},
+    {q:'Hewan apa ini?',emoji:'🐢',desc:'Rumahnya ada di punggungnya!',correct:'Kura-kura',choices:['Kura-kura','Buaya','Ikan','Katak']},
+    {q:'Hewan apa ini?',emoji:'🐹',desc:'Kecil berbulu, lucu sekali!',correct:'Hamster',choices:['Tikus','Kelinci','Hamster','Tupai']},
+  ]},
+  {id:'t_hewan2', cat:'hewan', name:'Hewan di Kebun Binatang', icon:'🦁',
+   qs:[
+    {q:'Hewan apa ini?',emoji:'🦁',desc:'Raja hutan yang gagah!',correct:'Singa',choices:['Harimau','Singa','Cheetah','Beruang']},
+    {q:'Hewan apa ini?',emoji:'🐘',desc:'Hidungnya panjang sekali!',correct:'Gajah',choices:['Badak','Kuda Nil','Gajah','Jerapah']},
+    {q:'Hewan apa ini?',emoji:'🦒',desc:'Lehernya sangat panjang!',correct:'Jerapah',choices:['Unta','Jerapah','Kuda','Zebra']},
+    {q:'Hewan apa ini?',emoji:'🦓',desc:'Warna hitam putih bergaris!',correct:'Zebra',choices:['Kuda','Zebra','Keledai','Sapi']},
+    {q:'Hewan apa ini?',emoji:'🐒',desc:'Suka berayun di pohon!',correct:'Monyet',choices:['Gorila','Kera','Monyet','Orang Utan']},
+    {q:'Hewan apa ini?',emoji:'🦏',desc:'Ada cula di hidungnya!',correct:'Badak',choices:['Badak','Gajah','Kuda Nil','Bison']},
+  ]},
+  {id:'t_hewan3', cat:'hewan', name:'Hewan Indonesia', icon:'🦅',
+   qs:[
+    {q:'Hewan khas Papua dengan bulu indah...',emoji:'🦜',desc:'Bulunya berwarna-warni, sangat cantik!',correct:'Cenderawasih',choices:['Merak','Cenderawasih','Kakatua','Beo']},
+    {q:'Hewan khas Komodo yang mirip naga...',emoji:'🦎',desc:'Hewan reptil raksasa dari Nusa Tenggara!',correct:'Komodo',choices:['Biawak','Iguana','Komodo','Buaya']},
+    {q:'Harimau yang ada di Pulau Sumatera...',emoji:'🐯',desc:'Harimau khas Indonesia, dilindungi!',correct:'Harimau Sumatera',choices:['Harimau Sumatera','Singa Afrika','Cheetah','Leopard']},
+    {q:'Orang Utan tinggal di hutan...',emoji:'🦧',desc:'Kera besar dengan rambut oranye, khas Kalimantan!',correct:'Kalimantan',choices:['Sulawesi','Jawa','Kalimantan','Papua']},
+    {q:'Badak bercula satu ada di...',emoji:'🦏',desc:'Badak paling langka di dunia!',correct:'Ujung Kulon',choices:['Ujung Kulon','Taman Safari','Raja Ampat','Bromo']},
+    {q:'Burung Garuda adalah lambang negara...',emoji:'🦅',desc:'Burung gagah yang jadi simbol Indonesia!',correct:'Indonesia',choices:['Malaysia','Brunei','Indonesia','Singapura']},
+  ]},
+  // ── BUAH ──
+  {id:'t_buah1', cat:'buah', name:'Mengenal Buah', icon:'🍎',
+   qs:[
+    {q:'Buah apa ini?',emoji:'🍎',desc:'Merah dan manis, enak sekali!',correct:'Apel',choices:['Pir','Apel','Persik','Ceri']},
+    {q:'Buah apa ini?',emoji:'🍌',desc:'Kuning dan melengkung!',correct:'Pisang',choices:['Mangga','Pisang','Pepaya','Durian']},
+    {q:'Buah apa ini?',emoji:'🍊',desc:'Rasanya segar dan asam manis!',correct:'Jeruk',choices:['Lemon','Jeruk','Jeruk Bali','Limau']},
+    {q:'Buah apa ini?',emoji:'🍇',desc:'Bulat kecil dan tumbuh bergerombol!',correct:'Anggur',choices:['Ceri','Blueberry','Anggur','Kismis']},
+    {q:'Buah apa ini?',emoji:'🍓',desc:'Merah berbintik, manis asam!',correct:'Stroberi',choices:['Stroberi','Raspberry','Ceri','Apel merah']},
+    {q:'Buah apa ini?',emoji:'🍉',desc:'Hijau di luar, merah di dalam!',correct:'Semangka',choices:['Semangka','Melon','Labu','Pir']},
+  ]},
+  {id:'t_buah2', cat:'buah', name:'Buah Tropis Indonesia', icon:'🥭',
+   qs:[
+    {q:'Buah apa ini?',emoji:'🥭',desc:'Kuning manis, raja buah tropis!',correct:'Mangga',choices:['Pepaya','Jambu','Mangga','Nanas']},
+    {q:'Buah berduri yang baunya kuat...',emoji:'🫐',desc:'Orang bilang raja buah, tapi baunya kuat!',correct:'Durian',choices:['Nangka','Cempedak','Durian','Salak']},
+    {q:'Buah apa ini?',emoji:'🍍',desc:'Berkulit bersisik kuning, rasanya manis segar!',correct:'Nanas',choices:['Nanas','Kelapa','Pepaya','Rambutan']},
+    {q:'Buah berbulu merah ini namanya...',emoji:'🍒',desc:'Kulitnya berambut merah, dalamnya putih!',correct:'Rambutan',choices:['Leci','Rambutan','Langsat','Manggis']},
+    {q:'Buah apa ini?',emoji:'🥥',desc:'Air dan dagingnya enak, tumbuh di pantai!',correct:'Kelapa',choices:['Kelapa','Salak','Durian','Nangka']},
+    {q:'Buah kuning panjang yang kaya vitamin...',emoji:'🍈',desc:'Bijinya bisa dimakan, kaya vitamin C!',correct:'Pepaya',choices:['Pepaya','Mangga','Pisang','Semangka']},
+  ]},
+  // ── KENDARAAN ──
+  {id:'t_kend1', cat:'kendaraan', name:'Kendaraan Darat', icon:'🚗',
+   qs:[
+    {q:'Kendaraan apa ini?',emoji:'🚗',desc:'Punya 4 roda, bisa angkut keluarga!',correct:'Mobil',choices:['Motor','Mobil','Bus','Truk']},
+    {q:'Kendaraan apa ini?',emoji:'🏍️',desc:'Punya 2 roda, lebih kecil dari mobil!',correct:'Motor',choices:['Sepeda','Motor','Mobil','Becak']},
+    {q:'Kendaraan apa ini?',emoji:'🚌',desc:'Besar, bisa angkut banyak penumpang!',correct:'Bus',choices:['Truk','Kereta','Bus','Van']},
+    {q:'Kendaraan apa ini?',emoji:'🚲',desc:'Dikayuh dengan kaki, tidak pakai bensin!',correct:'Sepeda',choices:['Sepeda','Motor','Skuter','Sepeda Roda Tiga']},
+    {q:'Kendaraan apa ini?',emoji:'🚂',desc:'Berjalan di atas rel, panjang sekali!',correct:'Kereta',choices:['Bus','Truk','Kereta','Trem']},
+    {q:'Kendaraan apa ini?',emoji:'🚛',desc:'Besar dan kuat, angkut barang berat!',correct:'Truk',choices:['Bus','Truk','Traktor','Van']},
+  ]},
+  {id:'t_kend2', cat:'kendaraan', name:'Kendaraan Udara & Air', icon:'✈️',
+   qs:[
+    {q:'Kendaraan apa ini?',emoji:'✈️',desc:'Terbang tinggi di langit!',correct:'Pesawat',choices:['Helikopter','Pesawat','Balon Udara','Roket']},
+    {q:'Kendaraan apa ini?',emoji:'🚀',desc:'Melesat ke luar angkasa!',correct:'Roket',choices:['Roket','Pesawat','Rudal','Helikopter']},
+    {q:'Kendaraan apa ini?',emoji:'🚁',desc:'Bisa naik turun di tempat sempit!',correct:'Helikopter',choices:['Pesawat','Helikopter','Drone','Parasut']},
+    {q:'Kendaraan apa ini?',emoji:'🚢',desc:'Berlayar di laut, besar sekali!',correct:'Kapal',choices:['Perahu','Kapal','Sampan','Feri']},
+    {q:'Kendaraan apa ini?',emoji:'⛵',desc:'Kecil, layarnya tiup angin!',correct:'Perahu Layar',choices:['Perahu Layar','Kapal','Kano','Jet Ski']},
+    {q:'Kendaraan apa ini?',emoji:'🛸',desc:'Hanya ada di cerita fiksi ilmiah!',correct:'UFO',choices:['Satelit','UFO','Drone','Helikopter']},
+  ]},
+];
 
-function loadState(){
-  try{
-    const s = localStorage.getItem('darizka_state');
-    if(s){ STATE = JSON.parse(s); }
-  }catch(e){ STATE = {stars:{}, totalStars:0, music:false}; }
-  if(!STATE.stars) STATE.stars = {};
-  if(typeof STATE.totalStars !== 'number') STATE.totalStars = 0;
+// ═══════ KID LEVELS (4-6 th) ═══════
+const KID_LEVELS = [
+  // ── ALFABET ──
+  {id:'k_alfa1', cat:'alfabet', name:'Huruf A – M', icon:'🔤',
+   qs:[
+    {q:'Huruf pertama dalam alfabet adalah...',emoji:'🅰️',desc:'A adalah huruf pertama!',correct:'A',choices:['A','B','C','D']},
+    {q:'B adalah singkatan dari...',emoji:'🐝',desc:'B... b... Bunga!',correct:'Bunga',choices:['Bunga','Apel','Mobil','Pohon']},
+    {q:'Huruf setelah C adalah...',emoji:'📝',desc:'C, D, E...',correct:'D',choices:['D','E','B','F']},
+    {q:'Kata "Ibu" dimulai dengan huruf...',emoji:'👩',desc:'I... bu...!',correct:'I',choices:['H','I','J','A']},
+    {q:'Kata "Mangga" dimulai dengan huruf...',emoji:'🥭',desc:'M... angga...',correct:'M',choices:['L','N','M','K']},
+    {q:'Huruf vokal adalah...',emoji:'🎵',desc:'A, I, U, E, O adalah huruf vokal!',correct:'A, I, U, E, O',choices:['A, I, U, E, O','A, B, C, D, E','A, E, I, O, U, Y','Semua huruf']},
+  ]},
+  {id:'k_alfa2', cat:'alfabet', name:'Huruf N – Z', icon:'✏️',
+   qs:[
+    {q:'Huruf terakhir dalam alfabet adalah...',emoji:'💤',desc:'Z adalah huruf ke-26!',correct:'Z',choices:['Z','Y','X','W']},
+    {q:'Kata "Nasi" dimulai dengan huruf...',emoji:'🍚',desc:'N... asi...',correct:'N',choices:['M','N','O','P']},
+    {q:'Kata "Pohon" dimulai dengan huruf...',emoji:'🌳',desc:'P... ohon...',correct:'P',choices:['O','P','Q','R']},
+    {q:'Huruf setelah S adalah...',emoji:'📖',desc:'...R, S, T...',correct:'T',choices:['R','U','T','V']},
+    {q:'Kata "Ulat" dimulai dengan huruf...',emoji:'🐛',desc:'U... lat...',correct:'U',choices:['O','U','I','E']},
+    {q:'Ada berapa huruf dalam alfabet Indonesia?',emoji:'🔡',desc:'Alfabet Indonesia punya 26 huruf!',correct:'26',choices:['24','25','26','27']},
+  ]},
+  // ── ANGKA ──
+  {id:'k_angka1', cat:'angka', name:'Berhitung 1 – 10', icon:'🔢',
+   qs:[
+    {q:'Berapa jumlah jari di satu tangan?',emoji:'🖐️',desc:'Hitung satu per satu ya!',correct:'5',choices:['4','5','6','10']},
+    {q:'1 + 1 = ...',emoji:'➕',desc:'Satu ditambah satu!',correct:'2',choices:['1','2','3','4']},
+    {q:'Angka setelah 7 adalah...',emoji:'7️⃣',desc:'Tujuh... delapan!',correct:'8',choices:['9','6','8','10']},
+    {q:'Berapa jumlah kaki kucing?',emoji:'🐱',desc:'Hitung kaki kucingnya!',correct:'4',choices:['2','3','4','6']},
+    {q:'5 – 2 = ...',emoji:'➖',desc:'Lima dikurangi dua!',correct:'3',choices:['2','3','4','5']},
+    {q:'Angka terbesar di antara ini...',emoji:'🔢',desc:'Mana yang paling besar?',correct:'9',choices:['5','7','3','9']},
+  ]},
+  {id:'k_angka2', cat:'angka', name:'Berhitung 10 – 20', icon:'🧮',
+   qs:[
+    {q:'10 + 5 = ...',emoji:'➕',desc:'Sepuluh ditambah lima!',correct:'15',choices:['14','15','16','20']},
+    {q:'Berapa jumlah bulan dalam setahun?',emoji:'📅',desc:'Januari sampai Desember!',correct:'12',choices:['10','11','12','13']},
+    {q:'Angka setelah 15 adalah...',emoji:'🔢',desc:'Lima belas... enam belas!',correct:'16',choices:['14','16','17','15']},
+    {q:'20 – 5 = ...',emoji:'➖',desc:'Dua puluh dikurangi lima!',correct:'15',choices:['10','12','15','20']},
+    {q:'Berapa hari dalam seminggu?',emoji:'📆',desc:'Senin sampai Minggu!',correct:'7',choices:['5','6','7','8']},
+    {q:'Berapa jam dalam satu hari?',emoji:'🕐',desc:'Dua belas siang, dua belas malam!',correct:'24',choices:['12','20','24','48']},
+  ]},
+  // ── PROFESI ──
+  {id:'k_prof1', cat:'profesi', name:'Profesi Penolong', icon:'👨‍⚕️',
+   qs:[
+    {q:'Siapa yang merawat orang sakit di rumah sakit?',emoji:'🏥',desc:'Pakai baju putih, punya stetoskop!',correct:'Dokter',choices:['Dokter','Guru','Polisi','Tentara']},
+    {q:'Siapa yang memadamkan api saat kebakaran?',emoji:'🚒',desc:'Pemberani! Pakai helm dan selang besar!',correct:'Pemadam Kebakaran',choices:['Polisi','Tentara','Pemadam Kebakaran','Satpam']},
+    {q:'Siapa yang menjaga keamanan dan menangkap penjahat?',emoji:'🚔',desc:'Pakai seragam biru, punya pistol!',correct:'Polisi',choices:['Tentara','Polisi','Satpam','Hakim']},
+    {q:'Siapa yang mengantar surat dan paket ke rumah?',emoji:'📬',desc:'Naik motor, bawa tas besar!',correct:'Tukang Pos',choices:['Kurir','Tukang Pos','Driver','Sopir']},
+    {q:'Siapa yang merawat hewan yang sakit?',emoji:'🐾',desc:'Dokter khusus untuk hewan!',correct:'Dokter Hewan',choices:['Dokter','Dokter Hewan','Penjaga Kebun Binatang','Ahli Biologi']},
+    {q:'Siapa yang mengoperasikan pesawat terbang?',emoji:'✈️',desc:'Pakai seragam dan topi keren!',correct:'Pilot',choices:['Pilot','Masinis','Kapten Kapal','Astronot']},
+  ]},
+  {id:'k_prof2', cat:'profesi', name:'Profesi Kreatif & Pendidikan', icon:'🎨',
+   qs:[
+    {q:'Siapa yang mengajar murid di sekolah?',emoji:'🏫',desc:'Pakai buku, berdiri di depan kelas!',correct:'Guru',choices:['Dosen','Guru','Pelatih','Tutor']},
+    {q:'Siapa yang memasak makanan di restoran?',emoji:'👨‍🍳',desc:'Pakai topi putih tinggi, jago masak!',correct:'Koki',choices:['Koki','Pelayan','Kasir','Manajer Restoran']},
+    {q:'Siapa yang membuat bangunan dan gedung?',emoji:'🏗️',desc:'Pakai helm, tahu cara menggambar denah!',correct:'Arsitek',choices:['Tukang Bangunan','Arsitek','Insinyur','Desainer']},
+    {q:'Siapa yang melukis gambar dan karya seni?',emoji:'🖼️',desc:'Punya kuas dan cat warna!',correct:'Pelukis',choices:['Fotografer','Desainer','Pelukis','Pematung']},
+    {q:'Siapa yang menulis berita untuk koran?',emoji:'📰',desc:'Punya buku catatan dan sering wawancara!',correct:'Wartawan',choices:['Penulis','Jurnalis','Wartawan','Editor']},
+    {q:'Siapa yang menjual sayur dan buah di pasar?',emoji:'🛒',desc:'Ada di pasar tradisional setiap hari!',correct:'Pedagang',choices:['Petani','Pedagang','Distributor','Kasir']},
+  ]},
+  // ── ALAM & CUACA ──
+  {id:'k_alam1', cat:'alam', name:'Cuaca & Alam', icon:'🌳',
+   qs:[
+    {q:'Cuaca apa saat langit cerah dan matahari bersinar?',emoji:'☀️',desc:'Panas, cerah, bagus buat bermain di luar!',correct:'Cerah',choices:['Cerah','Mendung','Hujan','Berangin']},
+    {q:'Cuaca apa saat air turun dari langit?',emoji:'🌧️',desc:'Butuh payung agar tidak basah!',correct:'Hujan',choices:['Badai','Hujan','Salju','Kabut']},
+    {q:'Saat ada petir dan badai besar, cuacanya...',emoji:'⛈️',desc:'Sangat berbahaya, lebih baik di dalam rumah!',correct:'Badai',choices:['Hujan','Mendung','Badai','Berangin']},
+    {q:'Air yang turun saat cuaca sangat dingin di negara 4 musim...',emoji:'❄️',desc:'Putih, dingin, bisa dibuat bola lempar!',correct:'Salju',choices:['Es','Salju','Embun','Hujan Es']},
+    {q:'Bagian bumi yang tertinggi namanya...',emoji:'⛰️',desc:'Puncaknya sering tertutup salju!',correct:'Gunung',choices:['Bukit','Pegunungan','Gunung','Tebing']},
+    {q:'Air yang mengalir dari gunung ke laut namanya...',emoji:'🏞️',desc:'Bisa untuk mandi dan minum!',correct:'Sungai',choices:['Danau','Sungai','Selat','Teluk']},
+  ]},
+  {id:'k_alam2', cat:'alam', name:'Bumi & Langit', icon:'🌍',
+   qs:[
+    {q:'Bintang terbesar yang memberikan cahaya siang hari...',emoji:'☀️',desc:'Tanpanya, bumi akan gelap dan dingin!',correct:'Matahari',choices:['Matahari','Bulan','Bintang','Planet']},
+    {q:'Benda langit yang bersinar di malam hari...',emoji:'🌙',desc:'Kadang bulat penuh, kadang seperti sabit!',correct:'Bulan',choices:['Matahari','Bulan','Bintang','Meteor']},
+    {q:'Planet tempat kita tinggal bernama...',emoji:'🌍',desc:'Biru, hijau, ada air dan daratan!',correct:'Bumi',choices:['Mars','Bumi','Jupiter','Venus']},
+    {q:'Tempat berkumpulnya air asin yang sangat luas...',emoji:'🌊',desc:'Sangat luas, ada ikan paus di sini!',correct:'Samudra',choices:['Danau','Sungai','Laut','Samudra']},
+    {q:'Tanaman besar yang punya batang keras...',emoji:'🌳',desc:'Rumah burung dan tupai!',correct:'Pohon',choices:['Pohon','Semak','Tanaman','Bunga']},
+    {q:'Warna langit yang cerah di siang hari...',emoji:'🌤️',desc:'Karena cahaya matahari memantul di atmosfer!',correct:'Biru',choices:['Putih','Abu-abu','Biru','Hijau']},
+  ]},
+  // ── TUBUH ──
+  {id:'k_tubuh1', cat:'tubuh', name:'Mengenal Tubuh', icon:'🧍',
+   qs:[
+    {q:'Bagian tubuh yang dipakai untuk berpikir...',emoji:'🧠',desc:'Di dalam kepala kita!',correct:'Otak',choices:['Otak','Hati','Paru-paru','Mata']},
+    {q:'Kita melihat menggunakan...',emoji:'👀',desc:'Ada dua di wajah kita!',correct:'Mata',choices:['Telinga','Hidung','Mata','Mulut']},
+    {q:'Kita mendengar menggunakan...',emoji:'👂',desc:'Ada di kiri dan kanan kepala!',correct:'Telinga',choices:['Mata','Telinga','Hidung','Mulut']},
+    {q:'Kita mencium bau menggunakan...',emoji:'👃',desc:'Di tengah-tengah wajah kita!',correct:'Hidung',choices:['Mulut','Hidung','Mata','Pipi']},
+    {q:'Kita makan dan berbicara menggunakan...',emoji:'👄',desc:'Di bawah hidung kita!',correct:'Mulut',choices:['Mulut','Pipi','Dagu','Telinga']},
+    {q:'Kita berjalan menggunakan...',emoji:'🦵',desc:'Ada dua, satu kiri satu kanan!',correct:'Kaki',choices:['Tangan','Kaki','Lutut','Jari']},
+  ]},
+  // ── LAWAN KATA ──
+  {id:'k_lawan1', cat:'lawan', name:'Lawan Kata', icon:'⚖️',
+   qs:[
+    {q:'Lawan kata dari "Besar" adalah...',emoji:'📦',desc:'Kalau besar lawannya...!',correct:'Kecil',choices:['Sedang','Kecil','Tipis','Pendek']},
+    {q:'Lawan kata dari "Panas" adalah...',emoji:'🌡️',desc:'Kalau panas lawannya...!',correct:'Dingin',choices:['Hangat','Sejuk','Dingin','Lembap']},
+    {q:'Lawan kata dari "Tinggi" adalah...',emoji:'📏',desc:'Kalau tinggi lawannya...!',correct:'Pendek',choices:['Kecil','Pendek','Rendah','Datar']},
+    {q:'Lawan kata dari "Siang" adalah...',emoji:'🌓',desc:'Kalau siang lawannya...!',correct:'Malam',choices:['Sore','Pagi','Malam','Subuh']},
+    {q:'Lawan kata dari "Cepat" adalah...',emoji:'⏱️',desc:'Kalau cepat lawannya...!',correct:'Lambat',choices:['Pelan','Lambat','Santai','Berhenti']},
+    {q:'Lawan kata dari "Gelap" adalah...',emoji:'💡',desc:'Kalau gelap lawannya...!',correct:'Terang',choices:['Cerah','Terang','Bersinar','Siang']},
+  ]},
+];
+
+// ═══════ BIGKID LEVELS (7+ th) ═══════
+// Difficulty system: easy/medium/hard per question bank
+const BIGKID_LEVELS = [
+  // ── BENDERA ──
+  {id:'b_flag1', cat:'bendera', name:'Bendera ASEAN', icon:'🌏',
+   qs:{
+    easy:[
+      {q:'Bendera negara mana ini?',flag:'🇮🇩',desc:'Merah putih, 2 warna',correct:'Indonesia',choices:['Malaysia','Indonesia','Singapura','Brunei']},
+      {q:'Bendera negara mana ini?',flag:'🇸🇬',desc:'Merah putih, ada bulan bintang',correct:'Singapura',choices:['Malaysia','Indonesia','Singapura','Brunei']},
+      {q:'Bendera negara mana ini?',flag:'🇹🇭',desc:'Merah putih biru, 3 garis',correct:'Thailand',choices:['Thailand','Laos','Myanmar','Kamboja']},
+      {q:'Bendera negara mana ini?',flag:'🇻🇳',desc:'Merah, ada bintang kuning',correct:'Vietnam',choices:['Vietnam','China','Laos','Kamboja']},
+      {q:'Bendera negara mana ini?',flag:'🇵🇭',desc:'Biru merah, ada matahari',correct:'Filipina',choices:['Malaysia','Filipina','Thailand','Indonesia']},
+      {q:'Berapa negara anggota ASEAN?',emoji:'🌏',desc:'ASEAN didirikan tahun 1967',correct:'10',choices:['8','9','10','12']},
+    ],
+    medium:[
+      {q:'Bendera negara mana ini?',flag:'🇲🇾',desc:'Mirip bendera USA tapi ada bulan bintang',correct:'Malaysia',choices:['Indonesia','Malaysia','Brunei','Filipina']},
+      {q:'Bendera negara mana ini?',flag:'🇲🇲',desc:'Merah hijau, ada bintang putih',correct:'Myanmar',choices:['Laos','Kamboja','Myanmar','Thailand']},
+      {q:'Bendera negara mana ini?',flag:'🇧🇳',desc:'Kuning, ada garis hitam putih dan lambang',correct:'Brunei Darussalam',choices:['Malaysia','Brunei Darussalam','Singapura','Indonesia']},
+      {q:'Bendera negara mana ini?',flag:'🇰🇭',desc:'Biru merah, ada gambar candi',correct:'Kamboja',choices:['Thailand','Laos','Vietnam','Kamboja']},
+      {q:'Bendera negara mana ini?',flag:'🇱🇦',desc:'Merah biru, ada lingkaran putih',correct:'Laos',choices:['Vietnam','Laos','Kamboja','Myanmar']},
+      {q:'Ibu kota Vietnam adalah...',emoji:'🇻🇳',desc:'Kota bersejarah di Vietnam Utara',correct:'Hanoi',choices:['Ho Chi Minh','Hanoi','Da Nang','Hue']},
+    ],
+    hard:[
+      {q:'Bendera negara mana ini?',flag:'🇹🇱',desc:'Hitam merah kuning putih',correct:'Timor-Leste',choices:['Indonesia','Timor-Leste','Papua Nugini','Vanuatu']},
+      {q:'Negara ASEAN yang berbentuk kepulauan terbesar...',emoji:'🏝️',desc:'Terdiri dari ribuan pulau!',correct:'Indonesia',choices:['Filipina','Indonesia','Malaysia','Brunei Darussalam']},
+      {q:'Ibu kota Myanmar adalah...',emoji:'🇲🇲',desc:'Bukan Yangon, tapi kota yang dibangun baru',correct:'Naypyidaw',choices:['Yangon','Mandalay','Naypyidaw','Bagan']},
+      {q:'Negara ASEAN yang paling kecil luas wilayahnya...',emoji:'🌏',desc:'Sebuah pulau kecil di ujung Semenanjung Malaya',correct:'Singapura',choices:['Brunei Darussalam','Singapura','Timor-Leste','Laos']},
+      {q:'ASEAN berdiri pada tahun...',emoji:'📅',desc:'Didirikan di Bangkok',correct:'1967',choices:['1945','1955','1967','1975']},
+      {q:'Bahasa resmi Brunei Darussalam adalah...',emoji:'🇧🇳',desc:'Bahasa yang juga dipakai di Malaysia',correct:'Melayu',choices:['Inggris','Melayu','Arab','Mandarin']},
+    ]
+  }},
+  {id:'b_flag2', cat:'bendera', name:'Bendera Eropa', icon:'🇪🇺',
+   qs:{
+    easy:[
+      {q:'Bendera negara mana ini?',flag:'🇫🇷',desc:'Biru putih merah, vertikal',correct:'Prancis',choices:['Belanda','Italia','Prancis','Belgia']},
+      {q:'Bendera negara mana ini?',flag:'🇩🇪',desc:'Hitam merah kuning',correct:'Jerman',choices:['Austria','Belgia','Jerman','Swiss']},
+      {q:'Bendera negara mana ini?',flag:'🇬🇧',desc:'Union Jack, merah putih biru',correct:'Inggris',choices:['Amerika Serikat','Inggris','Australia','Selandia Baru']},
+      {q:'Bendera negara mana ini?',flag:'🇮🇹',desc:'Hijau putih merah, vertikal',correct:'Italia',choices:['Prancis','Italia','Portugal','Irlandia']},
+      {q:'Bendera negara mana ini?',flag:'🇪🇸',desc:'Merah kuning merah, ada lambang',correct:'Spanyol',choices:['Spanyol','Portugal','Meksiko','Kolombia']},
+      {q:'Ibu kota Prancis adalah...',emoji:'🇫🇷',desc:'Kota Menara Eiffel!',correct:'Paris',choices:['London','Berlin','Paris','Roma']},
+    ],
+    medium:[
+      {q:'Bendera negara mana ini?',flag:'🇳🇱',desc:'Merah putih biru, horizontal',correct:'Belanda',choices:['Prancis','Rusia','Belanda','Luksemburg']},
+      {q:'Bendera negara mana ini?',flag:'🇵🇹',desc:'Hijau merah, ada lingkaran lambang',correct:'Portugal',choices:['Italia','Spanyol','Brasil','Portugal']},
+      {q:'Bendera negara mana ini?',flag:'🇷🇺',desc:'Putih biru merah, horizontal',correct:'Rusia',choices:['Belanda','Serbia','Rusia','Slovakia']},
+      {q:'Bendera negara mana ini?',flag:'🇵🇱',desc:'Putih merah, 2 warna horizontal',correct:'Polandia',choices:['Austria','Polandia','Monako','Indonesia']},
+      {q:'Ibu kota Jerman adalah...',emoji:'🇩🇪',desc:'Kota bersejarah yang dulu terbagi dua',correct:'Berlin',choices:['Munich','Hamburg','Frankfurt','Berlin']},
+      {q:'Bendera Uni Eropa berwarna...',emoji:'🇪🇺',desc:'Ada bintang-bintang di sekelilingnya',correct:'Biru dengan bintang kuning',choices:['Merah putih','Biru dengan bintang kuning','Hijau kuning','Hitam merah kuning']},
+    ],
+    hard:[
+      {q:'Bendera negara mana ini?',flag:'🇨🇭',desc:'Merah, salib putih — tapi bentuk KOTAK',correct:'Swiss',choices:['Austria','Swiss','Liechtenstein','Denmark']},
+      {q:'Bendera negara mana ini?',flag:'🇲🇨',desc:'Merah putih, mirip Indonesia tapi lebih kecil',correct:'Monako',choices:['Polandia','Monako','Singapura','Kanada']},
+      {q:'Negara Eropa yang tidak punya laut (landlocked)...',emoji:'🗺️',desc:'Dikelilingi negara lain sepenuhnya',correct:'Swiss',choices:['Austria','Swiss','Hungaria','Semua benar']},
+      {q:'Ibu kota Portugal adalah...',emoji:'🇵🇹',desc:'Kota pelabuhan di tepi Samudra Atlantik',correct:'Lisbon',choices:['Porto','Madrid','Lisbon','Seville']},
+      {q:'Negara terkecil di Eropa sekaligus dunia...',emoji:'🏛️',desc:'Ada di dalam kota Roma, Italia',correct:'Vatikan',choices:['Monako','San Marino','Vatikan','Liechtenstein']},
+      {q:'Uni Eropa memiliki berapa negara anggota?',emoji:'🇪🇺',desc:'Per 2024, setelah Brexit',correct:'27',choices:['25','26','27','28']},
+    ]
+  }},
+  {id:'b_flag3', cat:'bendera', name:'Bendera Amerika & Afrika', icon:'🌎',
+   qs:{
+    easy:[
+      {q:'Bendera negara mana ini?',flag:'🇺🇸',desc:'Bintang dan garis-garis!',correct:'Amerika Serikat',choices:['Amerika Serikat','Kanada','Australia','Inggris']},
+      {q:'Bendera negara mana ini?',flag:'🇧🇷',desc:'Hijau kuning, ada bola biru',correct:'Brasil',choices:['Brasil','Argentina','Kolombia','Venezuela']},
+      {q:'Bendera negara mana ini?',flag:'🇦🇷',desc:'Biru putih biru, ada matahari',correct:'Argentina',choices:['Uruguay','Chile','Argentina','Paraguay']},
+      {q:'Ibu kota Amerika Serikat adalah...',emoji:'🇺🇸',desc:'Bukan New York!',correct:'Washington D.C.',choices:['New York','Los Angeles','Chicago','Washington D.C.']},
+      {q:'Bendera negara mana ini?',flag:'🇿🇦',desc:'Warni-warni dengan huruf Y',correct:'Afrika Selatan',choices:['Nigeria','Kenya','Afrika Selatan','Ghana']},
+      {q:'Bendera Kanada memiliki gambar...',emoji:'🇨🇦',desc:'Pohon khas Kanada!',correct:'Daun Maple',choices:['Beruang','Daun Maple','Bintang','Elang']},
+    ],
+    medium:[
+      {q:'Bendera negara mana ini?',flag:'🇲🇽',desc:'Hijau putih merah, ada burung elang',correct:'Meksiko',choices:['Italia','Meksiko','Bolivia','Peru']},
+      {q:'Negara terbesar di Amerika Selatan...',emoji:'🌎',desc:'Bahasa resminya Portugis!',correct:'Brasil',choices:['Argentina','Brasil','Kolombia','Peru']},
+      {q:'Bendera Nigeria berwarna...',emoji:'🇳🇬',desc:'Negara terbesar di Afrika',correct:'Hijau dan Putih',choices:['Merah Hijau','Hijau dan Putih','Merah Putih','Biru Putih']},
+      {q:'Ibu kota Brasil adalah...',emoji:'🇧🇷',desc:'Bukan Rio de Janeiro!',correct:'Brasilia',choices:['Sao Paulo','Rio de Janeiro','Brasilia','Salvador']},
+      {q:'Bendera negara mana ini?',flag:'🇪🇬',desc:'Merah putih hitam, ada lambang elang',correct:'Mesir',choices:['Suriah','Irak','Mesir','Libya']},
+      {q:'Gurun Sahara terletak di benua...',emoji:'🏜️',desc:'Gurun terbesar di dunia!',correct:'Afrika',choices:['Asia','Amerika','Afrika','Australia']},
+    ],
+    hard:[
+      {q:'Ibu kota Kanada adalah...',emoji:'🇨🇦',desc:'Bukan Toronto, bukan Vancouver!',correct:'Ottawa',choices:['Toronto','Vancouver','Montreal','Ottawa']},
+      {q:'Negara Afrika yang paling banyak penduduknya...',emoji:'🌍',desc:'Lebih dari 200 juta jiwa!',correct:'Nigeria',choices:['Mesir','Ethiopia','Nigeria','Kongo']},
+      {q:'Bahasa resmi Brasil adalah...',emoji:'🇧🇷',desc:'Bukan Spanyol, tapi bahasa Eropa lainnya!',correct:'Portugis',choices:['Spanyol','Inggris','Portugis','Brasil']},
+      {q:'Bendera negara mana ini?',flag:'🇨🇱',desc:'Merah putih biru, ada bintang',correct:'Cile',choices:['Kuba','Cile','Bolivia','Venezuela']},
+      {q:'Sungai Nil mengalir melalui negara...',emoji:'🌊',desc:'Sungai terpanjang di dunia!',correct:'Mesir',choices:['Sudan','Ethiopia','Uganda','Mesir']},
+      {q:'Ibu kota Argentina adalah...',emoji:'🇦🇷',desc:'Kota terbesar di Amerika Selatan Selatan',correct:'Buenos Aires',choices:['Santiago','Lima','Montevideo','Buenos Aires']},
+    ]
+  }},
+  // ── KOTA & DESTINASI ──
+  {id:'b_dest1', cat:'destinasi', name:'Destinasi Dunia', icon:'🗼',
+   qs:{
+    easy:[
+      {q:'Menara Eiffel ada di kota...',emoji:'🗼',desc:'Kota cahaya di Prancis!',correct:'Paris',choices:['London','Paris','Roma','Madrid']},
+      {q:'Big Ben adalah menara jam di kota...',emoji:'🕰️',desc:'Ibu kota Inggris!',correct:'London',choices:['Paris','Berlin','London','Amsterdam']},
+      {q:'Colosseum adalah arena bersejarah di kota...',emoji:'🏛️',desc:'Ibu kota Italia!',correct:'Roma',choices:['Athena','Roma','Madrid','Lisboa']},
+      {q:'Patung Liberty ada di kota...',emoji:'🗽',desc:'The Big Apple!',correct:'New York',choices:['Washington D.C.','Los Angeles','Chicago','New York']},
+      {q:'Tembok Besar ada di negara...',emoji:'🧱',desc:'Negara dengan penduduk terbanyak!',correct:'Tiongkok',choices:['Jepang','Korea Selatan','Tiongkok','Mongolia']},
+      {q:'Taj Mahal ada di negara...',emoji:'🕌',desc:'Monumen cinta yang indah!',correct:'India',choices:['Pakistan','Bangladesh','India','Nepal']},
+    ],
+    medium:[
+      {q:'Opera House yang terkenal ada di kota...',emoji:'🎭',desc:'Kota terbesar di Australia!',correct:'Sydney',choices:['Melbourne','Brisbane','Perth','Sydney']},
+      {q:'Ibu kota Jepang adalah...',emoji:'🗾',desc:'Kota terpadat di dunia!',correct:'Tokyo',choices:['Osaka','Kyoto','Hiroshima','Tokyo']},
+      {q:'Piramida Giza ada di negara...',emoji:'🔺',desc:'Salah satu keajaiban dunia kuno!',correct:'Mesir',choices:['Libya','Aljazair','Sudan','Mesir']},
+      {q:'Katedral Sagrada Familia ada di kota...',emoji:'⛪',desc:'Kota di Spanyol yang punya pantai!',correct:'Barcelona',choices:['Madrid','Valencia','Seville','Barcelona']},
+      {q:'Menara Petronas ada di ibu kota...',emoji:'🏙️',desc:'Dua menara kembar yang megah!',correct:'Kuala Lumpur',choices:['Singapura','Jakarta','Bangkok','Kuala Lumpur']},
+      {q:'Kremlin adalah istana bersejarah di kota...',emoji:'🏰',desc:'Ibu kota Rusia!',correct:'Moskow',choices:['Saint Petersburg','Kiev','Minsk','Moskow']},
+    ],
+    hard:[
+      {q:'Ibu kota Australia adalah...',emoji:'🇦🇺',desc:'Bukan Sydney, bukan Melbourne!',correct:'Canberra',choices:['Sydney','Melbourne','Brisbane','Canberra']},
+      {q:'Angkor Wat adalah candi megah di negara...',emoji:'🛕',desc:'Negara di Asia Tenggara',correct:'Kamboja',choices:['Thailand','Laos','Vietnam','Kamboja']},
+      {q:'Machu Picchu ada di negara...',emoji:'🏔️',desc:'Kota kuno suku Inca di pegunungan Andes!',correct:'Peru',choices:['Bolivia','Ekuador','Kolombia','Peru']},
+      {q:'Stonehenge ada di negara...',emoji:'🪨',desc:'Batu-batu besar misterius!',correct:'Inggris',choices:['Prancis','Irlandia','Wales','Inggris']},
+      {q:'Tembok Besar Tiongkok dibangun untuk...',emoji:'🧱',desc:'Memerlukan waktu berabad-abad!',correct:'Mempertahankan dari serangan musuh',choices:['Jalan raya','Irigasi','Mempertahankan dari serangan musuh','Batas wilayah']},
+      {q:'Kota tertua di dunia yang masih berpenghuni adalah...',emoji:'🏙️',desc:'Ada di Timur Tengah',correct:'Jericho',choices:['Roma','Athena','Kairo','Jericho']},
+    ]
+  }},
+  // ── KOTA INDONESIA ──
+  {id:'b_kota1', cat:'kota', name:'Kota Indonesia 1', icon:'🏙️',
+   qs:{
+    easy:[
+      {q:'Ibu kota Indonesia saat ini adalah...',emoji:'🇮🇩',desc:'Kota yang juga dikenal sebagai kota metropolitan!',correct:'Jakarta',choices:['Surabaya','Bandung','Jakarta','Semarang']},
+      {q:'Ibu kota baru Indonesia yang sedang dibangun...',emoji:'🏗️',desc:'Ada di Pulau Kalimantan!',correct:'Nusantara',choices:['Palangkaraya','Samarinda','Balikpapan','Nusantara']},
+      {q:'Kota terbesar kedua di Indonesia...',emoji:'🌆',desc:'Ada di Jawa Timur, dikenal sebagai Kota Pahlawan!',correct:'Surabaya',choices:['Bandung','Medan','Surabaya','Semarang']},
+      {q:'Kota di Jawa Barat yang terkenal dengan cuacanya yang sejuk...',emoji:'🌿',desc:'Kota Kembang!',correct:'Bandung',choices:['Bogor','Bandung','Cirebon','Sukabumi']},
+      {q:'Kota di Sumatera Utara yang merupakan kota terbesar...',emoji:'🌴',desc:'Kota Medan terkenal dengan Mie Aceh dan kulinernya!',correct:'Medan',choices:['Pekanbaru','Palembang','Medan','Padang']},
+      {q:'Kota Yogyakarta dikenal sebagai kota...',emoji:'🎭',desc:'Banyak seniman, universitas, dan budaya Jawa!',correct:'Budaya dan Pelajar',choices:['Industri','Budaya dan Pelajar','Pelabuhan','Pertambangan']},
+    ],
+    medium:[
+      {q:'Kota Makassar adalah ibu kota provinsi...',emoji:'🌊',desc:'Di Pulau Sulawesi bagian selatan!',correct:'Sulawesi Selatan',choices:['Sulawesi Tengah','Sulawesi Utara','Sulawesi Selatan','Sulawesi Tenggara']},
+      {q:'Kota Denpasar adalah ibu kota provinsi...',emoji:'🌴',desc:'Pulau Dewata!',correct:'Bali',choices:['Nusa Tenggara Barat','Bali','Lombok','Nusa Tenggara Timur']},
+      {q:'Kota Padang adalah ibu kota provinsi...',emoji:'🌶️',desc:'Terkenal dengan Masakan Padang!',correct:'Sumatera Barat',choices:['Sumatera Utara','Lampung','Sumatera Selatan','Sumatera Barat']},
+      {q:'Kota Manado adalah ibu kota provinsi...',emoji:'🐠',desc:'Terkenal dengan keindahan laut Bunaken!',correct:'Sulawesi Utara',choices:['Sulawesi Tengah','Gorontalo','Sulawesi Utara','Maluku Utara']},
+      {q:'Kota Palembang adalah ibu kota provinsi...',emoji:'🍢',desc:'Terkenal dengan Jembatan Ampera dan Pempek!',correct:'Sumatera Selatan',choices:['Jambi','Bengkulu','Sumatera Selatan','Lampung']},
+      {q:'Kota Semarang adalah ibu kota provinsi...',emoji:'🥟',desc:'Terkenal dengan Lumpia dan Klenteng Sam Poo Kong!',correct:'Jawa Tengah',choices:['Jawa Barat','Jawa Timur','Jawa Tengah','Banten']},
+    ],
+    hard:[
+      {q:'Kota Jayapura adalah ibu kota provinsi...',emoji:'🦜',desc:'Di ujung timur Indonesia!',correct:'Papua',choices:['Papua Barat','Maluku','Papua Barat Daya','Papua']},
+      {q:'Kota Ambon adalah ibu kota provinsi...',emoji:'🏝️',desc:'Di kepulauan timur Indonesia, terkenal dengan rempah!',correct:'Maluku',choices:['Maluku Utara','Papua','Nusa Tenggara Timur','Maluku']},
+      {q:'Kota Pontianak unik karena dilalui oleh...',emoji:'🌐',desc:'Garis khayalan yang membagi bumi!',correct:'Garis Khatulistiwa',choices:['Garis Bujur Nol','Garis Khatulistiwa','Garis Batas Waktu','Garis Wallace']},
+      {q:'Ibu kota provinsi Kalimantan Tengah adalah...',emoji:'🌳',desc:'Kota di tepian Sungai Kahayan',correct:'Palangka Raya',choices:['Banjarmasin','Samarinda','Balikpapan','Palangka Raya']},
+      {q:'Ibu kota provinsi Nusa Tenggara Timur adalah...',emoji:'🦎',desc:'Dekat dengan Pulau Komodo!',correct:'Kupang',choices:['Mataram','Labuan Bajo','Kupang','Ende']},
+      {q:'Kota Pekanbaru adalah ibu kota provinsi...',emoji:'🛢️',desc:'Salah satu penghasil minyak bumi terbesar!',correct:'Riau',choices:['Jambi','Kepulauan Riau','Riau','Bengkulu']},
+    ]
+  }},
+  {id:'b_kota2', cat:'kota', name:'Kota Indonesia 2', icon:'🗺️',
+   qs:{
+    easy:[
+      {q:'Kota Bogor terkenal dengan...',emoji:'🌧️',desc:'Hampir setiap hari turun hujan!',correct:'Hujan yang sering',choices:['Pantai','Gunung berapi','Hujan yang sering','Batu besar']},
+      {q:'Kota Solo (Surakarta) terkenal dengan...',emoji:'🎭',desc:'Keraton dan seni tradisional Jawa!',correct:'Budaya Jawa dan Batik',choices:['Pelabuhan','Budaya Jawa dan Batik','Pertambangan','Industri otomotif']},
+      {q:'Kota Lombok adalah kota terbesar di provinsi...',emoji:'🌶️',desc:'Pulau di sebelah timur Bali!',correct:'Nusa Tenggara Barat',choices:['Bali','Nusa Tenggara Timur','Nusa Tenggara Barat','Maluku']},
+      {q:'Kota Balikpapan ada di provinsi...',emoji:'🛢️',desc:'Terkenal sebagai kota minyak di Kalimantan!',correct:'Kalimantan Timur',choices:['Kalimantan Selatan','Kalimantan Barat','Kalimantan Tengah','Kalimantan Timur']},
+      {q:'Malang terletak di provinsi...',emoji:'🍎',desc:'Kota apel di pegunungan!',correct:'Jawa Timur',choices:['Jawa Barat','Jawa Tengah','Jawa Timur','Banten']},
+      {q:'Kota yang dijuluki Paris van Java adalah...',emoji:'🌸',desc:'Kota kembang yang sejuk!',correct:'Bandung',choices:['Jakarta','Surabaya','Yogyakarta','Bandung']},
+    ],
+    medium:[
+      {q:'Ibu kota provinsi Aceh adalah...',emoji:'🕌',desc:'Provinsi paling barat Indonesia, terkenal Kopi Gayo!',correct:'Banda Aceh',choices:['Lhokseumawe','Langsa','Meulaboh','Banda Aceh']},
+      {q:'Ibu kota provinsi Gorontalo adalah...',emoji:'🌊',desc:'Provinsi kecil di Sulawesi!',correct:'Gorontalo',choices:['Manado','Palu','Kendari','Gorontalo']},
+      {q:'Kota Samarinda adalah ibu kota provinsi...',emoji:'🌳',desc:'Salah satu provinsi terbesar di Kalimantan!',correct:'Kalimantan Timur',choices:['Kalimantan Selatan','Kalimantan Tengah','Kalimantan Barat','Kalimantan Timur']},
+      {q:'Kota Ternate ada di provinsi...',emoji:'🌶️',desc:'Dulu dikenal sebagai penghasil cengkeh terbesar dunia!',correct:'Maluku Utara',choices:['Maluku','Papua Barat','Sulawesi Utara','Maluku Utara']},
+      {q:'Ibu kota provinsi Lampung adalah...',emoji:'🐘',desc:'Pintu gerbang Sumatera dari arah Jawa!',correct:'Bandar Lampung',choices:['Metro','Bandar Lampung','Kotabumi','Kalianda']},
+      {q:'Ibu kota provinsi Bengkulu adalah...',emoji:'🌺',desc:'Terkenal dengan bunga Rafflesia Arnoldii terbesar di dunia!',correct:'Bengkulu',choices:['Curup','Mukomuko','Bengkulu','Lubuklinggau']},
+    ],
+    hard:[
+      {q:'Ibu kota provinsi Sulawesi Tengah adalah...',emoji:'🐟',desc:'Kota di teluk yang indah!',correct:'Palu',choices:['Poso','Luwuk','Toli-Toli','Palu']},
+      {q:'Ibu kota provinsi Sulawesi Tenggara adalah...',emoji:'🏝️',desc:'Di dekat Kepulauan Wakatobi yang indah!',correct:'Kendari',choices:['Bau-Bau','Kolaka','Raha','Kendari']},
+      {q:'Ibu kota provinsi Kalimantan Barat adalah...',emoji:'🌊',desc:'Kota di tepi Sungai Kapuas, sungai terpanjang Indonesia!',correct:'Pontianak',choices:['Singkawang','Ketapang','Sanggau','Pontianak']},
+      {q:'Kota Sorong ada di provinsi...',emoji:'🐠',desc:'Gerbang menuju Raja Ampat!',correct:'Papua Barat Daya',choices:['Papua Barat','Papua','Papua Barat Daya','Maluku']},
+      {q:'Ibu kota provinsi Maluku Utara adalah...',emoji:'🏝️',desc:'Bukan Ternate, tapi kota yang lebih baru!',correct:'Sofifi',choices:['Ternate','Tidore','Bacan','Sofifi']},
+      {q:'Berapa jumlah provinsi Indonesia per tahun 2024?',emoji:'🗺️',desc:'Indonesia terus berkembang dengan pemekaran!',correct:'38',choices:['34','36','38','40']},
+    ]
+  }},
+  // ── KULINER ──
+  {id:'b_mk1', cat:'kuliner', name:'Kuliner Nusantara 1', icon:'🍜',
+   qs:{
+    easy:[
+      {q:'Rendang adalah masakan khas daerah...',emoji:'🥩',desc:'Daging dimasak lama dengan santan dan rempah!',correct:'Sumatera Barat',choices:['Jawa Tengah','Sulawesi','Sumatera Barat','Kalimantan']},
+      {q:'Nasi Gudeg adalah makanan khas kota...',emoji:'🍛',desc:'Nangka muda dimasak manis, khas kota keraton!',correct:'Yogyakarta',choices:['Solo','Semarang','Yogyakarta','Magelang']},
+      {q:'Soto Ayam adalah makanan khas...',emoji:'🍲',desc:'Sup ayam kuning yang hangat dan segar!',correct:'Jawa',choices:['Jawa','Papua','Kalimantan','Sulawesi']},
+      {q:'Gado-gado adalah makanan khas dengan bumbu...',emoji:'🥜',desc:'Sayuran rebus disiram saus spesial!',correct:'Kacang',choices:['Santan','Kacang','Kecap','Cuka']},
+      {q:'Pempek adalah makanan khas kota...',emoji:'🐟',desc:'Dari ikan tenggiri, dimakan dengan kuah cuka!',correct:'Palembang',choices:['Padang','Medan','Palembang','Jambi']},
+      {q:'Bakso adalah makanan dari...',emoji:'🍡',desc:'Bulatan kenyal yang gurih!',correct:'Daging',choices:['Ikan','Ayam','Daging','Tahu']},
+    ],
+    medium:[
+      {q:'Rawon adalah sup hitam khas kota...',emoji:'🍲',desc:'Warnanya hitam dari kluwek, rasanya gurih!',correct:'Surabaya',choices:['Jakarta','Semarang','Yogyakarta','Surabaya']},
+      {q:'Papeda dimakan dengan ikan kuah kuning, khas daerah...',emoji:'🫕',desc:'Bubur sagu kental, makanan pokok Papua!',correct:'Papua',choices:['Maluku','Papua','Nusa Tenggara Timur','Sulawesi']},
+      {q:'Lumpia adalah makanan khas kota...',emoji:'🥢',desc:'Rebung dan udang dibungkus kulit tipis, digoreng!',correct:'Semarang',choices:['Surabaya','Jakarta','Yogyakarta','Semarang']},
+      {q:'Coto Makassar adalah sup jeroan khas...',emoji:'🍲',desc:'Kuahnya kaya rempah, dari Sulawesi!',correct:'Sulawesi Selatan',choices:['Sulawesi Tengah','Sulawesi Utara','Kalimantan','Sulawesi Selatan']},
+      {q:'Soto Betawi khas dari daerah...',emoji:'🍜',desc:'Soto berkuah santan dan susu, daging sapi!',correct:'Jakarta',choices:['Bandung','Surabaya','Bogor','Jakarta']},
+      {q:'Nasi Liwet adalah masakan khas kota...',emoji:'🍚',desc:'Nasi gurih dari santan dengan lauk lengkap!',correct:'Solo',choices:['Solo','Bandung','Surabaya','Semarang']},
+    ],
+    hard:[
+      {q:'Pepes Ikan adalah makanan yang dimasak dengan cara...',emoji:'🐟',desc:'Dibungkus daun pisang!',correct:'Dibungkus dan dikukus/dibakar',choices:['Digoreng','Direbus','Dibungkus dan dikukus/dibakar','Dipanggang langsung']},
+      {q:'Mie Aceh menggunakan daging apa sebagai pelengkap utama?',emoji:'🍝',desc:'Khas dari ujung barat Sumatera!',correct:'Sapi atau Kepiting',choices:['Ayam','Ikan Tuna','Sapi atau Kepiting','Babi']},
+      {q:'Makanan khas Manado yang menggunakan ikan bakar dengan sambal dabu-dabu...',emoji:'🐟',desc:'Sambal segar khas Manado!',correct:'Ikan Bakar Manado',choices:['Ikan Asin','Ikan Bakar Manado','Ikan Pindang','Ikan Goreng']},
+      {q:'Bika Ambon sebenarnya adalah kue khas daerah...',emoji:'🍰',desc:'Meski namanya Ambon, asalnya dari sini!',correct:'Medan',choices:['Ambon','Manado','Makassar','Medan']},
+      {q:'Sagu adalah makanan pokok utama masyarakat di daerah...',emoji:'🌾',desc:'Bukan padi, tapi sagu yang jadi makanan utama!',correct:'Papua dan Maluku',choices:['Sumatera','Papua dan Maluku','Kalimantan','Nusa Tenggara']},
+      {q:'Kerak Telor adalah makanan khas yang berasal dari...',emoji:'🍳',desc:'Makanan tradisional Betawi yang dimasak di atas arang!',correct:'Jakarta',choices:['Bandung','Surabaya','Banten','Jakarta']},
+    ]
+  }},
+  {id:'b_mk2', cat:'kuliner', name:'Kuliner Nusantara 2', icon:'🍛',
+   qs:{
+    easy:[
+      {q:'Ketoprak adalah makanan khas daerah...',emoji:'🥗',desc:'Tahu, bihun, ketupat dengan bumbu kacang!',correct:'Jakarta',choices:['Bandung','Jakarta','Bogor','Bekasi']},
+      {q:'Pecel adalah sayuran dengan bumbu khas daerah...',emoji:'🥗',desc:'Bumbu kacang yang gurih, khas Jawa Timur!',correct:'Jawa Timur',choices:['Jawa Barat','Jawa Tengah','Jawa Timur','Banten']},
+      {q:'Nasi Goreng adalah makanan yang dimasak dengan cara...',emoji:'🍳',desc:'Nasi yang diaduk dengan bumbu di wajan panas!',correct:'Digoreng',choices:['Dikukus','Direbus','Digoreng','Dipanggang']},
+      {q:'Sate Ayam dimakan dengan saus...',emoji:'🍡',desc:'Bumbu pelengkap yang khas!',correct:'Kacang',choices:['Kecap saja','Kacang','Tomat','Mayones']},
+      {q:'Tempe adalah makanan dari bahan...',emoji:'🫘',desc:'Fermentasi biji-bijian!',correct:'Kedelai',choices:['Kacang tanah','Jagung','Kedelai','Beras']},
+      {q:'Opor Ayam biasanya disajikan saat...',emoji:'🍗',desc:'Tradisi tahunan di Indonesia!',correct:'Hari Raya Lebaran',choices:['Hari Natal','Hari Raya Lebaran','Tahun Baru','Ulang Tahun']},
+    ],
+    medium:[
+      {q:'Makanan khas Batak dari Sumatera Utara yang dari babi...',emoji:'🍲',desc:'Makanan adat yang disajikan dalam upacara!',correct:'Naniura',choices:['Arsik','Saksang','Naniura','Lapet']},
+      {q:'Kue Dadar Gulung berisi...',emoji:'🍃',desc:'Bungkusan hijau yang manis!',correct:'Kelapa parut dan gula merah',choices:['Kacang merah','Cokelat','Kelapa parut dan gula merah','Durian']},
+      {q:'Es Teler adalah minuman khas yang berisi...',emoji:'🍹',desc:'Minuman es yang menyegarkan!',correct:'Alpukat, kelapa muda, dan kolang-kaling',choices:['Es krim dan buah','Jus alpukat murni','Alpukat, kelapa muda, dan kolang-kaling','Cincau dan leci']},
+      {q:'Pisang Goreng Nugget adalah kreasi modern dari daerah...',emoji:'🍌',desc:'Dimulai dari Kalimantan Timur!',correct:'Kalimantan',choices:['Jawa','Sumatera','Kalimantan','Sulawesi']},
+      {q:'Ikan Arsik adalah masakan ikan khas suku...',emoji:'🐟',desc:'Dimasak dengan kunyit dan andaliman!',correct:'Batak',choices:['Minang','Batak','Dayak','Bugis']},
+      {q:'Makanan khas Sulawesi yang terbuat dari sagu dan ikan...',emoji:'🫕',desc:'Disebut juga bubur sagu!',correct:'Kapurung',choices:['Tinutuan','Pallubasa','Kapurung','Konro']},
+    ],
+    hard:[
+      {q:'Rempah apa yang membuat Rendang berwarna hitam dan tahan lama?',emoji:'🌶️',desc:'Rempah khusus yang jadi rahasia Rendang!',correct:'Kelapa gongseng',choices:['Kunyit','Ketumbar','Kelapa gongseng','Serai']},
+      {q:'Makanan khas Lombok yang sangat pedas...',emoji:'🌶️',desc:'Sangat populer di seluruh Indonesia!',correct:'Ayam Taliwang',choices:['Ayam Betutu','Sate Rembiga','Ayam Taliwang','Plecing Kangkung']},
+      {q:'Bir Pletok adalah minuman tradisional khas suku...',emoji:'🍵',desc:'Minuman rempah yang menyehatkan, tidak mengandung alkohol!',correct:'Betawi',choices:['Sunda','Betawi','Jawa','Madura']},
+      {q:'Makanan khas Papua yang dibuat dalam lubang tanah namanya...',emoji:'🥩',desc:'Cara memasak tradisional dengan batu panas!',correct:'Bakar Batu',choices:['Panggang Batu','Bakar Batu','Rebus Batu','Kukus Tanah']},
+      {q:'Kopi Gayo berasal dari daerah...',emoji:'☕',desc:'Kopi arabika premium dari dataran tinggi Aceh!',correct:'Aceh Tengah',choices:['Toraja','Flores','Aceh Tengah','Mandailing']},
+      {q:'Gula Aren berbeda dari gula pasir karena berasal dari...',emoji:'🌴',desc:'Pohon yang ada di seluruh Nusantara!',correct:'Pohon Aren atau Enau',choices:['Tebu','Bit','Pohon Aren atau Enau','Jagung']},
+    ]
+  }},
+  // ── GEOGRAFI ──
+  {id:'b_geo1', cat:'geografi', name:'Geografi Indonesia', icon:'🌋',
+   qs:{
+    easy:[
+      {q:'Indonesia terletak di antara dua samudra, yaitu...',emoji:'🌊',desc:'Di antara dua samudra besar dunia!',correct:'Hindia dan Pasifik',choices:['Atlantik dan Pasifik','Hindia dan Atlantik','Hindia dan Pasifik','Arktik dan Pasifik']},
+      {q:'Pulau terbesar di Indonesia adalah...',emoji:'🏝️',desc:'Pulau yang terletak di barat!',correct:'Kalimantan',choices:['Papua','Kalimantan','Sumatera','Jawa']},
+      {q:'Gunung berapi tertinggi di Indonesia adalah...',emoji:'🌋',desc:'Di Pulau Jawa!',correct:'Semeru',choices:['Rinjani','Bromo','Semeru','Merapi']},
+      {q:'Sungai terpanjang di Indonesia ada di Pulau...',emoji:'🌊',desc:'Sungai Kapuas ada di sini!',correct:'Kalimantan',choices:['Papua','Sumatera','Jawa','Kalimantan']},
+      {q:'Indonesia disebut negara kepulauan karena...',emoji:'🏝️',desc:'Terdiri dari puluhan ribu pulau!',correct:'Terdiri dari ribuan pulau',choices:['Punya banyak gunung','Dikelilingi lautan','Terdiri dari ribuan pulau','Letaknya di khatulistiwa']},
+      {q:'Bali terletak di sebelah... Pulau Jawa.',emoji:'🌴',desc:'Dipisahkan oleh Selat Bali!',correct:'Timur',choices:['Barat','Utara','Selatan','Timur']},
+    ],
+    medium:[
+      {q:'Danau terbesar di Indonesia adalah...',emoji:'💧',desc:'Danau vulkanik yang ada di Sumatera Utara!',correct:'Danau Toba',choices:['Danau Poso','Danau Maninjau','Danau Ranau','Danau Toba']},
+      {q:'Raja Ampat yang terkenal dengan keindahan lautnya ada di provinsi...',emoji:'🐠',desc:'Di ujung barat Papua!',correct:'Papua Barat Daya',choices:['Maluku','Papua','Papua Barat','Papua Barat Daya']},
+      {q:'Selat yang memisahkan Pulau Jawa dan Bali namanya...',emoji:'🌊',desc:'Selat sempit tapi terkenal!',correct:'Selat Bali',choices:['Selat Madura','Selat Lombok','Selat Bali','Selat Sunda']},
+      {q:'Indonesia dilalui oleh garis...',emoji:'🌐',desc:'Garis yang membagi bumi menjadi dua bagian!',correct:'Khatulistiwa',choices:['Bujur Nol','Bujur Timur 180','Khatulistiwa','Balik Utara']},
+      {q:'Gunung Rinjani ada di Pulau...',emoji:'🌋',desc:'Gunung berapi tertinggi di pulau ini!',correct:'Lombok',choices:['Sumbawa','Bali','Flores','Lombok']},
+      {q:'Provinsi yang berbatasan langsung dengan negara Papua Nugini...',emoji:'🗺️',desc:'Di ujung timur Indonesia!',correct:'Papua Pegunungan',choices:['Papua','Papua Pegunungan','Papua Selatan','Papua Tengah']},
+    ],
+    hard:[
+      {q:'Garis Wallace adalah garis yang membagi...',emoji:'🦘',desc:'Garis yang dirumuskan naturalis Alfred Russel Wallace!',correct:'Fauna Asia dan Australia di Indonesia',choices:['Benua Asia dan Australia','Waktu Indonesia Barat dan Timur','Fauna Asia dan Australia di Indonesia','Wilayah laut Indonesia']},
+      {q:'Indonesia memiliki berapa zona waktu?',emoji:'🕐',desc:'WIB, WITA, dan WIT!',correct:'3',choices:['2','3','4','5']},
+      {q:'Titik terdalam laut Indonesia ada di Palung...',emoji:'🌊',desc:'Palung terdalam di perairan Indonesia!',correct:'Weber',choices:['Mariana','Jawa','Weber','Banda']},
+      {q:'Luas wilayah Indonesia kira-kira berapa km persegi?',emoji:'🗺️',desc:'Angka perkiraan luas daratan Indonesia',correct:'1,9 juta km²',choices:['500 ribu km²','1 juta km²','1,9 juta km²','3 juta km²']},
+      {q:'Pulau yang disebut sebagai "Garis Wallace" memisahkan...',emoji:'🦅',desc:'Fauna berbeda di barat dan timur!',correct:'Kalimantan dan Sulawesi',choices:['Jawa dan Bali','Sumatera dan Kalimantan','Kalimantan dan Sulawesi','Bali dan Lombok']},
+      {q:'Kepulauan Banda yang terkenal secara sejarah karena rempah ada di provinsi...',emoji:'🌶️',desc:'Rempah yang dulu diperebutkan bangsa Eropa!',correct:'Maluku',choices:['Maluku Utara','Papua Barat','Nusa Tenggara Timur','Maluku']},
+    ]
+  }},
+  // ── SAINS ──
+  {id:'b_sains1', cat:'sains', name:'Ilmu Pengetahuan Alam', icon:'🔬',
+   qs:{
+    easy:[
+      {q:'Planet yang paling dekat dengan matahari adalah...',emoji:'☀️',desc:'Planet terkecil dan terpanas!',correct:'Merkurius',choices:['Venus','Bumi','Merkurius','Mars']},
+      {q:'Berapa planet yang ada di Tata Surya kita?',emoji:'🪐',desc:'Pluto sudah bukan planet resmi!',correct:'8',choices:['7','8','9','10']},
+      {q:'Air yang dipanaskan akan berubah menjadi...',emoji:'💧',desc:'Berubah wujud!',correct:'Uap',choices:['Es','Gas beracun','Uap','Cairan lebih panas']},
+      {q:'Fotosintesis adalah proses yang dilakukan oleh...',emoji:'🌿',desc:'Menggunakan sinar matahari untuk membuat makanan!',correct:'Tumbuhan',choices:['Hewan','Manusia','Tumbuhan','Jamur']},
+      {q:'Benda langit yang mengorbit planet disebut...',emoji:'🌙',desc:'Bulan adalah contohnya!',correct:'Satelit',choices:['Asteroid','Komet','Bintang','Satelit']},
+      {q:'Organ tubuh yang memompa darah ke seluruh tubuh...',emoji:'❤️',desc:'Berdetak setiap saat!',correct:'Jantung',choices:['Paru-paru','Hati','Ginjal','Jantung']},
+    ],
+    medium:[
+      {q:'Planet terbesar di Tata Surya adalah...',emoji:'🪐',desc:'Memiliki Bintik Merah Besar yang terkenal!',correct:'Jupiter',choices:['Saturnus','Jupiter','Uranus','Neptunus']},
+      {q:'Benda yang dapat menghantarkan listrik disebut...',emoji:'⚡',desc:'Logam biasanya termasuk benda ini!',correct:'Konduktor',choices:['Isolator','Konduktor','Dielektrik','Resistor']},
+      {q:'Proses perubahan ulat menjadi kupu-kupu disebut...',emoji:'🦋',desc:'Perubahan bentuk yang menakjubkan!',correct:'Metamorfosis',choices:['Evolusi','Mutasi','Metamorfosis','Regenerasi']},
+      {q:'Tulang belakang adalah bagian dari sistem...',emoji:'🦴',desc:'Tulang yang melindungi sumsum tulang belakang!',correct:'Rangka',choices:['Otot','Saraf','Pencernaan','Rangka']},
+      {q:'Planet yang memiliki cincin paling indah adalah...',emoji:'🪐',desc:'Cincinnya terbuat dari es dan batu!',correct:'Saturnus',choices:['Jupiter','Uranus','Neptunus','Saturnus']},
+      {q:'Proses air laut menguap dan menjadi hujan disebut...',emoji:'🌧️',desc:'Siklus yang terus berulang di bumi!',correct:'Siklus Air',choices:['Siklus Karbon','Evaporasi','Siklus Air','Kondensasi']},
+    ],
+    hard:[
+      {q:'Kecepatan cahaya per detik adalah sekitar...',emoji:'💡',desc:'Sangat cepat, tidak ada yang lebih cepat!',correct:'300.000 km/detik',choices:['30.000 km/detik','300.000 km/detik','3.000.000 km/detik','30 km/detik']},
+      {q:'Unsur kimia dengan simbol Au adalah...',emoji:'⚗️',desc:'Logam mulia berwarna kuning!',correct:'Emas',choices:['Perak','Tembaga','Emas','Platinum']},
+      {q:'Lapisan atmosfer tempat terjadinya cuaca adalah...',emoji:'🌤️',desc:'Lapisan paling bawah atmosfer!',correct:'Troposfer',choices:['Stratosfer','Mesosfer','Ionosfer','Troposfer']},
+      {q:'Pembelahan sel yang terjadi pada sel kelamin disebut...',emoji:'🔬',desc:'Menghasilkan sel dengan setengah jumlah kromosom!',correct:'Meiosis',choices:['Mitosis','Meiosis','Endosis','Sitokinesis']},
+      {q:'Magnet memiliki dua kutub. Kutub yang sama jika didekatkan akan...',emoji:'🧲',desc:'Hukum dasar magnet!',correct:'Tolak-menolak',choices:['Tarik-menarik','Tolak-menolak','Tidak bereaksi','Menyatu']},
+      {q:'Organ yang menyaring darah dan menghasilkan urin...',emoji:'🫘',desc:'Ada dua, bentuknya seperti kacang merah!',correct:'Ginjal',choices:['Hati','Limpa','Pankreas','Ginjal']},
+    ]
+  }},
+  // ── PROVINSI INDONESIA ──
+  {id:'b_prov1', cat:'provinsi', name:'Provinsi Indonesia', icon:'🗺️',
+   qs:{
+    easy:[
+      {q:'Aceh adalah provinsi paling... Indonesia.',emoji:'🕌',desc:'Letak Aceh di peta Indonesia!',correct:'Barat',choices:['Timur','Utara','Barat','Selatan']},
+      {q:'Papua adalah provinsi paling... Indonesia.',emoji:'🦜',desc:'Berbatasan dengan negara Papua Nugini!',correct:'Timur',choices:['Barat','Selatan','Utara','Timur']},
+      {q:'Berapa jumlah provinsi Indonesia per 2024?',emoji:'🗺️',desc:'Terus bertambah dengan pemekaran!',correct:'38',choices:['34','36','38','40']},
+      {q:'Daerah Istimewa Yogyakarta dipimpin oleh seorang...',emoji:'👑',desc:'Pemimpin tradisional yang juga menjadi gubernur!',correct:'Sultan',choices:['Presiden','Gubernur biasa','Sultan','Bupati']},
+      {q:'Provinsi yang dikenal sebagai pulau wisata terbaik dunia...',emoji:'🌴',desc:'Pulau Dewata!',correct:'Bali',choices:['Lombok','Bali','Sulawesi Utara','Kepulauan Riau']},
+      {q:'Provinsi DKI adalah singkatan dari...',emoji:'🏙️',desc:'Status khusus ibu kota!',correct:'Daerah Khusus Ibukota',choices:['Daerah Kota Indonesia','Daerah Khusus Ibukota','Daerah Kecamatan Indonesia','Daerah Kawasan Industri']},
+    ],
+    medium:[
+      {q:'Provinsi Kalimantan Utara berbatasan langsung dengan negara...',emoji:'🌳',desc:'Tetangga di utara Borneo!',correct:'Malaysia',choices:['Brunei Darussalam','Malaysia','Filipina','Vietnam']},
+      {q:'Provinsi Sulawesi Selatan terkenal dengan suku...',emoji:'⛵',desc:'Pelaut ulung yang terkenal di seluruh dunia!',correct:'Bugis',choices:['Toraja','Minahasa','Bugis','Makassar']},
+      {q:'Provinsi penghasil kopi robusta terbesar di Indonesia...',emoji:'☕',desc:'Di daratan Sumatera bagian selatan!',correct:'Lampung',choices:['Aceh','Toraja','Lampung','Flores']},
+      {q:'Provinsi yang memiliki Taman Nasional Komodo adalah...',emoji:'🦎',desc:'Di kepulauan Nusa Tenggara!',correct:'Nusa Tenggara Timur',choices:['Nusa Tenggara Barat','Bali','Maluku','Nusa Tenggara Timur']},
+      {q:'Provinsi Papua terbagi menjadi berapa provinsi setelah pemekaran 2022?',emoji:'🗺️',desc:'Papua dimekarkan menjadi beberapa provinsi baru!',correct:'6',choices:['3','4','5','6']},
+      {q:'Provinsi Kepulauan Riau berbatasan langsung dengan negara...',emoji:'🌊',desc:'Di sebelah selatan Singapura!',correct:'Singapura dan Malaysia',choices:['Singapura dan Malaysia','Vietnam','Brunei Darussalam','Thailand']},
+    ],
+    hard:[
+      {q:'Ibu kota provinsi Sulawesi Barat adalah...',emoji:'🌊',desc:'Provinsi muda yang berdiri tahun 2004!',correct:'Mamuju',choices:['Majene','Polewali','Pasangkayu','Mamuju']},
+      {q:'Provinsi Kalimantan Selatan terkenal penghasil...',emoji:'💎',desc:'Sumber daya alam yang sangat berharga!',correct:'Batu Bara',choices:['Minyak Bumi','Batu Bara','Gas Alam','Nikel']},
+      {q:'Provinsi yang terletak di Kepulauan Maluku dan baru dimekarkan...',emoji:'🏝️',desc:'Pemekaran provinsi terbaru di kepulauan timur!',correct:'Maluku Utara',choices:['Maluku Tenggara','Maluku Barat Daya','Maluku Utara','Kepulauan Aru']},
+      {q:'Ibu kota provinsi Sulawesi Barat adalah...',emoji:'🌊',desc:'Kota di tepi Selat Makassar!',correct:'Mamuju',choices:['Majene','Pasangkayu','Mamuju','Polewali']},
+      {q:'Bahasa daerah dengan penutur terbanyak di Indonesia adalah...',emoji:'🗣️',desc:'Bahasa ibu jutaan orang Indonesia!',correct:'Jawa',choices:['Sunda','Batak','Minang','Jawa']},
+      {q:'Satu-satunya provinsi di Indonesia yang tidak memiliki laut adalah...',emoji:'🗺️',desc:'Dikelilingi provinsi lain!',correct:'Daerah Istimewa Yogyakarta',choices:['Jawa Tengah','Daerah Istimewa Yogyakarta','Sumatera Selatan','Kalimantan Tengah']},
+    ]
+  }},
+  // ── SEJARAH ──
+  {id:'b_sej1', cat:'sejarah', name:'Sejarah Indonesia', icon:'🏛️',
+   qs:{
+    easy:[
+      {q:'Indonesia merdeka pada tanggal...',emoji:'🇮🇩',desc:'Hari yang sangat bersejarah!',correct:'17 Agustus 1945',choices:['17 Agustus 1945','1 Juni 1945','28 Oktober 1928','20 Mei 1908']},
+      {q:'Proklamator kemerdekaan Indonesia adalah...',emoji:'👨‍💼',desc:'Dua tokoh penting!',correct:'Soekarno dan Hatta',choices:['Soekarno dan Hatta','Soekarno dan Sjahrir','Hatta dan Sjahrir','Soeharto dan Hatta']},
+      {q:'Sumpah Pemuda diucapkan pada tahun...',emoji:'📜',desc:'Tahun persatuan pemuda Indonesia!',correct:'1928',choices:['1908','1928','1945','1949']},
+      {q:'Pancasila adalah dasar negara Indonesia, terdiri dari...',emoji:'⭐',desc:'Dasar dan pandangan hidup bangsa!',correct:'5 sila',choices:['3 sila','4 sila','5 sila','6 sila']},
+      {q:'Kerajaan Hindu-Buddha terbesar di Nusantara adalah...',emoji:'👑',desc:'Kerajaan yang berpusat di Jawa Timur!',correct:'Majapahit',choices:['Sriwijaya','Majapahit','Mataram','Singasari']},
+      {q:'Borobudur adalah candi Buddha yang ada di provinsi...',emoji:'🛕',desc:'Salah satu keajaiban dunia!',correct:'Jawa Tengah',choices:['Jawa Barat','Jawa Tengah','Yogyakarta','Jawa Timur']},
+    ],
+    medium:[
+      {q:'Hari Kebangkitan Nasional diperingati setiap tanggal...',emoji:'📅',desc:'Berdirinya Budi Utomo tahun 1908!',correct:'20 Mei',choices:['17 Agustus','28 Oktober','20 Mei','1 Juni']},
+      {q:'Organisasi pergerakan pertama di Indonesia bernama...',emoji:'🏫',desc:'Berdiri tahun 1908 di Batavia!',correct:'Budi Utomo',choices:['Sarekat Islam','Budi Utomo','Indische Partij','Jong Java']},
+      {q:'Pertempuran Surabaya 10 November diperingati sebagai...',emoji:'⚔️',desc:'Perjuangan arek-arek Suroboyo!',correct:'Hari Pahlawan',choices:['Hari Kemerdekaan','Hari Nasional','Hari Pahlawan','Hari Sumpah Pemuda']},
+      {q:'Jenderal yang menjadi Presiden kedua Indonesia adalah...',emoji:'👨‍✈️',desc:'Memimpin Indonesia selama 32 tahun!',correct:'Soeharto',choices:['Soeharto','Habibie','Gus Dur','Megawati']},
+      {q:'VOC adalah singkatan dari perusahaan dagang...',emoji:'⚓',desc:'Perusahaan dagang dari Eropa yang menjajah!',correct:'Belanda',choices:['Portugis','Inggris','Spanyol','Belanda']},
+      {q:'Reformasi 1998 mengakhiri pemerintahan...',emoji:'📋',desc:'Orde Baru yang berlangsung 32 tahun!',correct:'Soeharto',choices:['Soekarno','Habibie','Soeharto','Gus Dur']},
+    ],
+    hard:[
+      {q:'Kongres Pemuda II pada 28 Oktober 1928 dipimpin oleh...',emoji:'👥',desc:'Ketua PPPI yang memimpin sidang bersejarah!',correct:'Soegondo Djojopoespito',choices:['Wage Rudolf Supratman','Soegondo Djojopoespito','Mohammad Yamin','Soenario']},
+      {q:'Kerajaan Sriwijaya berpusat di daerah yang sekarang disebut...',emoji:'👑',desc:'Kerajaan maritim terbesar di Asia Tenggara!',correct:'Palembang',choices:['Jambi','Bengkulu','Batam','Palembang']},
+      {q:'Indonesia secara resmi diakui kemerdekaannya oleh Belanda pada tahun...',emoji:'📜',desc:'Bukan 1945, tapi beberapa tahun kemudian!',correct:'1949',choices:['1945','1947','1949','1950']},
+      {q:'Teks Proklamasi diketik oleh...',emoji:'⌨️',desc:'Salah satu tokoh pejuang kemerdekaan!',correct:'Sayuti Melik',choices:['Mohammad Hatta','Ahmad Soebardjo','Sayuti Melik','BM Diah']},
+      {q:'Pabrik gula di Jawa dibangun masif pada masa sistem...',emoji:'🌿',desc:'Sistem yang memaksa petani tanam wajib!',correct:'Tanam Paksa',choices:['VOC','Tanam Paksa','Etis','Liberal']},
+      {q:'Proklamasi kemerdekaan Indonesia dibacakan di...',emoji:'🏠',desc:'Alamat bersejarah di Jakarta!',correct:'Jalan Pegangsaan Timur No. 56, Jakarta',choices:['Istana Merdeka','Hotel Des Indes','Jalan Pegangsaan Timur No. 56, Jakarta','Lapangan Banteng']},
+    ]
+  }},
+];
+
+// ══════════ CATEGORY DEFINITIONS ══════════
+const CATEGORIES = {
+  toddler: [
+    {id:'warna', name:'Warna', icon:'🎨', desc:'Mengenal warna'},
+    {id:'bentuk', name:'Bentuk', icon:'⭕', desc:'Mengenal bentuk'},
+    {id:'hewan', name:'Hewan', icon:'🐶', desc:'Dunia binatang'},
+    {id:'buah', name:'Buah', icon:'🍎', desc:'Buah-buahan'},
+    {id:'kendaraan', name:'Kendaraan', icon:'🚗', desc:'Alat transportasi'},
+  ],
+  kid: [
+    {id:'alfabet', name:'Alfabet', icon:'🔤', desc:'Huruf A sampai Z'},
+    {id:'angka', name:'Angka', icon:'🔢', desc:'Berhitung seru'},
+    {id:'profesi', name:'Profesi', icon:'👨‍⚕️', desc:'Berbagai pekerjaan'},
+    {id:'alam', name:'Alam & Cuaca', icon:'🌳', desc:'Bumi dan langit'},
+    {id:'tubuh', name:'Tubuh', icon:'🧍', desc:'Mengenal tubuh'},
+    {id:'lawan', name:'Lawan Kata', icon:'⚖️', desc:'Antonim seru'},
+  ],
+  bigkid: [
+    {id:'bendera', name:'Bendera', icon:'🏳️', desc:'Bendera negara dunia'},
+    {id:'destinasi', name:'Destinasi', icon:'🗼', desc:'Tempat wisata dunia'},
+    {id:'kota', name:'Kota Indonesia', icon:'🏙️', desc:'Kota-kota Nusantara'},
+    {id:'kuliner', name:'Kuliner', icon:'🍜', desc:'Makanan khas Indonesia'},
+    {id:'geografi', name:'Geografi', icon:'🌋', desc:'Alam dan peta Indonesia'},
+    {id:'sains', name:'Sains', icon:'🔬', desc:'Ilmu pengetahuan alam'},
+    {id:'provinsi', name:'Provinsi', icon:'🗺️', desc:'Provinsi Indonesia'},
+    {id:'sejarah', name:'Sejarah', icon:'🏛️', desc:'Sejarah Indonesia'},
+  ]
+};
+</script>
+<script>
+// ══════════════════════════════════════════════
+// GAME ENGINE — Dari Z ke A v5
+// ══════════════════════════════════════════════
+
+// ── STATE ──
+let state = {
+  age: null,        // 'toddler' | 'kid' | 'bigkid'
+  cat: null,        // category id
+  lvlId: null,      // level id
+  diff: 'easy',     // 'easy' | 'medium' | 'hard'
+  qi: 0,            // question index
+  correct: 0,       // correct answers
+  answered: false,  // current question answered
+  questions: [],    // shuffled questions for session
+  progress: {}      // {lvlId: {stars, best}}
+};
+
+// ── PROGRESS (localStorage with fallback) ──
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem('dzka_progress_v5');
+    if (raw) state.progress = JSON.parse(raw);
+  } catch(e) { state.progress = {}; }
 }
-function saveState(){
-  try{ localStorage.setItem('darizka_state', JSON.stringify(STATE)); }catch(e){}
+function saveProgress() {
+  try { localStorage.setItem('dzka_progress_v5', JSON.stringify(state.progress)); } catch(e){}
+}
+function getStars(lvlId) { return state.progress[lvlId]?.stars || 0; }
+function setStars(lvlId, stars) {
+  const prev = state.progress[lvlId]?.stars || 0;
+  if (stars > prev) { state.progress[lvlId] = {stars}; saveProgress(); }
+}
+function totalStarsForAge(age) {
+  const levels = age === 'toddler' ? TODDLER_LEVELS : age === 'kid' ? KID_LEVELS : BIGKID_LEVELS;
+  return levels.reduce((s, lv) => s + getStars(lv.id), 0);
+}
+function totalStarsAll() {
+  return totalStarsForAge('toddler') + totalStarsForAge('kid') + totalStarsForAge('bigkid');
+}
+function updateAllStarBadges() {
+  const el = (id) => document.getElementById(id);
+  el('totalStarsMain').textContent = totalStarsAll();
+  el('totalStarsCat').textContent = totalStarsAll();
+  el('totalStarsLvl').textContent = totalStarsAll();
+  el('starsToddler').textContent = totalStarsForAge('toddler') + ' ⭐';
+  el('starsKid').textContent = totalStarsForAge('kid') + ' ⭐';
+  el('starsBigkid').textContent = totalStarsForAge('bigkid') + ' ⭐';
 }
 
-// ============================================================
-// AUDIO (Web Audio API - no external files)
-// ============================================================
-let audioCtx = null;
-let musicNode = null;
-function getAudio(){
-  if(!audioCtx){
-    try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){}
-  }
-  if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume().catch(()=>{}); }
-  return audioCtx;
+// ── SCREEN MANAGEMENT ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  stopTTS();
 }
-function playTone(freq, dur, type='sine', vol=0.3){
-  const ctx = getAudio(); if(!ctx) return;
-  try{
-    const osc = ctx.createOscillator();
-    const g = ctx.createGain();
-    osc.type = type; osc.frequency.value = freq;
-    g.gain.setValueAtTime(0, ctx.currentTime);
-    g.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    osc.connect(g); g.connect(ctx.destination);
-    osc.start(); osc.stop(ctx.currentTime + dur);
-  }catch(e){}
-}
-function soundCorrect(){ playTone(523, .12, 'sine', .3); setTimeout(()=>playTone(659, .12, 'sine', .3), 120); setTimeout(()=>playTone(784, .2, 'sine', .3), 240); }
-function soundWrong(){ playTone(200, .2, 'triangle', .25); }
-function soundTap(){ playTone(800, .05, 'square', .15); }
-function soundWin(){
-  const notes = [523, 659, 784, 1047, 784, 1047];
-  notes.forEach((n,i)=>setTimeout(()=>playTone(n, .18, 'sine', .3), i*150));
-}
-function toggleMusic(){
-  STATE.music = !STATE.music;
-  saveState();
-  document.querySelectorAll('#musicBtn, #musicBtn2').forEach(b=>{ b.textContent = STATE.music ? '🎵' : '🔇'; });
-  if(STATE.music){ startMusic(); } else { stopMusic(); }
-}
-function startMusic(){
-  const ctx = getAudio(); if(!ctx) return;
-  stopMusic();
-  try{
-    const melody = [
-      [392,.4],[440,.4],[494,.4],[523,.4],[494,.4],[440,.4],[392,.8],
-      [523,.4],[587,.4],[523,.4],[440,.4],[392,.4],[349,.8],
-    ];
-    let t = ctx.currentTime;
-    musicNode = {nodes:[], stopped:false};
-    function loop(){
-      if(musicNode && musicNode.stopped) return;
-      melody.forEach(([f,d])=>{
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        osc.type = 'triangle'; osc.frequency.value = f;
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(.08, t+.02);
-        g.gain.exponentialRampToValueAtTime(.001, t+d);
-        osc.connect(g); g.connect(ctx.destination);
-        osc.start(t); osc.stop(t+d);
-        musicNode.nodes.push(osc);
-        t += d;
-      });
-      setTimeout(loop, (melody.reduce((a,b)=>a+b[1],0))*1000);
-    }
-    loop();
-  }catch(e){}
-}
-function stopMusic(){
-  if(musicNode){ musicNode.stopped = true; musicNode.nodes.forEach(n=>{ try{n.stop();}catch(e){} }); musicNode = null; }
-}
+function backToCategories() { showCategoryScreen(state.age); }
 
-// ============================================================
-// NAVIGATION
-// ============================================================
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  const el = document.getElementById(id);
-  if(el) el.classList.add('active');
-  window.scrollTo(0,0);
-}
-function showHome(){
-  soundTap();
-  updateTotalStars();
-  renderAgeCounts();
+// ── SPLASH → HOME ──
+function showHome() {
   showScreen('home');
+  updateAllStarBadges();
+  // Mascot greeting rotation
+  const greetings = ['🧭','🌟','🎯','🗺️','🔭','🌈'];
+  document.getElementById('mascotHome').textContent = greetings[Math.floor(Math.random()*greetings.length)];
 }
-function selectAge(age){
-  soundTap();
-  CURRENT.age = age;
-  renderCategoryScreen(age);
-  showScreen('categoryScreen');
-}
-function selectCategory(catId){
-  soundTap();
-  CURRENT.category = catId;
-  renderLevelList(CURRENT.age, catId);
-  showScreen('levelListScreen');
-}
-function backToCategories(){
-  soundTap();
-  showScreen('categoryScreen');
-}
-function backToLevelList(){
-  soundTap();
-  document.getElementById('complete').classList.remove('show');
-  renderLevelList(CURRENT.age, CURRENT.category);
-  showScreen('levelListScreen');
-}
-function quitPlay(){
-  soundTap();
-  if(confirm('Keluar dari level? Progres belum tersimpan.')){
-    backToLevelList();
+
+// ── SPLASH STARS ──
+function buildSplashStars() {
+  const wrap = document.getElementById('starsWrap');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'star-dot';
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${Math.random()*4}s;`;
+    wrap.appendChild(s);
   }
 }
 
-// ============================================================
-// RENDER HELPERS
-// ============================================================
-function updateTotalStars(){
-  STATE.totalStars = Object.values(STATE.stars).reduce((a,b)=>a+b, 0);
-  ['totalStarsDisplay','totalStarsDisplay2','totalStarsDisplay3'].forEach(id=>{
-    const el = document.getElementById(id); if(el) el.textContent = STATE.totalStars;
-  });
-  saveState();
+// ── AGE SELECTION ──
+function selectAge(age) {
+  state.age = age;
+  showCategoryScreen(age);
 }
-function renderAgeCounts(){
-  const ageGroups = {toddler:0, kid:0, bigkid:0};
-  LEVELS.forEach(l=>{
-    ageGroups[l.age] = (ageGroups[l.age] || 0) + (STATE.stars[l.id] || 0);
-  });
-  document.getElementById('cntToddler').textContent = ageGroups.toddler + ' ⭐';
-  document.getElementById('cntKid').textContent = ageGroups.kid + ' ⭐';
-  document.getElementById('cntBigkid').textContent = ageGroups.bigkid + ' ⭐';
-}
-function renderCategoryScreen(age){
-  const meta = CATEGORIES[age];
-  document.getElementById('catTitle').textContent = meta.label;
+
+function showCategoryScreen(age) {
+  const cfg = AGES[age];
+  document.getElementById('catTitle').textContent = cfg.label;
   const banner = document.getElementById('catBanner');
-  banner.style.setProperty('--ageColor', meta.color);
-  banner.style.background = meta.color;
-  document.getElementById('catBannerTitle').textContent = meta.label;
-  document.getElementById('catBannerSub').textContent = meta.sub;
-  
+  banner.className = 'cat-banner ' + cfg.cls;
+  document.getElementById('catBannerTitle').textContent = cfg.bannerTitle;
+  document.getElementById('catBannerSub').textContent = cfg.bannerSub;
+
   const grid = document.getElementById('catGrid');
   grid.innerHTML = '';
-  meta.cats.forEach(cat=>{
-    const levelsInCat = LEVELS.filter(l => l.age === age && l.category === cat.id);
-    const totalStars = levelsInCat.reduce((sum,l) => sum + (STATE.stars[l.id] || 0), 0);
-    const maxStars = levelsInCat.length * 3;
-    const card = document.createElement('div');
-    card.className = 'cat-card';
-    card.onclick = ()=>selectCategory(cat.id);
-    card.innerHTML = `
-      ${totalStars>0 ? `<div class="cat-stars">⭐${totalStars}/${maxStars}</div>` : ''}
-      <span class="cat-icon">${cat.icon}</span>
+  const cats = CATEGORIES[age];
+  const levels = age === 'toddler' ? TODDLER_LEVELS : age === 'kid' ? KID_LEVELS : BIGKID_LEVELS;
+
+  cats.forEach(cat => {
+    const catLevels = levels.filter(l => l.cat === cat.id);
+    const totalCatStars = catLevels.reduce((s, l) => s + getStars(l.id), 0);
+    const maxStars = catLevels.length * 3;
+
+    const div = document.createElement('div');
+    div.className = 'cat-item';
+    div.onclick = () => showLevelList(age, cat.id, cat.name);
+    div.innerHTML = `
+      <div class="cat-emoji">${cat.icon}</div>
       <div class="cat-name">${cat.name}</div>
-      <div class="cat-count">${levelsInCat.length} level</div>
-    `;
-    grid.appendChild(card);
+      <div class="cat-count">${catLevels.length} level</div>
+      <div class="cat-stars">${renderStarsMini(totalCatStars, maxStars)}</div>`;
+    grid.appendChild(div);
   });
+
+  showScreen('categoryScreen');
+  updateAllStarBadges();
 }
-function renderLevelList(age, catId){
-  const cat = CATEGORIES[age].cats.find(c => c.id === catId);
-  document.getElementById('lvlListTitle').textContent = cat.icon + ' ' + cat.name;
-  const levels = LEVELS.filter(l => l.age === age && l.category === catId);
+
+function renderStarsMini(got, max) {
+  const full = Math.min(got, max);
+  const empty = max - full;
+  return '⭐'.repeat(Math.min(full,12)) + '☆'.repeat(Math.min(empty,12));
+}
+
+// ── LEVEL LIST ──
+let currentCatName = '';
+
+function showLevelList(age, catId, catName) {
+  state.age = age;
+  state.cat = catId;
+  currentCatName = catName;
+  document.getElementById('lvlListTitle').textContent = catName;
+
+  // Show difficulty selector only for bigkid
+  const diffRow = document.getElementById('diffRow');
+  diffRow.style.display = (age === 'bigkid') ? 'flex' : 'none';
+  if (age !== 'bigkid') state.diff = 'easy';
+
+  renderLevelGrid();
+  showScreen('levelListScreen');
+  updateAllStarBadges();
+}
+
+function renderLevelGrid() {
+  const levels = state.age === 'toddler' ? TODDLER_LEVELS : state.age === 'kid' ? KID_LEVELS : BIGKID_LEVELS;
+  const catLevels = levels.filter(l => l.cat === state.cat);
   const grid = document.getElementById('lvlGrid');
   grid.innerHTML = '';
-  levels.forEach((lvl, idx)=>{
-    const stars = STATE.stars[lvl.id] || 0;
-    // First level unlocked, later levels need prev star
-    const locked = idx > 0 && (STATE.stars[levels[idx-1].id] || 0) === 0;
-    const card = document.createElement('div');
-    card.className = 'lvl-card' + (locked ? ' locked' : '');
-    card.onclick = ()=>{ if(!locked) startLevel(lvl); else showToast('🔒 Selesaikan level sebelumnya'); };
-    let starHtml = '';
-    for(let i=0;i<3;i++) starHtml += (i<stars ? '⭐' : '☆');
-    card.innerHTML = `
-      ${locked ? '<div class="lvl-lock">🔒</div>' : ''}
-      <span class="lvl-icon">${lvl.icon}</span>
-      <div class="lvl-name">${lvl.name}</div>
-      <div class="lvl-stars">${starHtml}</div>
-    `;
-    grid.appendChild(card);
+
+  catLevels.forEach((lv, i) => {
+    // Lock logic: toddler & kid = all unlocked, bigkid = progressive
+    const locked = (state.age === 'bigkid') && i > 0 && getStars(catLevels[i-1].id) === 0;
+    const stars = getStars(lv.id);
+
+    const div = document.createElement('div');
+    div.className = 'lvl-item' + (locked ? ' locked' : '');
+    if (!locked) div.onclick = () => startLevel(lv);
+
+    const numCls = stars > 0 ? 'lvl-num done' : 'lvl-num';
+    const starsRow = stars > 0 ? '⭐'.repeat(stars) + '☆'.repeat(3-stars) : '☆☆☆';
+
+    div.innerHTML = `
+      <div class="${numCls}">${i+1}</div>
+      <div class="lvl-info">
+        <div class="lvl-name">${lv.name}</div>
+        <div class="lvl-detail">${getQCount(lv)} soal${stars > 0 ? ' · ' + stars + ' bintang' : ''}</div>
+      </div>
+      ${locked ? '<span class="lock-icon">🔒</span>' : '<div class="lvl-stars-row">'+starsRow+'</div>'}`;
+    grid.appendChild(div);
   });
 }
 
-// ============================================================
-// PLAY LEVEL
-// ============================================================
-function startLevel(level){
-  CURRENT.level = level;
-  CURRENT.qIndex = 0;
-  CURRENT.correct = 0;
-  CURRENT.wrong = 0;
-  document.getElementById('playName').textContent = level.icon + ' ' + level.name;
+function getQCount(lv) {
+  if (Array.isArray(lv.qs)) return lv.qs.length;
+  return lv.qs[state.diff]?.length || 6;
+}
+
+function setDiff(d) {
+  state.diff = d;
+  ['Easy','Medium','Hard'].forEach(n => {
+    const btn = document.getElementById('diff'+n);
+    if (btn) btn.classList.toggle('active', d === n.toLowerCase());
+  });
+  renderLevelGrid();
+}
+
+// ── START LEVEL ──
+function startLevel(lv) {
+  state.lvlId = lv.id;
+  state.qi = 0;
+  state.correct = 0;
+  state.answered = false;
+
+  // Get questions based on age/difficulty
+  let rawQs;
+  if (Array.isArray(lv.qs)) {
+    rawQs = lv.qs;
+  } else {
+    rawQs = lv.qs[state.diff] || lv.qs.easy;
+  }
+  // Shuffle
+  state.questions = [...rawQs].sort(() => Math.random() - .5);
+
+  document.getElementById('playTitle').textContent = lv.name;
+  const isToddler = state.age === 'toddler';
+  const choicesGrid = document.getElementById('choicesGrid');
+  choicesGrid.className = 'choices-grid' + (isToddler ? ' toddler-mode' : '');
+
   showScreen('play');
   renderQuestion();
 }
-function renderQuestion(){
-  const level = CURRENT.level;
-  const q = level.questions[CURRENT.qIndex];
-  document.getElementById('playProg').textContent = `Soal ${CURRENT.qIndex+1} dari ${level.questions.length}`;
-  document.getElementById('progressFill').style.width = ((CURRENT.qIndex)/level.questions.length*100) + '%';
-  
-  const area = document.getElementById('playArea');
-  area.innerHTML = '';
-  const card = document.createElement('div');
-  card.className = 'question-card';
-  
-  if(level.type === 'flag'){
-    card.innerHTML = `
-      <div class="question-text">${q.q}</div>
-      <div class="question-flag">${q.flag}</div>
-    `;
-    area.appendChild(card);
-    const choiceGrid = document.createElement('div');
-    choiceGrid.className = 'choice-grid';
-    q.choices.forEach(c=>{
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.textContent = c;
-      btn.onclick = ()=>checkAnswer(btn, c === q.correct);
-      choiceGrid.appendChild(btn);
-    });
-    area.appendChild(choiceGrid);
-  } else if(level.type === 'food'){
-    card.innerHTML = `
-      <div class="question-text">${q.q}</div>
-      <div class="question-emoji">${q.emoji}</div>
-      <div class="question-desc">${q.desc}</div>
-    `;
-    area.appendChild(card);
-    const choiceGrid = document.createElement('div');
-    choiceGrid.className = 'choice-grid';
-    q.choices.forEach(c=>{
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.textContent = c;
-      btn.onclick = ()=>checkAnswer(btn, c === q.correct);
-      choiceGrid.appendChild(btn);
-    });
-    area.appendChild(choiceGrid);
+
+// ── RENDER QUESTION ──
+const MASCOT_CORRECT = [
+  'Benar sekali! 🎉', 'Pintar! ✨', 'Luar biasa! 🌟',
+  'Kamu hebat! 👏', 'Mantap! 🔥', 'Tepat! 💯'
+];
+const MASCOT_WRONG = [
+  'Hampir! Coba lagi ya 😊', 'Jangan menyerah! 💪',
+  'Tenang, belajar itu proses 😄', 'Yuk coba lagi! 🌈'
+];
+const MASCOT_INTRO = [
+  'Siap petualangan baru! 🧭', 'Yuk, kita mulai! 😊',
+  'Konsentrasi ya! 🎯', 'Aku percaya kamu bisa! ⭐'
+];
+
+function renderQuestion() {
+  const q = state.questions[state.qi];
+  const total = state.questions.length;
+  state.answered = false;
+  stopTTS();
+
+  document.getElementById('qBadge').textContent = `Soal ${state.qi+1} dari ${total}`;
+  document.getElementById('progressFill').style.width = `${(state.qi/total)*100}%`;
+  document.getElementById('playScore').textContent = `${state.correct}/${total}`;
+
+  // Emoji or flag
+  const emojiEl = document.getElementById('qEmoji');
+  const flagEl = document.getElementById('qFlag');
+  if (q.flag) {
+    flagEl.textContent = q.flag; flagEl.style.display = 'block';
+    emojiEl.style.display = 'none';
+  } else if (q.emoji) {
+    emojiEl.textContent = q.emoji; emojiEl.style.display = 'block';
+    flagEl.style.display = 'none';
   } else {
-    // pic / basic type
-    card.innerHTML = `<div class="question-text">${q.q}</div>`;
-    area.appendChild(card);
-    const choiceGrid = document.createElement('div');
-    choiceGrid.className = 'choice-grid';
-    q.items.forEach((item, i)=>{
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.innerHTML = `<div class="choice-emoji"><span class="e">${item}</span><span class="l">${q.labels[i]}</span></div>`;
-      btn.onclick = ()=>checkAnswer(btn, i === q.ci);
-      choiceGrid.appendChild(btn);
-    });
-    area.appendChild(choiceGrid);
+    emojiEl.style.display = 'none'; flagEl.style.display = 'none';
+  }
+
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('qDesc').textContent = q.desc || '';
+
+  // Mascot
+  document.getElementById('mascotMsg').textContent =
+    MASCOT_INTRO[Math.floor(Math.random()*MASCOT_INTRO.length)];
+
+  // Choices
+  const grid = document.getElementById('choicesGrid');
+  grid.innerHTML = '';
+  // Shuffle choices
+  const choices = [...q.choices].sort(() => Math.random() - .5);
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = () => answerQ(c, q.correct, btn);
+    grid.appendChild(btn);
+  });
+
+  // Auto-TTS for toddler / kid
+  if (state.age === 'toddler' || state.age === 'kid') {
+    setTimeout(speakQuestion, 600);
   }
 }
-function checkAnswer(btn, isCorrect){
-  document.querySelectorAll('.choice-btn').forEach(b=>b.classList.add('disabled'));
-  if(isCorrect){
+
+// ── ANSWER ──
+function answerQ(chosen, correct, btn) {
+  if (state.answered) return;
+  state.answered = true;
+  stopTTS();
+
+  const isCorrect = chosen === correct;
+  if (isCorrect) {
+    state.correct++;
     btn.classList.add('correct');
-    CURRENT.correct++;
-    soundCorrect();
-    showFeedback('🎉', 'Hebat!');
+    document.getElementById('mascotMsg').textContent =
+      MASCOT_CORRECT[Math.floor(Math.random()*MASCOT_CORRECT.length)];
+    playSound('correct');
   } else {
     btn.classList.add('wrong');
-    CURRENT.wrong++;
-    soundWrong();
     // Highlight correct
-    const level = CURRENT.level;
-    const q = level.questions[CURRENT.qIndex];
-    document.querySelectorAll('.choice-btn').forEach(b=>{
-      let isAns = false;
-      if(level.type === 'flag' || level.type === 'food'){
-        isAns = b.textContent === q.correct;
-      } else {
-        const idx = Array.from(b.parentNode.children).indexOf(b);
-        isAns = idx === q.ci;
-      }
-      if(isAns) b.classList.add('correct');
+    document.querySelectorAll('.choice-btn').forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct');
     });
-    showFeedback('💪', 'Coba lagi!');
+    document.getElementById('mascotMsg').textContent =
+      MASCOT_WRONG[Math.floor(Math.random()*MASCOT_WRONG.length)];
+    playSound('wrong');
   }
-  setTimeout(()=>{
-    document.getElementById('feedback').classList.remove('show');
-    CURRENT.qIndex++;
-    if(CURRENT.qIndex >= CURRENT.level.questions.length){
-      finishLevel();
-    } else {
+
+  // Disable all
+  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+
+  // Next after delay
+  setTimeout(() => {
+    state.qi++;
+    if (state.qi < state.questions.length) {
       renderQuestion();
+    } else {
+      showResult();
     }
-  }, 1400);
+  }, isCorrect ? 1000 : 1600);
 }
-function showFeedback(emoji, text){
-  document.getElementById('fbEmoji').textContent = emoji;
-  document.getElementById('fbText').textContent = text;
-  document.getElementById('feedback').classList.add('show');
-}
-function finishLevel(){
-  const total = CURRENT.level.questions.length;
-  const correct = CURRENT.correct;
-  let stars = 0;
-  // More forgiving thresholds per child psychologist feedback
-  if(correct === total) stars = 3;
-  else if(correct >= Math.ceil(total*0.8)) stars = 2;
-  else if(correct >= Math.ceil(total*0.5)) stars = 1;
-  else if(correct >= 1) stars = 1; // any progress earns 1 star to avoid demotivation
-  
-  const prev = STATE.stars[CURRENT.level.id] || 0;
-  // Save LATEST score (overwrites previous), per user request
-  STATE.stars[CURRENT.level.id] = stars;
-  saveState();
-  updateTotalStars();
-  
-  let subMsg = `Benar ${correct} dari ${total} soal`;
-  let titleMsg = 'Hebat!';
-  let emoji = '🏆';
-  if(stars === 3){ titleMsg = 'Sempurna! 🌟'; emoji = '🏆'; }
-  else if(stars === 2){ titleMsg = 'Bagus Sekali!'; emoji = '🎉'; }
-  else if(stars === 1){ titleMsg = 'Hebat, Terus Berlatih!'; emoji = '💪'; }
-  else { titleMsg = 'Coba Lagi Yuk!'; emoji = '🌱'; subMsg = `Benar ${correct} dari ${total} - kamu pasti bisa!`; }
-  document.querySelector('.complete-title').textContent = titleMsg;
-  document.querySelector('.complete-emoji').textContent = emoji;
-  document.getElementById('completeSub').textContent = subMsg;
-  document.getElementById('star1').classList.remove('on');
-  document.getElementById('star2').classList.remove('on');
-  document.getElementById('star3').classList.remove('on');
-  document.getElementById('star1').textContent = '☆';
-  document.getElementById('star2').textContent = '☆';
-  document.getElementById('star3').textContent = '☆';
-  
-  document.getElementById('complete').classList.add('show');
-  
-  setTimeout(()=>{
-    if(stars >= 1){ document.getElementById('star1').classList.add('on'); document.getElementById('star1').textContent = '⭐'; }
-  }, 300);
-  setTimeout(()=>{
-    if(stars >= 2){ document.getElementById('star2').classList.add('on'); document.getElementById('star2').textContent = '⭐'; }
-  }, 600);
-  setTimeout(()=>{
-    if(stars >= 3){ document.getElementById('star3').classList.add('on'); document.getElementById('star3').textContent = '⭐'; }
-  }, 900);
-  
-  if(stars >= 2){ soundWin(); confetti(); }
-  else { playTone(440, .3, 'sine', .25); }
-}
-function replayLevel(){
-  soundTap();
-  document.getElementById('complete').classList.remove('show');
-  // Restart same level
-  startLevel(CURRENT.level);
-}
-function nextLevel(){
-  soundTap();
-  document.getElementById('complete').classList.remove('show');
-  const levels = LEVELS.filter(l => l.age === CURRENT.age && l.category === CURRENT.category);
-  const idx = levels.findIndex(l => l.id === CURRENT.level.id);
-  if(idx >=0 && idx < levels.length-1){
-    startLevel(levels[idx+1]);
+
+// ── RESULT ──
+function showResult() {
+  const total = state.questions.length;
+  const pct = state.correct / total;
+  let stars = pct >= 0.85 ? 3 : pct >= 0.6 ? 2 : pct >= 0.3 ? 1 : 0;
+
+  setStars(state.lvlId, stars);
+  updateAllStarBadges();
+
+  const msgs = [
+    {e:'😢', t:'Coba Lagi!', m:'Semangat terus ya, kamu pasti bisa!'},
+    {e:'🙂', t:'Hebat, Terus Berlatih!', m:'Kamu bisa lebih baik lagi!'},
+    {e:'😄', t:'Bagus Sekali!', m:'Kamu sudah belajar dengan baik!'},
+    {e:'🌟', t:'Sempurna!', m:'Luar biasa! Kamu menguasai materi ini!'}
+  ];
+  const msg = msgs[stars];
+
+  document.getElementById('resultEmoji').textContent = msg.e;
+  document.getElementById('resultTitle').textContent = msg.t;
+  document.getElementById('resultMsg').textContent = msg.m;
+  document.getElementById('resultStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
+  document.getElementById('resultScore').textContent = `${state.correct} dari ${total} benar`;
+
+  // Next level button
+  const levels = state.age === 'toddler' ? TODDLER_LEVELS : state.age === 'kid' ? KID_LEVELS : BIGKID_LEVELS;
+  const catLevels = levels.filter(l => l.cat === state.cat);
+  const idx = catLevels.findIndex(l => l.id === state.lvlId);
+  const nextBtn = document.getElementById('nextBtn');
+  if (idx >= 0 && idx < catLevels.length - 1) {
+    nextBtn.style.display = 'block';
+    nextBtn.dataset.nextId = catLevels[idx+1].id;
   } else {
-    showToast('🎊 Semua level di kategori ini selesai!');
-    setTimeout(backToCategories, 1200);
+    nextBtn.style.display = 'none';
+  }
+
+  if (stars >= 2) confetti();
+  if (stars >= 1) playSound('win');
+
+  showScreen('result');
+}
+
+function goNext() {
+  const nextBtn = document.getElementById('nextBtn');
+  const nextId = nextBtn.dataset.nextId;
+  const levels = state.age === 'toddler' ? TODDLER_LEVELS : state.age === 'kid' ? KID_LEVELS : BIGKID_LEVELS;
+  const lv = levels.find(l => l.id === nextId);
+  if (lv) startLevel(lv);
+}
+
+function replayLevel() {
+  const levels = state.age === 'toddler' ? TODDLER_LEVELS : state.age === 'kid' ? KID_LEVELS : BIGKID_LEVELS;
+  const lv = levels.find(l => l.id === state.lvlId);
+  if (lv) startLevel(lv);
+}
+
+function confirmBack() {
+  stopTTS();
+  backToCategories();
+}
+
+// ── TTS (Text-to-Speech) ──
+let ttsUtterance = null;
+
+function speakQuestion() {
+  if (!window.speechSynthesis) return;
+  stopTTS();
+
+  const q = state.questions[state.qi];
+  if (!q) return;
+
+  // Build readable text
+  let text = q.q;
+  if (q.desc) text += '. ' + q.desc;
+
+  ttsUtterance = new SpeechSynthesisUtterance(text);
+  ttsUtterance.lang = 'id-ID';
+  ttsUtterance.rate = 0.85;
+  ttsUtterance.pitch = 1.1;
+
+  const btn = document.getElementById('ttsBtn');
+
+  // Try to use Indonesian voice
+  const voices = window.speechSynthesis.getVoices();
+  const idVoice = voices.find(v => v.lang.startsWith('id')) ||
+                  voices.find(v => v.lang.startsWith('ms')) ||
+                  voices.find(v => v.lang.startsWith('en'));
+  if (idVoice) ttsUtterance.voice = idVoice;
+
+  ttsUtterance.onstart = () => { if(btn) btn.classList.add('speaking'); };
+  ttsUtterance.onend = () => { if(btn) btn.classList.remove('speaking'); ttsUtterance = null; };
+  ttsUtterance.onerror = () => { if(btn) btn.classList.remove('speaking'); ttsUtterance = null; };
+
+  window.speechSynthesis.speak(ttsUtterance);
+}
+
+function stopTTS() {
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+  const btn = document.getElementById('ttsBtn');
+  if (btn) btn.classList.remove('speaking');
+  ttsUtterance = null;
+}
+
+// ── AUDIO (Web Audio API) ──
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch(e) { return null; }
+  }
+  if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+  return audioCtx;
+}
+
+function playSound(type) {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+
+  if (type === 'correct') {
+    // Pleasant ascending ding
+    [[523,0],[659,0.1],[784,0.2]].forEach(([freq,delay]) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.25, now+delay);
+      g.gain.exponentialRampToValueAtTime(0.001, now+delay+0.35);
+      o.start(now+delay); o.stop(now+delay+0.35);
+    });
+  } else if (type === 'wrong') {
+    // Soft descending tone
+    [[330,0],[262,0.15]].forEach(([freq,delay]) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'triangle'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.2, now+delay);
+      g.gain.exponentialRampToValueAtTime(0.001, now+delay+0.3);
+      o.start(now+delay); o.stop(now+delay+0.3);
+    });
+  } else if (type === 'win') {
+    // Fanfare
+    [[523,0],[659,0.1],[784,0.2],[1047,0.35],[784,0.5],[1047,0.65]].forEach(([freq,delay]) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.2, now+delay);
+      g.gain.exponentialRampToValueAtTime(0.001, now+delay+0.25);
+      o.start(now+delay); o.stop(now+delay+0.25);
+    });
   }
 }
 
-// ============================================================
-// VISUAL EFFECTS
-// ============================================================
-function confetti(){
-  const colors = ['#ffd200','#ff6b35','#4fc3f7','#66bb6a','#e91e63','#9c27b0'];
-  for(let i=0;i<50;i++){
-    const cf = document.createElement('div');
-    cf.className = 'cf';
-    cf.style.left = Math.random()*100 + 'vw';
-    cf.style.top = '-20px';
-    cf.style.background = colors[Math.floor(Math.random()*colors.length)];
-    cf.style.setProperty('--d', (1.5 + Math.random()*1.5) + 's');
-    cf.style.animationDelay = (Math.random()*0.5) + 's';
-    document.body.appendChild(cf);
-    setTimeout(()=>cf.remove(), 3500);
-  }
-}
-function showToast(msg){
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(()=>t.classList.add('show'), 10);
-  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(), 400); }, 2200);
-}
-
-// ============================================================
-// SPLASH STARS
-// ============================================================
-function makeStars(){
-  const c = document.getElementById('splashStars');
-  for(let i=0;i<30;i++){
-    const s = document.createElement('span');
-    s.style.left = Math.random()*100 + '%';
-    s.style.top = Math.random()*100 + '%';
-    s.style.animationDelay = (Math.random()*3) + 's';
-    s.style.animationDuration = (2 + Math.random()*2) + 's';
-    c.appendChild(s);
+// ── CONFETTI ──
+function confetti() {
+  const colors = ['#f5c842','#4fc3f7','#ff6eb4','#4cde7c','#ff6b6b','#c084fc'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'cf';
+    el.style.cssText = `left:${10+Math.random()*80}%;top:-10px;background:${colors[i%colors.length]};
+      --d:${1.5+Math.random()*2}s;animation-delay:${Math.random()*0.8}s;
+      transform:rotate(${Math.random()*360}deg);border-radius:${Math.random()>0.5?'50%':'2px'};`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
   }
 }
 
-// ============================================================
-// INIT
-// ============================================================
-loadState();
-makeStars();
-updateTotalStars();
-renderAgeCounts();
-// First user tap initializes audio (iOS requirement)
-document.addEventListener('touchstart', function initAudio(){
-  getAudio();
-  if(STATE.music) startMusic();
-  document.removeEventListener('touchstart', initAudio);
-}, {once:true});
-document.addEventListener('click', function initAudio2(){
-  getAudio();
-  if(STATE.music) startMusic();
-  document.removeEventListener('click', initAudio2);
-}, {once:true});
+// ── TOAST ──
+function showToast(msg, duration=2200) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  loadProgress();
+  buildSplashStars();
+  updateAllStarBadges();
+
+  // Preload TTS voices
+  if (window.speechSynthesis) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => {};
+  }
+
+  // Auto-dismiss splash after 3s if untapped
+  setTimeout(() => {
+    if (document.getElementById('splash').classList.contains('active')) {
+      showHome();
+    }
+  }, 8000);
+});
+
+// Prevent iOS safari bounce
+document.addEventListener('touchmove', (e) => {
+  if (!e.target.closest('.scroll-body')) e.preventDefault();
+}, {passive: false});
 </script>
-</body>
-</html>
+</body></html>
