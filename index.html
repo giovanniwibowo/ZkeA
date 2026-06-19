@@ -233,27 +233,56 @@ body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset
 
 /* Board container */
 .ut-board-wrap{padding:12px;flex-shrink:0;}
-.ut-board{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;border-radius:12px;overflow:hidden;border:2px solid var(--c-border);background:var(--c-border);}
+.ut-board{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;border-radius:12px;overflow:hidden;border:2px solid var(--c-border);background:var(--c-border);position:relative;}
+/* SVG overlay for drawn snakes & ladders */
+.ut-board-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;}
+.ut-ladder-rail{stroke:#b45309;stroke-width:0.85;stroke-linecap:round;opacity:0.95;}
+.ut-ladder-rung{stroke:#d97706;stroke-width:0.7;stroke-linecap:round;opacity:0.95;}
+.ut-snake-body{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0.92;}
+.ut-snake-outline{fill:none;stroke:rgba(0,0,0,0.18);stroke-linecap:round;}
+.ut-snake-head{filter:drop-shadow(0 1px 2px rgba(0,0,0,0.25));}
 .ut-cell{aspect-ratio:1;background:var(--c-card);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;font-size:clamp(7px,1.8vw,11px);cursor:default;transition:background .2s;}
 .ut-cell.special-star{background:rgba(245,200,66,0.12);}
 .ut-cell.has-snake{background:rgba(255,107,107,0.08);}
 .ut-cell.has-ladder{background:rgba(76,222,124,0.08);}
-.ut-cell-num{position:absolute;top:1px;left:2px;font-size:clamp(5px,1.2vw,8px);font-weight:700;color:var(--c-muted);line-height:1;}
-.ut-cell-icon{font-size:clamp(8px,2vw,14px);line-height:1;}
-.ut-cell-pions{position:absolute;bottom:1px;right:1px;display:flex;flex-wrap:wrap;gap:1px;max-width:90%;}
-.ut-pion{width:clamp(8px,2vw,13px);height:clamp(8px,2vw,13px);border-radius:50%;border:1.5px solid rgba(255,255,255,0.6);font-size:clamp(5px,1.2vw,8px);display:flex;align-items:center;justify-content:center;line-height:1;transition:all .4s cubic-bezier(.34,1.56,.64,1);}
+.ut-cell-num{position:absolute;top:1px;left:2px;font-size:clamp(5px,1.2vw,8px);font-weight:700;color:var(--c-muted);line-height:1;z-index:1;}
+.ut-cell-icon{font-size:clamp(13px,3.4vw,22px);line-height:1;}
+.ut-cell-pions{position:absolute;bottom:1px;right:1px;display:flex;flex-wrap:wrap;gap:1px;max-width:90%;z-index:3;}
+.ut-pion{width:clamp(10px,2.6vw,16px);height:clamp(10px,2.6vw,16px);border-radius:50%;border:1.5px solid rgba(255,255,255,0.7);font-size:clamp(6px,1.5vw,10px);display:flex;align-items:center;justify-content:center;line-height:1;box-shadow:0 1px 4px rgba(0,0,0,0.3);}
+/* Hopping pion that travels between cells */
+.ut-pion-hop{position:absolute;z-index:50;width:clamp(14px,3.4vw,22px);height:clamp(14px,3.4vw,22px);border-radius:50%;border:2px solid rgba(255,255,255,0.85);font-size:clamp(8px,2vw,13px);display:flex;align-items:center;justify-content:center;line-height:1;box-shadow:0 3px 10px rgba(0,0,0,0.4);pointer-events:none;transition:left .28s cubic-bezier(.45,.05,.55,.95),top .28s cubic-bezier(.45,.05,.55,.95);}
+.ut-pion-hop.hopping{animation:pionHop .28s ease-in-out;}
+@keyframes pionHop{0%{transform:translateY(0) scale(1);}40%{transform:translateY(-14px) scale(1.15);}100%{transform:translateY(0) scale(1);}}
 
 /* Dadu & Action area */
 .ut-action-area{padding:12px 16px;display:flex;flex-direction:column;gap:12px;}
 .ut-turn-banner{background:linear-gradient(135deg,rgba(251,146,60,0.2),rgba(251,191,36,0.1));border:1px solid rgba(251,146,60,0.3);border-radius:16px;padding:12px 16px;text-align:center;}
 .ut-turn-name{font-size:16px;font-weight:800;color:var(--c-text);}
 .ut-turn-sub{font-size:12px;color:var(--c-muted);margin-top:2px;}
-.ut-dadu-row{display:flex;align-items:center;justify-content:center;gap:16px;}
-.ut-dadu{width:72px;height:72px;border-radius:16px;background:var(--c-card);border:2px solid var(--c-border);display:flex;align-items:center;justify-content:center;font-size:36px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 16px rgba(0,0,0,0.2);}
-.ut-dadu:active{transform:scale(.92);}
-.ut-dadu.rolling{animation:diceRoll .6s ease-in-out;}
-@keyframes diceRoll{0%{transform:rotate(0deg) scale(1);}25%{transform:rotate(-15deg) scale(1.1);}50%{transform:rotate(15deg) scale(1.15);}75%{transform:rotate(-10deg) scale(1.1);}100%{transform:rotate(0deg) scale(1);}}
-.ut-dadu-result{font-size:28px;font-weight:900;color:var(--c-text);min-width:40px;text-align:center;}
+.ut-dadu-row{display:flex;align-items:center;justify-content:center;gap:18px;}
+/* ── 3D DICE ── */
+.ut-dadu-scene{width:72px;height:72px;perspective:400px;cursor:pointer;flex-shrink:0;}
+.ut-dadu-scene:active{transform:scale(.94);}
+.ut-dadu-cube{width:72px;height:72px;position:relative;transform-style:preserve-3d;transform:translateZ(-36px) rotateX(-20deg) rotateY(-20deg);transition:transform 1s cubic-bezier(.25,.1,.25,1);}
+.ut-dadu-cube.spinning{animation:cubeSpin .9s cubic-bezier(.3,.1,.3,1);}
+@keyframes cubeSpin{
+  0%{transform:translateZ(-36px) rotateX(0deg) rotateY(0deg);}
+  100%{transform:translateZ(-36px) rotateX(720deg) rotateY(900deg);}
+}
+.ut-dadu-face{position:absolute;width:72px;height:72px;background:linear-gradient(145deg,#ffffff,#e8eef5);border:1.5px solid rgba(0,0,0,0.12);border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:9px;gap:2px;box-shadow:inset 0 0 12px rgba(0,0,0,0.08);}
+.ut-pip{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#5a5a5a,#1a1a1a);align-self:center;justify-self:center;box-shadow:inset 0 1px 2px rgba(255,255,255,0.3);}
+/* Pip position helpers via grid-area */
+.p-tl{grid-area:1/1;}.p-tc{grid-area:1/2;}.p-tr{grid-area:1/3;}
+.p-ml{grid-area:2/1;}.p-mc{grid-area:2/2;}.p-mr{grid-area:2/3;}
+.p-bl{grid-area:3/1;}.p-bc{grid-area:3/2;}.p-br{grid-area:3/3;}
+/* Cube face 3D positioning - standard dice (opposite faces sum to 7) */
+.face-1{transform:rotateY(0deg) translateZ(36px);}
+.face-6{transform:rotateY(180deg) translateZ(36px);}
+.face-2{transform:rotateY(90deg) translateZ(36px);}
+.face-5{transform:rotateY(-90deg) translateZ(36px);}
+.face-3{transform:rotateX(90deg) translateZ(36px);}
+.face-4{transform:rotateX(-90deg) translateZ(36px);}
+.ut-dadu-result{font-size:30px;font-weight:900;color:var(--c-text);min-width:40px;text-align:center;}
 .ut-roll-btn{flex:1;background:linear-gradient(135deg,#fb923c,#f59e0b);color:#fff;border:none;border-radius:50px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;}
 .ut-roll-btn:active{transform:scale(.97);}
 .ut-roll-btn:disabled{opacity:.5;cursor:default;}
@@ -520,7 +549,16 @@ body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset
         <div class="ut-turn-sub" id="utTurnSub">Tap dadu untuk lempar!</div>
       </div>
       <div class="ut-dadu-row">
-        <div class="ut-dadu" id="utDaduEl" onclick="rollDice()">🎲</div>
+        <div class="ut-dadu-scene" onclick="rollDice()">
+          <div class="ut-dadu-cube" id="utDaduCube">
+            <div class="ut-dadu-face face-1"><span class="ut-pip p-mc"></span></div>
+            <div class="ut-dadu-face face-2"><span class="ut-pip p-tl"></span><span class="ut-pip p-br"></span></div>
+            <div class="ut-dadu-face face-3"><span class="ut-pip p-tl"></span><span class="ut-pip p-mc"></span><span class="ut-pip p-br"></span></div>
+            <div class="ut-dadu-face face-4"><span class="ut-pip p-tl"></span><span class="ut-pip p-tr"></span><span class="ut-pip p-bl"></span><span class="ut-pip p-br"></span></div>
+            <div class="ut-dadu-face face-5"><span class="ut-pip p-tl"></span><span class="ut-pip p-tr"></span><span class="ut-pip p-mc"></span><span class="ut-pip p-bl"></span><span class="ut-pip p-br"></span></div>
+            <div class="ut-dadu-face face-6"><span class="ut-pip p-tl"></span><span class="ut-pip p-tr"></span><span class="ut-pip p-ml"></span><span class="ut-pip p-mr"></span><span class="ut-pip p-bl"></span><span class="ut-pip p-br"></span></div>
+          </div>
+        </div>
         <div class="ut-dadu-result" id="utDaduResult">?</div>
         <button class="ut-roll-btn" id="utRollBtn" onclick="rollDice()">Lempar Dadu! 🎲</button>
       </div>
@@ -820,9 +858,8 @@ function buildBoard() {
     if (UT_SNAKES[cellNum] !== undefined) div.classList.add('has-snake');
     if (UT_LADDERS[cellNum] !== undefined) div.classList.add('has-ladder');
 
-    const icon = UT_SNAKES[cellNum] !== undefined ? '🐍' :
-                 UT_LADDERS[cellNum] !== undefined ? '🪜' :
-                 cellNum === 100 ? '🏆' :
+    // Snake/ladder cells now keep their zone icon — the snake/ladder is DRAWN on the board
+    const icon = cellNum === 100 ? '🏆' :
                  UT_STARS.includes(cellNum) ? '⭐' :
                  ZONE_ICONS[cellNum] || '';
 
@@ -833,8 +870,143 @@ function buildBoard() {
     board.appendChild(div);
   });
 
+  // Draw snakes & ladders as real graphics over the board
+  board.appendChild(buildBoardConnectors());
+
   // Place all pions at position 0 (before start)
   renderAllPions();
+}
+
+// ── DRAW SNAKES & LADDERS (SVG overlay) ──
+// Map cell number (1-100) to its center in a 0-100 coordinate space
+function utCellCenter(n) {
+  const logicalRow = Math.floor((n - 1) / 10);      // 0 for 1-10 ... 9 for 91-100
+  const displayRowIdx = 9 - logicalRow;             // 0 = top row (91-100)
+  const posInRow = (n - 1) % 10;                     // 0-9
+  const gridCol = (displayRowIdx % 2 === 1) ? (9 - posInRow) : posInRow;
+  return { x: (gridCol + 0.5) * 10, y: (displayRowIdx + 0.5) * 10 };
+}
+
+function buildBoardConnectors() {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('class', 'ut-board-svg');
+  svg.setAttribute('viewBox', '0 0 100 100');
+  svg.setAttribute('preserveAspectRatio', 'none');
+
+  // Ladders first (drawn under snakes)
+  Object.entries(UT_LADDERS).forEach(([from, to]) => {
+    svg.appendChild(makeLadder(utCellCenter(+from), utCellCenter(+to)));
+  });
+  // Snakes on top
+  const snakeColors = ['#16a34a', '#0ea5e9', '#a855f7', '#ec4899', '#eab308'];
+  let si = 0;
+  Object.entries(UT_SNAKES).forEach(([from, to]) => {
+    svg.appendChild(makeSnake(utCellCenter(+from), utCellCenter(+to), snakeColors[si % snakeColors.length]));
+    si++;
+  });
+  return svg;
+}
+
+function makeLadder(a, b) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const g = document.createElementNS(NS, 'g');
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const px = -dy / len, py = dx / len; // perpendicular unit
+  const w = 1.7; // half-width of ladder
+
+  // Two rails
+  [-w, w].forEach(off => {
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('x1', (a.x + px * off).toFixed(2));
+    line.setAttribute('y1', (a.y + py * off).toFixed(2));
+    line.setAttribute('x2', (b.x + px * off).toFixed(2));
+    line.setAttribute('y2', (b.y + py * off).toFixed(2));
+    line.setAttribute('class', 'ut-ladder-rail');
+    g.appendChild(line);
+  });
+
+  // Rungs
+  const rungs = Math.max(3, Math.round(len / 3.2));
+  for (let i = 0; i <= rungs; i++) {
+    const t = i / rungs;
+    const cx = a.x + dx * t, cy = a.y + dy * t;
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('x1', (cx + px * w).toFixed(2));
+    line.setAttribute('y1', (cy + py * w).toFixed(2));
+    line.setAttribute('x2', (cx - px * w).toFixed(2));
+    line.setAttribute('y2', (cy - py * w).toFixed(2));
+    line.setAttribute('class', 'ut-ladder-rung');
+    g.appendChild(line);
+  }
+  return g;
+}
+
+function makeSnake(head, tail, color) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const g = document.createElementNS(NS, 'g');
+  const dx = tail.x - head.x, dy = tail.y - head.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const ux = dx / len, uy = dy / len;
+  const px = -uy, py = ux; // perpendicular
+  const amp = Math.min(7, len * 0.22); // wave amplitude
+
+  // S-curve control points
+  const c1x = head.x + dx * 0.30 + px * amp, c1y = head.y + dy * 0.30 + py * amp;
+  const c2x = head.x + dx * 0.70 - px * amp, c2y = head.y + dy * 0.70 - py * amp;
+  const d = `M ${head.x.toFixed(2)} ${head.y.toFixed(2)} C ${c1x.toFixed(2)} ${c1y.toFixed(2)}, ${c2x.toFixed(2)} ${c2y.toFixed(2)}, ${tail.x.toFixed(2)} ${tail.y.toFixed(2)}`;
+
+  // Dark outline underneath for definition
+  const outline = document.createElementNS(NS, 'path');
+  outline.setAttribute('d', d);
+  outline.setAttribute('class', 'ut-snake-outline');
+  outline.setAttribute('stroke-width', '3.2');
+  g.appendChild(outline);
+
+  // Body (tapers from head to tail visually via width)
+  const body = document.createElementNS(NS, 'path');
+  body.setAttribute('d', d);
+  body.setAttribute('class', 'ut-snake-body');
+  body.setAttribute('stroke', color);
+  body.setAttribute('stroke-width', '2.4');
+  g.appendChild(body);
+
+  // Head circle at the higher cell
+  const h = document.createElementNS(NS, 'circle');
+  h.setAttribute('cx', head.x.toFixed(2));
+  h.setAttribute('cy', head.y.toFixed(2));
+  h.setAttribute('r', '2.8');
+  h.setAttribute('fill', color);
+  h.setAttribute('class', 'ut-snake-head');
+  g.appendChild(h);
+
+  // Eyes
+  [-1, 1].forEach(s => {
+    const e = document.createElementNS(NS, 'circle');
+    e.setAttribute('cx', (head.x + px * 1.0 * s + ux * 0.4).toFixed(2));
+    e.setAttribute('cy', (head.y + py * 1.0 * s + uy * 0.4).toFixed(2));
+    e.setAttribute('r', '0.6');
+    e.setAttribute('fill', '#fff');
+    g.appendChild(e);
+    const pupil = document.createElementNS(NS, 'circle');
+    pupil.setAttribute('cx', (head.x + px * 1.0 * s + ux * 0.6).toFixed(2));
+    pupil.setAttribute('cy', (head.y + py * 1.0 * s + uy * 0.6).toFixed(2));
+    pupil.setAttribute('r', '0.3');
+    pupil.setAttribute('fill', '#000');
+    g.appendChild(pupil);
+  });
+
+  // Forked tongue at head
+  const tongue = document.createElementNS(NS, 'path');
+  const tx = head.x - ux * 2.2, ty = head.y - uy * 2.2;
+  tongue.setAttribute('d', `M ${head.x.toFixed(2)} ${head.y.toFixed(2)} L ${tx.toFixed(2)} ${ty.toFixed(2)}`);
+  tongue.setAttribute('stroke', '#ef4444');
+  tongue.setAttribute('stroke-width', '0.5');
+  tongue.setAttribute('fill', 'none');
+  g.appendChild(tongue);
+
+  return g;
 }
 
 function renderAllPions() {
@@ -843,9 +1015,9 @@ function renderAllPions() {
     const el = document.getElementById('utPions'+i);
     if (el) el.innerHTML = '';
   }
-  // Add "waiting" pions (pos=0) shown on cell 1 area but offset
+  // Add pions at their positions (skip ones currently mid-walk)
   utState.players.forEach((p, idx) => {
-    if (p.pos >= 1) {
+    if (p.pos >= 1 && !p._walking) {
       const container = document.getElementById('utPions'+p.pos);
       if (container) {
         const pion = document.createElement('div');
@@ -885,67 +1057,151 @@ function updateTurnBanner() {
 }
 
 // ── DICE ROLL ──
-const DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+// Final rotation per face so the chosen number ends facing the viewer.
+// Base orientation shows face-1. We add full spins (multiples of 360) + offset.
+const DICE_ROT = {
+  1:{x:0,   y:0},
+  2:{x:0,   y:-90},
+  3:{x:-90, y:0},
+  4:{x:90,  y:0},
+  5:{x:0,   y:90},
+  6:{x:0,   y:180}
+};
 
 function rollDice() {
   if (utState.rolling || utState.gameOver) return;
   utState.rolling = true;
 
   const btn = document.getElementById('utRollBtn');
-  const daduEl = document.getElementById('utDaduEl');
+  const cube = document.getElementById('utDaduCube');
   const resultEl = document.getElementById('utDaduResult');
 
   btn.disabled = true;
   btn.textContent = 'Mengocok...';
   resultEl.textContent = '?';
-
-  // Animate dice
-  daduEl.classList.add('rolling');
   playSound('correct');
 
-  let count = 0;
-  const animInterval = setInterval(() => {
-    daduEl.textContent = DICE_FACES[Math.floor(Math.random()*6)];
-    count++;
-    if (count >= 8) {
-      clearInterval(animInterval);
-      daduEl.classList.remove('rolling');
-      const roll = Math.floor(Math.random()*6)+1;
-      daduEl.textContent = DICE_FACES[roll-1];
-      resultEl.textContent = roll;
-      setTimeout(() => processMove(roll), 500);
-    }
-  }, 80);
+  const roll = Math.floor(Math.random()*6)+1;
+  const target = DICE_ROT[roll];
+
+  // Add several full spins for a tumbling effect, then settle on the target face
+  const spinsX = 4 * 360; // 4 full turns
+  const spinsY = 4 * 360;
+  const finalX = spinsX + target.x;
+  const finalY = spinsY + target.y;
+
+  // Reset transition then apply
+  cube.style.transition = 'none';
+  cube.style.transform = 'translateZ(-36px) rotateX(0deg) rotateY(0deg)';
+  // Force reflow so the reset takes effect before animating
+  void cube.offsetWidth;
+  cube.style.transition = 'transform 1.1s cubic-bezier(.18,.65,.25,1)';
+  cube.style.transform = `translateZ(-36px) rotateX(${finalX}deg) rotateY(${finalY}deg)`;
+
+  setTimeout(() => {
+    resultEl.textContent = roll;
+    setTimeout(() => processMove(roll), 350);
+  }, 1150);
 }
 
-// ── MOVE PROCESSING ──
+// ── MOVE PROCESSING (step-by-step walking animation) ──
 function processMove(roll) {
   const player = utState.players[utState.currentPlayer];
-  let newPos = player.pos + roll;
+  const startPos = player.pos;
+  let target = startPos + roll;
+  let bounced = false;
 
   // Bounce back if over 100
-  if (newPos > 100) {
-    newPos = 100 - (newPos - 100);
-    showToast(`${player.emoji} ${player.name} memantul ke kotak ${newPos}!`, 2000);
+  if (target > 100) {
+    target = 100 - (target - 100);
+    bounced = true;
   }
 
-  // Animate movement
-  player.pos = newPos;
+  // Animate the pion hopping one cell at a time
+  animatePionWalk(player, startPos, target, roll, bounced, () => {
+    player.pos = target;
+    renderAllPions();
+    updatePlayersBar();
+
+    if (bounced) showToast(`${player.emoji} ${player.name} memantul ke kotak ${target}!`, 2000);
+
+    // Check win
+    if (target === 100) {
+      setTimeout(() => showFactCard(target, 'finish'), 300);
+      return;
+    }
+    setTimeout(() => {
+      let eventType = UT_STARS.includes(target) ? 'star' : 'normal';
+      showFactCard(target, eventType);
+    }, 350);
+  });
+}
+
+// ── WALKING ANIMATION ──
+// Creates a temporary "hopping" pion that travels cell by cell along the path.
+function animatePionWalk(player, startPos, target, roll, bounced, onDone) {
+  const board = document.getElementById('utBoard');
+
+  // Build the path of cell numbers to walk through
+  const path = [];
+  const forwardEnd = startPos + roll;
+  // Walk forward up to 100
+  for (let c = startPos + 1; c <= Math.min(forwardEnd, 100); c++) path.push(c);
+  // If bounced, walk backward from 100 to target
+  if (bounced) {
+    for (let c = 99; c >= target; c--) path.push(c);
+  }
+  if (path.length === 0) { onDone(); return; }
+
+  // Hide the player's static pion during the walk
+  player._walking = true;
   renderAllPions();
-  updatePlayersBar();
 
-  // Check win
-  if (newPos === 100) {
-    setTimeout(() => showFactCard(newPos, 'finish'), 400);
-    return;
+  // Create hopping pion
+  const hop = document.createElement('div');
+  hop.className = 'ut-pion-hop';
+  hop.style.background = player.color;
+  hop.textContent = player.emoji;
+  board.appendChild(hop);
+
+  // Position helper: place hop pion over a cell
+  function placeOver(cellNum) {
+    const cell = document.getElementById('utCell'+cellNum);
+    if (!cell) return;
+    const cellRect = cell.getBoundingClientRect();
+    const boardRect = board.getBoundingClientRect();
+    const size = hop.offsetWidth || 18;
+    const left = cellRect.left - boardRect.left + (cellRect.width - size)/2;
+    const top = cellRect.top - boardRect.top + (cellRect.height - size)/2;
+    hop.style.left = left + 'px';
+    hop.style.top = top + 'px';
   }
 
-  // Show fact card with slight delay for pion animation
-  setTimeout(() => {
-    let eventType = 'normal';
-    if (UT_STARS.includes(newPos)) eventType = 'star';
-    showFactCard(newPos, eventType);
-  }, 500);
+  // Start at current position (or cell 1 if just starting)
+  placeOver(startPos >= 1 ? startPos : 1);
+  if (startPos < 1) {
+    // first move from start: jump straight onto cell 1 path begins
+  }
+
+  let step = 0;
+  function nextStep() {
+    if (step >= path.length) {
+      // Done — remove hop pion, clear walking flag
+      hop.remove();
+      player._walking = false;
+      onDone();
+      return;
+    }
+    const cellNum = path[step];
+    hop.classList.add('hopping');
+    placeOver(cellNum);
+    playSound('step');
+    step++;
+    setTimeout(() => { hop.classList.remove('hopping'); }, 180);
+    setTimeout(nextStep, 300);
+  }
+  // Small delay before first hop
+  setTimeout(nextStep, 150);
 }
 
 // ── FUN FACT CARD ──
@@ -1027,26 +1283,30 @@ function closeFactCard(cellNum, starsEarned, snakeDest, ladderDest, isFinish) {
   const player = utState.players[utState.currentPlayer];
   player.stars += starsEarned;
 
-  // Apply snake
+  // Apply snake — slide down smoothly
   if (snakeDest >= 0) {
-    player.pos = snakeDest;
-    renderAllPions();
-    updatePlayersBar();
-    showToast(`🐍 ${player.name} turun ke kotak ${snakeDest}!`, 2000);
-    playSound('wrong');
-    setTimeout(() => nextTurn(), 500);
+    slidePion(player, cellNum, snakeDest, () => {
+      player.pos = snakeDest;
+      renderAllPions();
+      updatePlayersBar();
+      showToast(`🐍 ${player.name} turun ke kotak ${snakeDest}!`, 2000);
+      playSound('wrong');
+      setTimeout(() => nextTurn(), 500);
+    });
     return;
   }
 
-  // Apply ladder
+  // Apply ladder — slide up smoothly
   if (ladderDest >= 0) {
-    player.pos = ladderDest;
-    renderAllPions();
-    updatePlayersBar();
-    confetti();
-    playSound('win');
-    showToast(`🪜 ${player.name} naik ke kotak ${ladderDest}!`, 2000);
-    setTimeout(() => nextTurn(), 800);
+    slidePion(player, cellNum, ladderDest, () => {
+      player.pos = ladderDest;
+      renderAllPions();
+      updatePlayersBar();
+      confetti();
+      playSound('win');
+      showToast(`🪜 ${player.name} naik ke kotak ${ladderDest}!`, 2000);
+      setTimeout(() => nextTurn(), 800);
+    });
     return;
   }
 
@@ -1059,6 +1319,39 @@ function closeFactCard(cellNum, starsEarned, snakeDest, ladderDest, isFinish) {
   }
 
   nextTurn();
+}
+
+// Smoothly slide a pion from one cell directly to another (for snakes/ladders)
+function slidePion(player, fromCell, toCell, onDone) {
+  const board = document.getElementById('utBoard');
+  player._walking = true;
+  renderAllPions();
+
+  const hop = document.createElement('div');
+  hop.className = 'ut-pion-hop';
+  hop.style.background = player.color;
+  hop.textContent = player.emoji;
+  hop.style.transition = 'left .7s cubic-bezier(.45,.05,.55,.95),top .7s cubic-bezier(.45,.05,.55,.95)';
+  board.appendChild(hop);
+
+  function placeOver(cellNum) {
+    const cell = document.getElementById('utCell'+cellNum);
+    if (!cell) return;
+    const cellRect = cell.getBoundingClientRect();
+    const boardRect = board.getBoundingClientRect();
+    const size = hop.offsetWidth || 18;
+    hop.style.left = (cellRect.left - boardRect.left + (cellRect.width - size)/2) + 'px';
+    hop.style.top = (cellRect.top - boardRect.top + (cellRect.height - size)/2) + 'px';
+  }
+
+  placeOver(fromCell);
+  void hop.offsetWidth;
+  setTimeout(() => placeOver(toCell), 50);
+  setTimeout(() => {
+    hop.remove();
+    player._walking = false;
+    onDone();
+  }, 800);
 }
 
 function nextTurn() {
@@ -2196,6 +2489,15 @@ function playSound(type) {
       g.gain.exponentialRampToValueAtTime(0.001, now+delay+0.25);
       o.start(now+delay); o.stop(now+delay+0.25);
     });
+  } else if (type === 'step') {
+    // Short soft blip for each hop
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sine'; o.frequency.value = 660;
+    g.gain.setValueAtTime(0.12, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now+0.12);
+    o.start(now); o.stop(now+0.12);
   }
 }
 
